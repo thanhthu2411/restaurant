@@ -1,0 +1,45 @@
+:root {
+  --green: #5aa274;
+  --lightgray: #f1f1f1;
+  --sidebar-small-width: 75px;
+  --sidebar-large-width: 250px;
+}
+
+body {
+  box-sizing: border-box;
+  font-size: 1.2rem;
+
+  font-family:
+    "Trebuchet MS", "Lucida Sans Unicode", "Lucida Grande", "Lucida Sans",
+    Arial, sans-serif;
+
+  ul {
+    padding-left: 0;
+  }
+
+  a {
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  button {
+    border: none;
+    background-color: transparent;
+
+    &:hover {
+      cursor: pointer;
+    }
+  }
+
+  .icon {
+    width: 35px;
+    height: 35px;
+    fill: black;
+  }
+
+  .cart-img {
+    width: 40px;
+    height: 40px;
+  }
+}

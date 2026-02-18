@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title><%= title %></title>
+    <link rel="stylesheet" href="/css/base.css">
+    <script src="/js/base.js" type="module"></script>
+
+    <% if (NODE_ENV.includes('dev')) { %>
+    <script>
+        // Get the current hostname and port from the browser
+        const host = window.location.hostname;
+        const currentPort = window.location.port;
+
+        // Calculate WebSocket port (current port + 1)
+        const wsPort = currentPort ? (parseInt(currentPort) + 1) : 3001;
+
+        // Create WebSocket connection using dynamic hostname and port
+        const ws = new WebSocket(`ws://${host}:${wsPort}`);
+        ws.onclose = () => {
+            setTimeout(() => location.reload(), 2000);
+        };
+    </script>
+<% } %>
+</head>
+<body>
+    <header>
+        <div class="header-left">
+            <button class="menu-btn" aria-label="menu button">
+                <svg class="icon"><use xlink:href="/images/sprite.symbol.svg#menu"></use></svg>
+            </button>
+            <a href="/">BiteBuddy</a>
+
+        </div>
+        <div class="header-middle">
+            <form class="search-form">
+                <input type="text" placeholder="Search BiteBuddy">
+                <button class="search-btn" type="submit" aria-label="submit button">
+                    <svg class="icon"><use xlink:href="/images/sprite.symbol.svg#search"></use></svg>
+                </button>
+            </form>
+        </div>
+        <div class="header-right">
+            <button>
+                <img class="cart-img" src="/images/cart.png" alt="cart icon">
+                <span class="cart-num">0</span>
+            </button>
+        </div>
+    </header>
