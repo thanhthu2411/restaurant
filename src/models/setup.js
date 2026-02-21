@@ -1,0 +1,1 @@
+// run the sql file to set up the database(seed database)

@@ -7,6 +7,12 @@ import router from "./src/controllers/routes.js";
 import {addLocalVariables} from "./src/middleware/global.js"
 import { title } from "process";
 
+
+/**
+ * Setup Express Server
+ */
+const app = express();
+
 /**
  * Declare Important VARIABLEs
  */
@@ -14,10 +20,6 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 const PORT = process.env.PORT || 3000;
 const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
-/**
- * Setup Express Server
- */
-const app = express();
 
 /**
  * Configure Express
