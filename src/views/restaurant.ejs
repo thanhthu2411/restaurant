@@ -2,7 +2,177 @@
 <main>
   <%- include('partials/sidebar') %>
   <section class="restaurant-container">
-    <p>hihi</p>
+    <!-- HERO SECTION  -->
+    <div class="hero-container">
+      <div class="hero-img-container">
+        <img
+          src="/images/dishes/hip-sip1.jpg"
+          class="restaurant-background"
+          alt="restaurant background image"
+        />
+        <img
+          src="/images/restaurants/tacos.png"
+          class="restaurant-logo"
+          alt="restaurant logo"
+        />
+      </div>
+      <div class="header-form-container">
+        <h1>Burger King</h1>
+        <form
+          action="/restaurant/rest_006?q=input"
+          class="restaurant-search-form"
+        >
+          <input name="q" type="text" placeholder="Search" />
+          <button class="search-btn" type="submit" aria-label="submit button">
+            <svg class="icon">
+              <use xlink:href="/images/sprite.symbol.svg#search"></use>
+            </svg>
+          </button>
+        </form>
+      </div>
+      <div class="restaurant-info-container">
+        <div class="basic-info">
+          <p>rating</p>
+          <span>&#9679;</span>
+          <p>Open/close hours</p>
+          <p class="address">address</p>
+        </div>
+        <div class="delivery-info">
+          <p class="delivery-fee">delivery fee<br /><span>$1.49</span></p>
+          <p>delivery time<br /><span>17mins</span></p>
+          <!-- <p>delivery distance</p> -->
+        </div>
+      </div>
+    </div>
+
+    <!-- RESTAURANT MAIN SECTION  -->
+    <div class="restaurant-main-container">
+      <!-- if hasDeals -->
+      <div class="restaurant-deal-container">
+        <h1>Deals and Savings</h1>
+        <div class="deals-container">
+          <div class="deal-card">
+            <p>Save 50% (up to $15) when you order $20 or more</p>
+            <span>Expires tomorrow by 1:00 AM</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="restaurant-menu-container">
+        <h1>Our Menu</h1>
+        <div class="menu-container">
+          <!-- forEach dishes in the restaurant  -->
+          <div
+            class="dish-card"
+            role="button"
+            data-name="chicken-alfredo"
+            data-description="test"
+            data-img-url="/images/dishes/burger-kingdom1.jpg"
+          >
+            <div class="dish-img-container">
+              <img class="dish-img" src="/images/dishes/burger-kingdom1.jpg" />
+            </div>
+            <div class="dish-info-container">
+              <span class="dish-name">Cheese Burger</span>
+              <span class="dish-description"
+                >Our classic breakfast sandwich has 18g of protein with...</span
+              >
+              <span class="price">$6.99</span>
+            </div>
+            <div class="add-icon">&#43;</div>
+          </div>
+        </div>
+      </div>
+      <!-- expand dish info when being clicked  -->
+      <div class="menu-container-expand">
+        <div class="wrapper">
+          <button class="modal-close-btn" aria-label="close button">
+            <svg class="icon">
+              <use xlink:href="/images/sprite.symbol.svg#close"></use>
+            </svg>
+          </button>
+          <div class="dish-info-expand-container">
+            <h2></h2>
+            <p></p>
+            <img src="" />
+          </div>
+          <a href="" class="add-to-cart-btn"> Add to Cart </a>
+        </div>
+      </div>
+
+      <!-- if (orderHistory)  -->
+      <div class="restaurant-history-container">
+        <h1>Order Again</h1>
+        <div class="menu-container">
+          <!-- forEach dishes in the restaurant  -->
+          <div
+            class="dish-card"
+            role="button"
+            data-name="chicken-alfredo"
+            data-description="test"
+            data-img-url="/images/dishes/burger-kingdom1.jpg"
+          >
+            <div class="dish-img-container">
+              <img class="dish-img" src="/images/dishes/burger-kingdom1.jpg" />
+            </div>
+            <div class="dish-info-container">
+              <span class="dish-name">Cheese Burger</span>
+              <span class="dish-description"
+                >Our classic breakfast sandwich has 18g of protein with...</span
+              >
+              <span class="price">$6.99</span>
+            </div>
+            <div class="add-icon">&#43;</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="restaurant-rating-container">
+        <h1>Ratings & Review</h1>
+        <!-- if (hasReview) -->
+
+        <button class="add-review-btn">Add Review</button>
+        <div class="rating-review-container">
+          <div class="rating-container">
+            <h2>4.4</h2>
+            <span>★★★★☆</span>
+            <p>190+ Ratings</p>
+          </div>
+          <div class="review-container">
+            <div class="review-card">
+              <p class="review">
+                First time trying it and I gotta say: the kats...
+              </p>
+              <span class="review-date">★★★★☆ &#9679; 11/26/2026</span>
+            </div>
+            <div class="review-card">
+              <p class="review">
+                First time trying it and I gotta say: the katsu fried chicken in
+                the cupbop was...
+              </p>
+              <span class="review-date">★★★★☆ &#9679; 11/26/2026</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="review-form-container">
+        <div class="wrapper">
+          <button class="modal-close-btn" aria-label="close button">
+            <svg class="icon">
+              <use xlink:href="/images/sprite.symbol.svg#close"></use>
+            </svg>
+          </button>
+
+          <form action="/restaurant/restSlug" method="post" class="review-form">
+            <label for="review">Comment</label>
+            <input id="review" name="review" class="review-input" minlength="2">
+            <button type="submit" class="save-review-btn">Save</button>
+            <a class="cancel-review-btn" href="/restaurant/restSlug">Cancel</a>
+          </form>
+        </div>
+      </div>
+    </div>
   </section>
 </main>
 <%- include('partials/footer')%>

@@ -6,7 +6,7 @@ import {
   getRestaurantById,
 } from "../../models/restaurant/restaurant.js";
 
-const restaurantPage = (req, res) => {
+const homePage = (req, res) => {
   const dealRestaurants = getDealRestaurant();
   const nearRestaurant = getNearRestaurant();
   const topRestaurant = getTopRestaurant();
@@ -21,7 +21,7 @@ const restaurantPage = (req, res) => {
   res.render("home", context);
 };
 
-const restaurantDetailPage = (req, res, next) => {
+const restaurantPage = (req, res, next) => {
   const resId = req.params.resId;
   const restaurant = getRestaurantById(resId);
 
@@ -35,6 +35,7 @@ const restaurantDetailPage = (req, res, next) => {
     title: `${restaurant.name}`,
     restaurant: restaurant,
   });
+
 };
 
-export { restaurantPage, restaurantDetailPage };
+export { homePage, restaurantPage };

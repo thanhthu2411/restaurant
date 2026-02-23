@@ -5,8 +5,8 @@ import path from "path";
 
 import router from "./src/controllers/routes.js";
 import {addLocalVariables} from "./src/middleware/global.js"
-import { title } from "process";
 
+//import session, flash, databaseSetup, databaseConnection
 
 /**
  * Setup Express Server
@@ -27,10 +27,24 @@ const NODE_ENV = process.env.NODE_ENV?.toLowerCase() || 'production';
 app.use(express.static(path.join(__dirname, "public")));
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'src/views'));
+app.use(express.urlencoded({extended: true}));
+app.use(express.json());
+
+/**HANDLE SESSION STORE */
+
+
+
+
+
+
+
 
 
 //Global middleware
 app.use(addLocalVariables);
+
+
+// FLASH MESSAGE
 
 /**
  * Declare ROUTES
@@ -43,7 +57,7 @@ app.use("/", router);
 app.use((req, res, next) => {
     const err = new Error('Page Not Found');
     err.status = 404;
-    return next(err);
+    next(err);
 })
 
 // global error handler
@@ -94,5 +108,8 @@ if (NODE_ENV.includes('dev')) {
 
 // START the server and listen on the specified port
 app.listen(PORT, () => {
+    //SET UP DATABASE
+
+    
     console.log(`Server is running on http://127.0.0.1:${PORT}`)
 })

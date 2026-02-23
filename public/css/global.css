@@ -26,9 +26,14 @@ body {
   button {
     border: none;
     background-color: transparent;
+    transition: all 0.2s ease;
 
     &:hover {
       cursor: pointer;
+    }
+
+    &:active {
+      transform: translateY(1px);
     }
   }
 

@@ -1,10 +1,10 @@
 import {Router} from 'express';
-import { restaurantPage, restaurantDetailPage } from './restaurant/restaurant.js';
+import { homePage, restaurantPage } from './restaurant/restaurant.js';
 
 const router = Router();
 
-router.get('/', restaurantPage);
-router.get('/restaurant/:resId', restaurantDetailPage);
+router.get('/', homePage);
+router.get('/restaurant/:resId', restaurantPage);
 
 // /dish/search
 export default router;
