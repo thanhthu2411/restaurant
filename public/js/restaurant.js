@@ -20,5 +20,17 @@ export const dishCardHandler = () => {
 }
 
 //handle add review button
+export const reviewFormHandler = () => {
+    const closeFormBtn = document.querySelector(".form-close-btn");
+    const addReviewBtn = document.querySelector(".add-review-btn");
+    const reviewForm = document.querySelector(".review-form-container");
 
+    addReviewBtn.addEventListener("click", () => {
+        reviewForm.classList.add("form-clicked");
+    })
+
+    closeFormBtn.addEventListener("click", () => {
+        reviewForm.classList.remove("form-clicked");
+    })
+}
 
