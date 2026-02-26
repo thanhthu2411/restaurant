@@ -5,6 +5,7 @@ const router = Router();
 
 router.get('/', homePage);
 router.get('/restaurant/:resId', restaurantPage);
+// router.get('')
 
 // /dish/search
 export default router;
