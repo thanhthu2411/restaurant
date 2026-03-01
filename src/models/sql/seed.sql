@@ -1,256 +1,388 @@
--- Database seed file for student course catalog
 -- This file creates tables and inserts all initial data
 
 BEGIN;
 
 -- Drop existing tables (in reverse dependency order)
-DROP TABLE IF EXISTS catalog CASCADE;
-DROP TABLE IF EXISTS faculty CASCADE;
-DROP TABLE IF EXISTS courses CASCADE;
-DROP TABLE IF EXISTS departments CASCADE;
+DROP TABLE IF EXISTS review CASCADE;
+DROP TABLE IF EXISTS cart_dish CASCADE;
+DROP TABLE IF EXISTS order_dish CASCADE;
+DROP TABLE IF EXISTS cart CASCADE;
+DROP TABLE IF EXISTS order CASCADE;
+DROP TABLE IF EXISTS dishes CASCADE;
+DROP TABLE IF EXISTS restaurants CASCADE;
+DROP TABLE IF EXISTS users CASCADE;
+DROP TABLE IF EXISTS deals CASCADE;
+DROP TABLE IF EXISTS order_status CASCADE;
+DROP TABLE IF EXISTS categories CASCADE;
+DROP TABLE IF EXISTS roles CASCADE;
 
--- Create departments table
-CREATE TABLE departments (
-    id INTEGER PRIMARY KEY,
+CREATE TABLE roles (
+    id SERIAL PRIMARY KEY,
+    role_name VARCHAR(50) UNIQUE NOT NULL,
+    role_description TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE categories (
+    id SERIAL PRIMARY KEY,
+    category_name VARCHAR(100),
+    slug VARCHAR(100) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+CREATE TABLE users (
+    id SERIAL PRIMARY KEY,
+    role_id INTEGER REFERENCES roles(id),
+    name VARCHAR(255) NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
+    password VARCHAR(255) NOT NULL,
+    address TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+);
+
+CREATE TABLE deals (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(255) NOT NULL,
     code VARCHAR(20) UNIQUE NOT NULL,
-    name VARCHAR(200) UNIQUE NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Create courses table
-CREATE TABLE courses (
-    id SERIAL PRIMARY KEY,
-    course_code VARCHAR(20) UNIQUE NOT NULL,
-    name VARCHAR(200) NOT NULL,
     description TEXT,
-    credit_hours INTEGER NOT NULL CHECK (credit_hours > 0),
-    department_id INTEGER NOT NULL,
-    slug VARCHAR(250) UNIQUE NOT NULL,
+    expiration_date TIMESTAMP,
+    amount DECIMAL DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (department_id) REFERENCES departments(id)
 );
 
--- Create faculty table
-CREATE TABLE faculty (
+CREATE TABLE restaurants (
     id SERIAL PRIMARY KEY,
-    first_name VARCHAR(100) NOT NULL,
-    last_name VARCHAR(100) NOT NULL,
-    office VARCHAR(50),
-    phone VARCHAR(20),
-    email VARCHAR(150) UNIQUE NOT NULL,
-    department_id INTEGER NOT NULL,
-    title VARCHAR(100),
-    gender VARCHAR(1),
-    slug VARCHAR(200) UNIQUE NOT NULL,
+    owner_id INTEGER REFERENCES users(id),
+     category_id INTEGER REFERENCES categories(id),
+    deal_id INTEGER REFERENCES deals(id),
+    name VARCHAR(255) NOT NULL,
+    slug VARCHAR(255) UNIQUE NOT NULL,
+    address TEXT NOT NULL,
+    open_hour TIME DEFAULT '08:00:00',
+    close_hour TIME DEFAULT '22:00:00',
+    delivery_fee DECIMAL DEFAULT 3.99,
+    delivery_minutes INTEGER DEFAULT 15,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (department_id) REFERENCES departments(id)
 );
 
--- Create catalog table
-CREATE TABLE catalog (
+CREATE TABLE restaurant_category (
+    restaurant_id INTEGER REFERENCES restaurants(id) ON DELETE CASCADE,
+    category_id INTEGER REFERENCES categories(id) ON DELETE CASCADE,
+    PRIMARY KEY (restaurant_id, category_id)
+);
+
+
+CREATE TABLE dishes (
     id SERIAL PRIMARY KEY,
-    course_slug VARCHAR(250) NOT NULL,
-    faculty_slug VARCHAR(200) NOT NULL,
-    time VARCHAR(100) NOT NULL,
-    room VARCHAR(50) NOT NULL,
+    restaurant_id INTEGER REFERENCES restaurants(id),
+    category_id INTEGER REFERENCES categories(id),
+    name VARCHAR(200) UNIQUE NOT NULL,
+    slug VARCHAR(255) UNIQUE NOT NULL,
+    description TEXT,
+    price DECIMAL NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(course_slug, faculty_slug, time, room)
+
 );
 
--- Insert departments
-INSERT INTO departments (id, code, name) VALUES
-    (0, 'CS', 'Computer Science'),
-    (1, 'MATH', 'Mathematics'),
-    (2, 'ENG', 'English'),
-    (3, 'INTL', 'International Studies'),
-    (4, 'REL', 'Religious Education'),
-    (5, 'GEN', 'General Studies'),
-    (6, 'ENGR', 'Engineering'),
-    (7, 'PHYS', 'Physics'),
-    (8, 'CHEM', 'Chemistry'),
-    (9, 'BIO', 'Biology'),
-    (10, 'ECON', 'Economics'),
-    (11, 'HIST', 'History');
+CREATE TABLE order_status (
+    id SERIAL PRIMARY KEY,
+    status VARCHAR(20) CHECK (status IN ('confirmed', 'preparing', 'delivered', 'shipped')),
+        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
 
--- Insert courses
-INSERT INTO courses (course_code, name, description, credit_hours, department_id, slug) VALUES
-    ('CSE 110', 'Introduction to Programming', 'Fundamentals of programming using Python. Introduction to problem solving, algorithm development, and basic programming concepts including variables, control structures, and functions.', 2, 0, 'cse-110'),
-    ('CSE 111', 'Programming with Functions', 'Learn to become a more organized, efficient, and capable computer programmer by researching and calling functions written by others; writing, calling, debugging, and testing your own functions.', 2, 0, 'cse-111'),
-    ('CSE 210', 'Programming with Classes', 'Introduction to the notion of classes and objects. Presents encapsulation at a conceptual level and works with inheritance and polymorphism.', 3, 0, 'cse-210'),
-    ('CSE 212', 'Programming with Data Structures', 'Data structures and algorithms including dynamic arrays, linked lists, stacks, queues, trees, graphs, and hash tables. Algorithm analysis and Big O notation.', 3, 0, 'cse-212'),
-    ('CSE 310', 'Operating Systems', 'Operating system concepts including processes, threads, CPU scheduling, memory management, file systems, and system security.', 3, 0, 'cse-310'),
-    ('CSE 340', 'Software Engineering', 'Software development lifecycle, requirements analysis, design patterns, testing strategies, and project management in software development.', 3, 0, 'cse-340'),
-    ('CSE 398', 'Computer Science Internship', 'Supervised work experience in computer science. Students apply classroom knowledge in real-world professional settings.', 3, 0, 'cse-398'),
-    ('CIT 160', 'Introduction to Programming', 'Fundamental programming concepts using modern programming languages. Problem solving, algorithm development, and basic programming structures.', 3, 0, 'cit-160'),
-    ('CIT 241', 'Network Routing and Switching', 'Initial router configuration, Cisco IOS Software management, routing protocol configuration, TCP/IP, and access control lists (ACLs).', 3, 0, 'cit-241'),
-    ('CIT 260', 'Object Oriented Programming', 'Fundamentals of Object Oriented Programming using Java. Classes, objects, inheritance, polymorphism, and graphical user interfaces.', 3, 0, 'cit-260'),
-    ('CIT 336', 'Web Backend Development', 'Server-side web development using modern frameworks and databases. RESTful APIs, authentication, and data management.', 3, 0, 'cit-336'),
-    ('WDD 130', 'Web Fundamentals', 'Introduction to web development using HTML and CSS. Basic web page structure, styling, and responsive design principles.', 2, 0, 'wdd-130'),
-    ('WDD 230', 'Web Frontend Development I', 'Advanced HTML, CSS, and JavaScript. DOM manipulation, event handling, and modern web development tools and practices.', 3, 0, 'wdd-230'),
-    ('WDD 330', 'Web Frontend Development II', 'Advanced JavaScript frameworks and libraries. Single page applications, state management, and modern frontend development patterns.', 3, 0, 'wdd-330'),
-    ('WDD 430', 'Full Stack Development', 'Integration of frontend and backend technologies. Database design, API development, and deployment of full-stack web applications.', 3, 0, 'wdd-430'),
-    ('MATH 108X', 'Mathematics Preparation', 'Preparation for college-level mathematics. Review of algebra, geometry, and trigonometry concepts needed for calculus.', 3, 1, 'math-108x'),
-    ('MATH 112', 'Calculus I', 'Limits, derivatives, and applications of derivatives. Introduction to integration and the Fundamental Theorem of Calculus.', 4, 1, 'math-112'),
-    ('MATH 113', 'Calculus II', 'Integration techniques, applications of integration, infinite sequences and series, parametric equations, and polar coordinates.', 4, 1, 'math-113'),
-    ('MATH 215', 'Calculus III', 'Multivariable calculus including partial derivatives, multiple integrals, vector fields, line integrals, and surface integrals.', 4, 1, 'math-215'),
-    ('MATH 221', 'Statistics', 'Descriptive statistics, probability distributions, hypothesis testing, confidence intervals, regression analysis, and ANOVA.', 3, 1, 'math-221'),
-    ('MATH 280', 'Topics in Pure Mathematics', 'Advanced mathematical topics including proof techniques, set theory, number theory, and abstract algebra concepts.', 3, 1, 'math-280'),
-    ('MATH 341', 'Differential Equations', 'First and second order differential equations, systems of differential equations, and applications to physical and biological systems.', 3, 1, 'math-341'),
-    ('ENG 106', 'English Preparation', 'Development of basic writing skills including grammar, sentence structure, paragraph development, and essay organization.', 3, 2, 'eng-106'),
-    ('ENG 150', 'Writing and Reasoning Foundations', 'Academic writing with emphasis on critical thinking, research skills, and argumentation. Introduction to various rhetorical modes.', 3, 2, 'eng-150'),
-    ('ENG 250', 'Writing and Research', 'Advanced academic writing with emphasis on research methodology, source evaluation, and scholarly communication.', 3, 2, 'eng-250'),
-    ('ENG 216', 'Technical Writing', 'Writing for technical and professional audiences. Reports, proposals, manuals, and other forms of workplace communication.', 3, 2, 'eng-216'),
-    ('ENG 295', 'Literature and Film', 'Study of literary works and their film adaptations. Analysis of narrative techniques, themes, and cultural contexts.', 3, 2, 'eng-295'),
-    ('ENG 324', 'Shakespeare', 'Study of selected plays and sonnets by William Shakespeare with attention to language, themes, and historical context.', 3, 2, 'eng-324'),
-    ('ENG 381', 'American Literature', 'Survey of American literature from colonial period to present, including major authors, movements, and cultural influences.', 3, 2, 'eng-381'),
-    ('INTL 201', 'Introduction to International Studies', 'Overview of global issues, international relations theory, and cross-cultural analysis of political, economic, and social systems.', 3, 3, 'intl-201'),
-    ('INTL 301', 'Comparative Politics', 'Comparative analysis of political systems, governance structures, and policy-making processes across different nations.', 3, 3, 'intl-301'),
-    ('INTL 350', 'International Economics', 'Economic principles applied to international trade, finance, development, and global economic institutions.', 3, 3, 'intl-350'),
-    ('INTL 401', 'Global Issues Seminar', 'In-depth analysis of contemporary global challenges including security, environment, human rights, and economic development.', 3, 3, 'intl-401'),
-    ('REL 121', 'The Eternal Family', 'Doctrinal foundations of the family, marriage preparation, and principles of successful family relationships from an LDS perspective.', 2, 4, 'rel-121'),
-    ('REL 250', 'The Living Christ', 'Study of the life, mission, and teachings of Jesus Christ as recorded in the New Testament and modern revelation.', 2, 4, 'rel-250'),
-    ('FDMAT 108', 'Mathematics for Life', 'Practical applications of mathematics in personal finance, statistics, and problem-solving for daily life.', 3, 1, 'fdmat-108'),
-    ('FDENG 101', 'Writing and Communication', 'Foundational writing and communication skills for academic and professional success.', 3, 2, 'fdeng-101'),
-    ('GS 170', 'Foundations of Learning', 'Study skills, time management, goal setting, and strategies for academic success in higher education.', 2, 5, 'gs-170'),
-    ('ECEN 160', 'Introduction to Electrical Engineering', 'Fundamentals of electrical engineering including circuit analysis, Ohms law, and basic electronic components.', 3, 6, 'ecen-160'),
-    ('PHYS 121', 'University Physics I', 'Mechanics, wave motion, and thermodynamics with calculus-based approach. Laboratory component included.', 4, 7, 'phys-121'),
-    ('CHEM 111', 'General Chemistry I', 'Fundamental principles of chemistry including atomic structure, bonding, stoichiometry, and thermochemistry.', 4, 8, 'chem-111'),
-    ('BIO 111', 'General Biology I', 'Introduction to biological principles including cell structure, metabolism, genetics, and evolution.', 4, 9, 'bio-111'),
-    ('ECON 151', 'Macroeconomics', 'Introduction to macroeconomic principles including national income, inflation, unemployment, and fiscal policy.', 3, 10, 'econ-151'),
-    ('HIST 170', 'Foundations of the Restoration', 'History of the restoration of the Gospel of Jesus Christ through the Prophet Joseph Smith and the early Church.', 2, 11, 'hist-170');
+);
 
--- Insert faculty
-INSERT INTO faculty (first_name, last_name, office, phone, email, department_id, title, gender, slug) VALUES
-    ('Nathan', 'Jack', 'STC 310A', '208-496-7622', 'jackn@byui.edu', 0, 'Department Chair', 'm', 'nathan-jack'),
-    ('Jason', 'Allred', 'STC 310B', '208-496-7607', 'allredjas@byui.edu', 0, 'Associate Chair', 'm', 'jason-allred'),
-    ('Adam', 'Hayes', 'STC 310C', '208-496-3782', 'hayesa@byui.edu', 0, 'Associate Chair', 'm', 'adam-hayes'),
-    ('Nate', 'Phillips', 'STC 310D', '208-496-7625', 'phillipsn@byui.edu', 0, 'Associate Chair', 'm', 'nate-phillips'),
-    ('William', 'Clements', 'STC 310E', '208-496-7617', 'clementsw@byui.edu', 0, 'Program Lead', 'm', 'william-clements'),
-    ('Zachariah', 'Alvey', 'STC 330A', '208-496-3741', 'alveyz@byui.edu', 0, 'Professor', 'm', 'zachariah-alvey'),
-    ('Bradley', 'Armstrong', 'STC 330B', '208-496-3766', 'armstrongb@byui.edu', 0, 'Professor', 'm', 'bradley-armstrong'),
-    ('Lee', 'Barney', 'STC 330C', '208-496-3767', 'barneyl@byui.edu', 0, 'Professor', 'm', 'lee-barney'),
-    ('Rex', 'Barzee', 'STC 330D', '208-496-3768', 'barzeer@byui.edu', 0, 'Professor', 'm', 'rex-barzee'),
-    ('Scott', 'Burton', 'STC 330E', '208-496-7614', 'burtons@byui.edu', 0, 'Professor', 'm', 'scott-burton'),
-    ('Christopher', 'Keers', 'STC 330F', '208-496-7604', 'keersc@byui.edu', 0, 'Professor', 'm', 'christopher-keers'),
-    ('Julie Ann', 'Anderson', 'STC 330G', '208-496-4505', 'andersonju@byui.edu', 0, 'Professor', 'f', 'julie-ann-anderson'),
-    ('Joelle', 'Moen', 'GEB 205A', '208-496-4391', 'moenj@byui.edu', 2, 'Department Chair', 'f', 'joelle-moen'),
-    ('Josh', 'Allen', 'GEB 205B', '208-496-4366', 'allenj@byui.edu', 2, 'Professor', 'm', 'josh-allen'),
-    ('Matt', 'Babcock', 'GEB 205C', '208-496-4367', 'babcockm@byui.edu', 2, 'Professor', 'm', 'matt-babcock'),
-    ('Jeremy', 'Bailey', 'GEB 205D', '208-496-4405', 'baileyj@byui.edu', 2, 'Professor', 'm', 'jeremy-bailey'),
-    ('Tom', 'Ballard', 'GEB 205E', '208-496-4342', 'ballardt@byui.edu', 2, 'Professor', 'm', 'tom-ballard'),
-    ('Mark', 'Bennion', 'GEB 205F', '208-496-4368', 'bennionm@byui.edu', 2, 'Professor', 'm', 'mark-bennion'),
-    ('William', 'Brugger', 'GEB 205G', '208-496-4370', 'bruggerw@byui.edu', 2, 'Professor', 'm', 'william-brugger'),
-    ('Curtis', 'Chandler', 'GEB 205H', '208-496-4132', 'chandlerc@byui.edu', 2, 'Professor', 'm', 'curtis-chandler'),
-    ('Anna', 'Durfee', 'GEB 205I', '208-496-4304', 'durfeean@byui.edu', 2, 'Professor', 'f', 'anna-durfee'),
-    ('Elaine', 'Wagner', 'MC 301A', '208-496-7556', 'wagnere@byui.edu', 1, 'Department Chair', 'f', 'elaine-wagner'),
-    ('Brett', 'Amidan', 'MC 301B', '208-496-7563', 'amidanb@byui.edu', 1, 'Professor', 'm', 'brett-amidan'),
-    ('Dave', 'Brown', 'MC 301C', '208-496-7527', 'brownd@byui.edu', 1, 'Professor', 'm', 'dave-brown'),
-    ('Greg', 'Cameron', 'MC 301D', '208-496-7528', 'camerong@byui.edu', 1, 'Professor', 'm', 'greg-cameron'),
-    ('Paul', 'Cannon', 'MC 301E', '208-496-7565', 'cannonp@byui.edu', 1, 'Professor', 'm', 'paul-cannon'),
-    ('Paul', 'Cox', 'MC 301F', '208-496-7529', 'coxp@byui.edu', 1, 'Professor', 'm', 'paul-cox'),
-    ('Craig', 'Johnson', 'MC 301G', '208-496-7539', 'johnsonc@byui.edu', 1, 'Professor', 'm', 'craig-johnson'),
-    ('Chaz', 'Clark', 'MC 301H', '208-496-7535', 'clarkty@byui.edu', 1, 'Professor', 'm', 'chaz-clark'),
-    ('Robert', 'Colvin', 'LA 201A', '208-496-4308', 'colvinr@byui.edu', 3, 'Professor', 'm', 'robert-colvin'),
-    ('Scott', 'Galer', 'LA 201B', '208-496-4310', 'galers@byui.edu', 3, 'Professor', 'm', 'scott-galer'),
-    ('John', 'Ivers', 'LA 201C', '208-496-4313', 'iversj@byui.edu', 3, 'Professor', 'm', 'john-ivers'),
-    ('Jeremy', 'Lamoreaux', 'LA 201D', '208-496-4234', 'lamoreauxj@byui.edu', 3, 'Professor', 'm', 'jeremy-lamoreaux'),
-    ('Trever', 'McKay', 'LA 201E', '208-496-4312', 'mckaytr@byui.edu', 3, 'Department Chair', 'm', 'trever-mckay'),
-    ('Michael', 'Paul', 'LA 201F', '208-496-4315', 'paulm@byui.edu', 3, 'Professor', 'm', 'michael-paul');
 
--- Insert catalog entries
-INSERT INTO catalog (course_slug, faculty_slug, time, room) VALUES
-    ('cse-110', 'nathan-jack', 'Mon Wed Fri 8:00-8:50', 'STC 101'),
-    ('cse-111', 'nathan-jack', 'Mon Wed Fri 9:00-9:50', 'STC 102'),
-    ('cse-210', 'nathan-jack', 'Tue Thu 10:00-11:15', 'STC 103'),
-    ('cse-212', 'nathan-jack', 'Tue Thu 1:00-2:15', 'STC 104'),
-    ('cse-340', 'nathan-jack', 'Mon Wed 2:00-3:15', 'STC 105'),
-    ('cit-160', 'jason-allred', 'Mon Wed Fri 10:00-10:50', 'STC 106'),
-    ('cit-241', 'jason-allred', 'Tue Thu 8:00-9:15', 'STC 107'),
-    ('cit-260', 'jason-allred', 'Mon Wed 11:00-12:15', 'STC 108'),
-    ('cit-336', 'jason-allred', 'Fri 1:00-3:50', 'STC 109'),
-    ('wdd-130', 'adam-hayes', 'Mon Wed Fri 11:00-11:50', 'STC 201'),
-    ('wdd-230', 'adam-hayes', 'Tue Thu 11:00-12:15', 'STC 202'),
-    ('wdd-330', 'adam-hayes', 'Mon Wed 1:00-2:15', 'STC 203'),
-    ('wdd-430', 'adam-hayes', 'Tue Thu 2:30-3:45', 'STC 204'),
-    ('cse-310', 'adam-hayes', 'Fri 9:00-11:50', 'STC 205'),
-    ('cse-398', 'nate-phillips', 'Mon Wed 9:00-10:15', 'STC 206'),
-    ('cse-110', 'nate-phillips', 'Tue Thu 9:00-10:15', 'STC 207'),
-    ('cse-111', 'nate-phillips', 'Mon Wed Fri 1:00-1:50', 'STC 208'),
-    ('cse-212', 'nate-phillips', 'Tue Thu 3:00-4:15', 'STC 209'),
-    ('cse-210', 'william-clements', 'Mon Wed Fri 2:00-2:50', 'STC 301'),
-    ('cit-160', 'william-clements', 'Tue Thu 10:00-11:15', 'STC 302'),
-    ('cit-260', 'william-clements', 'Mon Wed 3:00-4:15', 'STC 303'),
-    ('cse-340', 'zachariah-alvey', 'Tue Thu 8:00-9:15', 'STC 304'),
-    ('cse-310', 'zachariah-alvey', 'Mon Wed Fri 8:00-8:50', 'STC 305'),
-    ('cse-212', 'zachariah-alvey', 'Tue Thu 1:00-2:15', 'STC 306'),
-    ('wdd-130', 'zachariah-alvey', 'Mon Wed 4:00-5:15', 'STC 307'),
-    ('cse-111', 'zachariah-alvey', 'Fri 10:00-12:50', 'STC 308'),
-    ('cse-110', 'bradley-armstrong', 'Mon Wed Fri 12:00-12:50', 'STC 309'),
-    ('cit-241', 'bradley-armstrong', 'Tue Thu 12:00-1:15', 'STC 310'),
-    ('wdd-230', 'bradley-armstrong', 'Mon Wed 5:00-6:15', 'STC 401'),
-    ('cse-210', 'bradley-armstrong', 'Fri 2:00-4:50', 'STC 402'),
-    ('wdd-330', 'lee-barney', 'Mon Wed Fri 3:00-3:50', 'STC 403'),
-    ('cse-340', 'lee-barney', 'Tue Thu 4:00-5:15', 'STC 404'),
-    ('cit-336', 'lee-barney', 'Mon Wed 6:00-7:15', 'STC 405'),
-    ('cse-398', 'lee-barney', 'Thu 6:00-8:50', 'STC 406'),
-    ('cit-260', 'rex-barzee', 'Mon Wed Fri 4:00-4:50', 'STC 407'),
-    ('wdd-430', 'rex-barzee', 'Tue Thu 5:00-6:15', 'STC 408'),
-    ('cse-212', 'rex-barzee', 'Mon Wed 7:00-8:15', 'STC 409'),
-    ('cse-310', 'rex-barzee', 'Fri 5:00-7:50', 'STC 410'),
-    ('cse-111', 'scott-burton', 'Mon Wed Fri 5:00-5:50', 'STC 411'),
-    ('wdd-130', 'scott-burton', 'Tue Thu 6:00-7:15', 'STC 412'),
-    ('cit-160', 'scott-burton', 'Mon Wed 8:00-9:15', 'STC 413'),
-    ('wdd-230', 'scott-burton', 'Thu 7:00-9:50', 'STC 414'),
-    ('cse-210', 'christopher-keers', 'Mon Wed Fri 6:00-6:50', 'STC 415'),
-    ('cit-241', 'christopher-keers', 'Tue Thu 7:00-8:15', 'STC 416'),
-    ('cse-340', 'christopher-keers', 'Mon Wed 9:00-10:15', 'STC 417'),
-    ('wdd-330', 'christopher-keers', 'Fri 6:00-8:50', 'STC 418'),
-    ('cse-110', 'julie-ann-anderson', 'Tue Thu 8:00-9:15', 'STC 419'),
-    ('wdd-130', 'julie-ann-anderson', 'Mon Wed Fri 7:00-7:50', 'STC 420'),
-    ('cit-160', 'julie-ann-anderson', 'Tue Thu 9:00-10:15', 'STC 421'),
-    ('wdd-230', 'julie-ann-anderson', 'Mon Wed 10:00-11:15', 'STC 422'),
-    ('cse-111', 'julie-ann-anderson', 'Fri 7:00-9:50', 'STC 423'),
-    ('eng-150', 'joelle-moen', 'Mon Wed Fri 8:00-8:50', 'GEB 101'),
-    ('eng-250', 'joelle-moen', 'Tue Thu 8:00-9:15', 'GEB 102'),
-    ('eng-216', 'joelle-moen', 'Mon Wed 9:00-10:15', 'GEB 103'),
-    ('eng-324', 'joelle-moen', 'Fri 9:00-11:50', 'GEB 104'),
-    ('eng-106', 'josh-allen', 'Mon Wed Fri 9:00-9:50', 'GEB 105'),
-    ('eng-150', 'josh-allen', 'Tue Thu 9:00-10:15', 'GEB 106'),
-    ('eng-295', 'josh-allen', 'Mon Wed 10:00-11:15', 'GEB 107'),
-    ('eng-381', 'josh-allen', 'Fri 10:00-12:50', 'GEB 108'),
-    ('eng-150', 'matt-babcock', 'Mon Wed Fri 10:00-10:50', 'GEB 201'),
-    ('eng-216', 'matt-babcock', 'Tue Thu 10:00-11:15', 'GEB 202'),
-    ('eng-250', 'matt-babcock', 'Mon Wed 11:00-12:15', 'GEB 203'),
-    ('eng-295', 'matt-babcock', 'Thu 1:00-3:50', 'GEB 204'),
-    ('eng-106', 'jeremy-bailey', 'Mon Wed Fri 11:00-11:50', 'GEB 301'),
-    ('eng-150', 'jeremy-bailey', 'Tue Thu 11:00-12:15', 'GEB 302'),
-    ('eng-324', 'jeremy-bailey', 'Mon Wed 12:00-1:15', 'GEB 303'),
-    ('eng-381', 'jeremy-bailey', 'Fri 11:00-1:50', 'GEB 304'),
-    ('eng-150', 'tom-ballard', 'Mon Wed Fri 12:00-12:50', 'GEB 305'),
-    ('eng-216', 'tom-ballard', 'Tue Thu 12:00-1:15', 'GEB 306'),
-    ('eng-250', 'tom-ballard', 'Mon Wed 1:00-2:15', 'GEB 307'),
-    ('eng-295', 'tom-ballard', 'Fri 12:00-2:50', 'GEB 308'),
-    ('math-112', 'elaine-wagner', 'Mon Wed Fri 8:00-8:50', 'MC 101'),
-    ('math-113', 'elaine-wagner', 'Tue Thu 8:00-9:15', 'MC 102'),
-    ('math-215', 'elaine-wagner', 'Mon Wed 9:00-10:15', 'MC 103'),
-    ('math-221', 'elaine-wagner', 'Fri 8:00-10:50', 'MC 104'),
-    ('math-108x', 'brett-amidan', 'Mon Wed Fri 9:00-9:50', 'MC 105'),
-    ('math-112', 'brett-amidan', 'Tue Thu 9:00-10:15', 'MC 106'),
-    ('math-280', 'brett-amidan', 'Mon Wed 10:00-11:15', 'MC 107'),
-    ('math-341', 'brett-amidan', 'Fri 9:00-11:50', 'MC 108'),
-    ('intl-201', 'robert-colvin', 'Mon Wed Fri 10:00-10:50', 'LA 101'),
-    ('intl-301', 'robert-colvin', 'Tue Thu 10:00-11:15', 'LA 102'),
-    ('intl-350', 'robert-colvin', 'Mon Wed 11:00-12:15', 'LA 103'),
-    ('intl-401', 'scott-galer', 'Mon Wed Fri 11:00-11:50', 'LA 201'),
-    ('intl-201', 'scott-galer', 'Tue Thu 11:00-12:15', 'LA 202'),
-    ('intl-350', 'scott-galer', 'Mon Wed 12:00-1:15', 'LA 203'),
-    ('intl-301', 'scott-galer', 'Fri 11:00-1:50', 'LA 204'),
-    ('intl-201', 'john-ivers', 'Mon Wed Fri 1:00-1:50', 'LA 301'),
-    ('intl-301', 'john-ivers', 'Tue Thu 1:00-2:15', 'LA 302'),
-    ('intl-401', 'john-ivers', 'Mon Wed 2:00-3:15', 'LA 303');
+CREATE TABLE orders (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    restaurant_id INTEGER REFERENCES restaurants(id),
+    status_id INTEGER REFERENCES order_status(id),
+    subtotal DECIMAL,
+    total DECIMAL,
+    delivery_fee DECIMAL DEFAULT 3.99,
+    delivery_minutes INTEGER DEFAULT 15,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+);
+
+CREATE TABLE order_dish (
+    order_id INTEGER REFERENCES orders(id),
+    dish_id INTEGER REFERENCES dishes(id),
+    quantity INTEGER,
+    order_price DECIMAL,
+    PRIMARY KEY (order_id, dish_id));
+
+
+CREATE TABLE cart (
+    id SERIAL PRIMARY KEY,
+    user_id INTEGER REFERENCES users(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+);
+
+CREATE TABLE cart_dish (
+    cart_id INTEGER REFERENCES cart(id),
+    dish_id INTEGER REFERENCES dishes(id),
+    quantity INTEGER DEFAULT 0,
+    PRIMARY KEY (cart_id, dish_id));
+
+CREATE TABLE review (
+    id SERIAL PRIMARY KEY,
+    restaurant_id INTEGER REFERENCES restaurants(id),
+    user_id INTEGER REFERENCES users(id),
+    rating INTEGER CHECK (rating < 6 AND rating > 0),
+    content TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+);
+
+
+-- insert data into tables
+INSERT INTO roles (role_name, role_description) VALUES
+    ('Admin', 'Administrator with full system access'),
+    ('Owner', 'Restaurant owner with control over their restaurnt'),
+    ('User', 'Standard user with basic access');
+
+INSERT INTO categories (category_name, slug) VALUES
+    ('burgers', 'burgers'),
+    ('bbq', 'bbq'),
+    ('seafood', 'seafood'),
+    ('noodles', 'noodles'),
+    ('ramen', 'ramen'),
+    ('sushi', 'sushi'),
+    ('thai', 'thai'),
+    ('korean', 'korean'),
+    ('indian', 'indian'),
+    ('mediterranean', 'mediterranean'),
+    ('italian', 'italian'),
+    ('sandwiches', 'sandwiches'),
+    ('salads', 'salads'),
+    ('dessert', 'dessert'),
+    ('bakery', 'bakery'),
+    ('coffee', 'coffee'),
+    ('breakfast', 'breakfast'),
+    ('brunch', 'brunch'),
+    ('healthy', 'healthy'),
+    ('vegetarian', 'vegetarian'),
+    ('gluten free', 'gluten-free'),
+    ('family meals', 'family-meals'),
+    ('late night', 'late-night'),
+    ('wings', 'wings'),
+    ('tacos', 'tacos'),
+    ('bubble tea', 'bubble-tea'),
+    ('smoothies', 'smoothies');
+
+INSERT INTO deals (name, code, description, expiration_date, amount) VALUES
+    ('$5 off', '5OFF', '$5 off for total order', '2026-12-31', 5.00),
+    ('$15 off', '15OFF', '$15 off for total order', '2026-12-01', 15.00),
+    ('$10 off', '10OFF', '$10 off for total order', '2026-12-01', 10.00);
+
+INSERT INTO users (role_id, name, email, password, address) VALUES
+    (2, 'Bubble Home Owner', 'bubblehome.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '123 Boba St'),
+    (2, 'Cake Paradise Owner', 'cakeparadise.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '456 Sweet Ave'),
+    (2, 'Chicken House Owner', 'chickenhouse.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '789 Fried Rd'),
+    (2, 'Curry Puff Owner', 'currypuff.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '321 Thai Ln'),
+    (2, 'Hot Grill Owner', 'hotgrill.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '654 Grill St'),
+    (2, 'Ice Cream Dream Owner', 'icecream.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '987 Cold Way'),
+    (2, 'Pasta Palace Owner', 'pastapalace.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '159 Noodle Blvd'),
+    (2, 'Pho Haven Owner', 'phohaven.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '753 Soup St'),
+    (2, 'Pizza Town Owner', 'pizzatown.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '852 Slice Ave'),
+    (2, 'Salad Station Owner', 'saladstation.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '147 Green Rd'),
+    (2, 'Steak House Owner', 'steakhouse.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '369 Beef Blvd'),
+    (2, 'Sushi World Owner', 'sushiworld.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '258 Fish St'),
+    (2, 'Taco Fiesta Owner', 'tacofiesta.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '741 Mexico Way'),
+    (2, 'Fire Chili Owner', 'firechili.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '852 Spice Rd'),
+    (2, 'Vegan Delight Owner', 'vegandelight.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '963 Plant Ave'),
+    (2, 'Smooth Sip Owner', 'smoothsip.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '123 Tea Lane');
+
+INSERT INTO restaurants (owner_id, deal_id, name, slug, address, open_hour, close_hour, delivery_fee, delivery_minutes) VALUES
+    (1, 1, 'Bubble Home', 'bubble-home', '123 Boba St, Rexburg, ID', '10:00:00', '22:00:00', 2.99, 15),
+    (2, 2, 'Cake Paradise', 'cake-paradise', '456 Sweet Ave, Rexburg, ID', '09:00:00', '21:00:00', 3.49, 20),
+    (3, NULL, 'Chicken House', 'chicken-house', '789 Fried Rd, Rexburg, ID', '11:00:00', '23:00:00', 3.99, 25),
+    (4, 3, 'Curry Puff Corner', 'curry-puff-corner', '321 Thai Ln, Rexburg, ID', '10:30:00', '21:30:00', 2.99, 15),
+    (5, NULL, 'Hot Grill', 'hot-grill', '654 Grill St, Rexburg, ID', '11:00:00', '23:00:00', 3.99, 20),
+    (6, 1, 'Ice Cream Dream', 'ice-cream-dream', '987 Cold Way, Rexburg, ID', '12:00:00', '22:00:00', 2.49, 10),
+    (7, NULL, 'Pasta Palace', 'pasta-palace', '159 Noodle Blvd, Rexburg, ID', '11:00:00', '22:00:00', 3.49, 20),
+    (8, 2, 'Pho Haven', 'pho-haven', '753 Soup St, Rexburg, ID', '10:00:00', '21:00:00', 2.99, 15),
+    (9, 3, 'Pizza Town', 'pizza-town', '852 Slice Ave, Rexburg, ID', '11:00:00', '23:00:00', 3.99, 20),
+    (10, NULL, 'Salad Station', 'salad-station', '147 Green Rd, Rexburg, ID', '09:00:00', '20:00:00', 2.49, 10),
+    (11, 1, 'Steak House', 'steak-house', '369 Beef Blvd, Rexburg, ID', '12:00:00', '22:00:00', 4.99, 25),
+    (12, 2, 'Sushi World', 'sushi-world', '258 Fish St, Rexburg, ID', '11:00:00', '22:00:00', 3.99, 20),
+    (13, 3, 'Taco Fiesta', 'taco-fiesta', '741 Mexico Way, Rexburg, ID', '11:00:00', '22:00:00', 2.99, 15),
+    (14, NULL, 'Fire Chili', 'fire-chili', '852 Spice Rd, Rexburg, ID', '11:00:00', '22:00:00', 3.49, 20),
+    (15, NULL, 'Vegan Delight', 'vegan-delight', '963 Plant Ave, Rexburg, ID', '10:00:00', '21:00:00', 2.99, 15),
+    (16, NULL, 'Smooth Sip', 'smooth-sip','123 Tea Lane, Rexburg, ID','09:00:00', '21:00:00', 2.49, 15);
+
+INSERT INTO restaurant_category (restaurant_id, category_id) VALUES
+    -- Bubble Home (bubble tea)
+    (1, 26),
+    -- Cake Paradise (dessert, bakery)
+    (2, 14),
+    (2, 15),
+    -- Chicken House (wings / chicken)
+    (3, 24),
+    -- Curry Puff Corner (thai)
+    (4, 7),
+    -- Hot Grill (bbq)
+    (5, 2),
+    -- Ice Cream Dream (dessert)
+    (6, 14),
+    -- Pasta Palace (italian)
+    (7, 11),
+    -- Pho Haven (noodles)
+    (8, 4),
+    -- Pizza Town (pizza -> closest: italian)
+    (9, 11),
+    -- Salad Station (healthy)
+    (10, 19),
+    -- Steak House (bbq)
+    (11, 2),
+    -- Sushi World
+    (12, 6),
+    -- Taco Fiesta
+    (13, 25),
+    -- Fire Chili (thai)
+    (14, 7),
+    -- Vegan Delight
+    (15, 20),
+    -- Smooth Sip (smoothies)
+    (16, 27);
+
+INSERT INTO dishes (restaurant_id, category_id, name, slug, description, price) VALUES
+
+    -- Bubble Home (Bubble Tea)
+    (1, 26, 'Classic Milk Tea', 'classic-milk-tea', 'Creamy milk tea with chewy tapioca pearls', 4.50),
+    (1, 26, 'Brown Sugar Boba', 'brown-sugar-boba', 'Sweet brown sugar milk with boba pearls', 5.00),
+    (1, 26, 'Taro Milk Tea', 'taro-milk-tea', 'Sweet taro-flavored milk tea', 4.75),
+    (1, 27, 'Mango Smoothie', 'mango-smoothie', 'Fresh mango blended smoothie', 5.25),
+    (1, 27, 'Strawberry Smoothie', 'strawberry-smoothie', 'Sweet strawberry smoothie', 5.25),
+    (1, 16, 'Iced Coffee', 'iced-coffee', 'Cold brewed iced coffee', 3.75),
+
+    -- Cake Paradise (Dessert & Bakery)
+    (2, 14, 'Chocolate Cake Slice', 'chocolate-cake-slice', 'Rich chocolate cake slice', 4.25),
+    (2, 14, 'Cheesecake', 'cheesecake', 'Creamy New York style cheesecake', 4.75),
+    (2, 15, 'Blueberry Muffin', 'blueberry-muffin', 'Fresh baked muffin with blueberries', 2.75),
+    (2, 14, 'Red Velvet Cupcake', 'red-velvet-cupcake', 'Moist red velvet cupcake', 3.25),
+    (2, 14, 'Carrot Cake Slice', 'carrot-cake-slice', 'Classic carrot cake with frosting', 4.00),
+    (2, 15, 'Cinnamon Roll', 'cinnamon-roll', 'Warm and sweet cinnamon roll', 3.50),
+
+    -- Chicken House (Wings & Chicken)
+    (3, 24, 'Buffalo Wings (6 pcs)', 'buffalo-wings-6', 'Spicy buffalo wings with dipping sauce', 6.99),
+    (3, 24, 'BBQ Wings (6 pcs)', 'bbq-wings-6', 'Sweet BBQ glazed wings', 6.99),
+    (3, 24, 'Chicken Tenders', 'chicken-tenders', 'Crispy chicken tenders with fries', 7.50),
+    (3, 1, 'Fried Chicken Combo', 'fried-chicken-combo', 'Fried chicken with fries and drink', 9.99),
+    (3, 24, 'Chicken Sandwich', 'chicken-sandwich', 'Crispy chicken sandwich with pickles', 6.75),
+    (3, 23, 'Late Night Nuggets', 'late-night-nuggets', 'Chicken nuggets for late cravings', 5.50),
+
+    -- Curry Puff Corner (Thai)
+    (4, 7, 'Chicken Curry Puff', 'chicken-curry-puff', 'Flaky pastry filled with chicken curry', 3.50),
+    (4, 7, 'Beef Curry Puff', 'beef-curry-puff', 'Savory beef-filled pastry', 3.75),
+    (4, 7, 'Thai Fried Rice', 'thai-fried-rice', 'Fried rice with Thai seasoning', 7.25),
+    (4, 7, 'Pad Thai', 'pad-thai', 'Stir-fried noodles with peanuts', 8.50),
+    (4, 7, 'Thai Tea', 'thai-tea', 'Sweet and creamy Thai iced tea', 3.25),
+    (4, 7, 'Spring Rolls', 'spring-rolls', 'Crispy vegetable spring rolls', 4.00),
+
+    -- Hot Grill (BBQ)
+    (5, 2, 'BBQ Ribs', 'bbq-ribs', 'Slow cooked BBQ ribs', 12.99),
+    (5, 2, 'Grilled Chicken Plate', 'grilled-chicken-plate', 'Grilled chicken with sides', 9.99),
+    (5, 2, 'BBQ Burger', 'bbq-burger', 'Burger with BBQ sauce and bacon', 8.75),
+    (5, 2, 'Grilled Steak', 'grilled-steak', 'Juicy grilled steak', 14.50),
+    (5, 2, 'Corn on the Cob', 'corn-on-cob', 'Buttery grilled corn', 2.50),
+    (5, 2, 'BBQ Fries', 'bbq-fries', 'Fries topped with BBQ seasoning', 3.50),
+
+    -- Ice Cream Dream (Dessert)
+    (6, 14, 'Vanilla Ice Cream', 'vanilla-ice-cream', 'Classic vanilla scoop', 2.50),
+    (6, 14, 'Chocolate Ice Cream', 'chocolate-ice-cream', 'Rich chocolate scoop', 2.50),
+    (6, 14, 'Strawberry Ice Cream', 'strawberry-ice-cream', 'Sweet strawberry scoop', 2.50),
+    (6, 14, 'Ice Cream Sundae', 'ice-cream-sundae', 'Sundae with toppings', 4.75),
+    (6, 14, 'Milkshake', 'milkshake', 'Thick and creamy milkshake', 4.25),
+    (6, 14, 'Ice Cream Cone', 'ice-cream-cone', 'Classic cone with scoop', 2.25),
+
+    -- Pasta Palace (Italian)
+    (7, 11, 'Spaghetti Bolognese', 'spaghetti-bolognese', 'Pasta with meat sauce', 9.50),
+    (7, 11, 'Fettuccine Alfredo', 'fettuccine-alfredo', 'Creamy Alfredo pasta', 9.75),
+    (7, 11, 'Chicken Parmesan', 'chicken-parmesan', 'Breaded chicken with cheese', 11.00),
+    (7, 11, 'Garlic Bread', 'garlic-bread', 'Toasted garlic bread', 3.00),
+    (7, 11, 'Penne Marinara', 'penne-marinara', 'Pasta with marinara sauce', 8.50),
+    (7, 11, 'Meatball Pasta', 'meatball-pasta', 'Pasta with homemade meatballs', 10.25),
+
+    -- Pho Haven (Noodles)
+    (8, 4, 'Beef Pho', 'beef-pho', 'Vietnamese noodle soup with beef', 9.50),
+    (8, 4, 'Chicken Pho', 'chicken-pho', 'Vietnamese noodle soup with chicken', 9.00),
+    (8, 4, 'Spring Rolls', 'pho-spring-rolls', 'Fresh vegetable spring rolls', 4.50),
+    (8, 4, 'Banh Mi Sandwich', 'banh-mi', 'Vietnamese sandwich with pork', 6.75),
+    (8, 4, 'Vietnamese Coffee', 'viet-coffee', 'Strong iced coffee with condensed milk', 3.75),
+    (8, 4, 'Rice Bowl', 'rice-bowl', 'Rice bowl with choice of protein', 7.50),
+
+    -- Pizza Town (Pizza)
+    (9, 11, 'Margherita Pizza', 'margherita-pizza', 'Classic pizza with cheese and basil', 9.50),
+    (9, 11, 'Pepperoni Pizza', 'pepperoni-pizza', 'Pizza topped with pepperoni', 10.50),
+    (9, 11, 'BBQ Chicken Pizza', 'bbq-chicken-pizza', 'Pizza with BBQ chicken topping', 11.00),
+    (9, 11, 'Cheese Pizza', 'cheese-pizza', 'Classic cheese pizza', 8.50),
+    (9, 11, 'Garlic Knots', 'garlic-knots', 'Soft garlic knots with dipping sauce', 4.00),
+    (9, 23, 'Late Night Pizza Slice', 'late-night-slice', 'Single slice for late cravings', 3.00),
+
+    -- Salad Station (Healthy)
+    (10, 19, 'Caesar Salad', 'caesar-salad', 'Fresh romaine with Caesar dressing', 6.75),
+    (10, 19, 'Greek Salad', 'greek-salad', 'Salad with feta and olives', 7.00),
+    (10, 19, 'Chicken Salad', 'chicken-salad', 'Salad with grilled chicken', 7.50),
+    (10, 19, 'Avocado Salad', 'avocado-salad', 'Healthy salad with avocado', 7.25),
+    (10, 19, 'Quinoa Bowl', 'quinoa-bowl', 'Quinoa with veggies and dressing', 8.00),
+    (10, 19, 'Smoothie Bowl', 'smoothie-bowl', 'Fruit and granola smoothie bowl', 6.50),
+
+    -- Steak House (BBQ)
+    (11, 2, 'Ribeye Steak', 'ribeye-steak', 'Juicy ribeye steak', 15.99),
+    (11, 2, 'Grilled Sirloin', 'sirloin-steak', 'Grilled sirloin steak', 13.99),
+    (11, 2, 'Steak Fries', 'steak-fries', 'Fries with seasoning', 3.50),
+    (11, 2, 'BBQ Ribs', 'steak-bbq-ribs', 'Slow cooked BBQ ribs', 12.99),
+    (11, 2, 'Mashed Potatoes', 'mashed-potatoes', 'Creamy mashed potatoes', 3.00),
+    (11, 2, 'Grilled Veggies', 'grilled-veggies', 'Seasoned grilled vegetables', 3.75),
+
+    -- Sushi World
+    (12, 6, 'California Roll', 'california-roll', 'Sushi roll with crab and avocado', 6.50),
+    (12, 6, 'Spicy Tuna Roll', 'spicy-tuna-roll', 'Tuna roll with spicy mayo', 7.25),
+    (12, 6, 'Salmon Nigiri', 'salmon-nigiri', 'Rice topped with salmon', 5.75),
+    (12, 6, 'Shrimp Tempura', 'shrimp-tempura', 'Crispy tempura shrimp', 7.50),
+    (12, 6, 'Miso Soup', 'miso-soup', 'Traditional Japanese soup', 3.00),
+    (12, 6, 'Edamame', 'edamame', 'Steamed soybeans with salt', 3.50),
+
+    -- Taco Fiesta
+    (13, 25, 'Beef Tacos (3)', 'beef-tacos', 'Three soft beef tacos', 7.50),
+    (13, 25, 'Chicken Tacos (3)', 'chicken-tacos', 'Three soft chicken tacos', 7.25),
+    (13, 25, 'Burrito', 'burrito', 'Large burrito with rice and beans', 8.50),
+    (13, 25, 'Quesadilla', 'quesadilla', 'Cheesy folded tortilla', 6.75),
+    (13, 25, 'Churros', 'churros', 'Sweet fried dough with cinnamon', 3.50),
+    (13, 25, 'Mexican Rice', 'mexican-rice', 'Seasoned Mexican rice', 2.50),
+
+    -- Fire Chili (Thai)
+    (14, 7, 'Thai Basil Chicken', 'thai-basil-chicken', 'Stir-fried chicken with basil', 8.75),
+    (14, 7, 'Green Curry', 'green-curry', 'Spicy coconut curry with rice', 9.00),
+    (14, 7, 'Pad See Ew', 'pad-see-ew', 'Stir-fried noodles with soy sauce', 8.50),
+    (14, 7, 'Spring Rolls', 'thai-spring-rolls', 'Crispy vegetable rolls', 4.00),
+    (14, 7, 'Thai Tea', 'thai-tea-fire', 'Sweet Thai iced tea', 3.25),
+    (14, 7, 'Fried Rice', 'thai-fried-rice-fire', 'Thai style fried rice', 7.50),
+
+    -- Vegan Delight
+    (15, 20, 'Vegan Burger', 'vegan-burger', 'Plant-based burger with veggies', 7.50),
+    (15, 19, 'Quinoa Salad', 'quinoa-salad', 'Healthy quinoa with veggies', 7.00),
+    (15, 20, 'Vegan Wrap', 'vegan-wrap', 'Plant-based wrap', 6.75),
+    (15, 19, 'Smoothie Bowl', 'smoothie-bowl-vegan', 'Fruit bowl with granola', 6.50),
+    (15, 20, 'Tofu Stir Fry', 'tofu-stir-fry', 'Stir-fried tofu and veggies', 7.75),
+    (15, 19, 'Green Smoothie', 'green-smoothie', 'Healthy spinach smoothie', 4.50),
+
+    -- Smooth Sip (Drinks)
+    (16, 27, 'Mango Smoothie', 'mango-smoothie-smooth', 'Fresh mango smoothie', 5.25),
+    (16, 27, 'Strawberry Smoothie', 'strawberry-smoothie-smooth', 'Sweet strawberry smoothie', 5.25),
+    (16, 26, 'Classic Boba Tea', 'classic-boba', 'Milk tea with tapioca pearls', 4.75),
+    (16, 26, 'Matcha Latte', 'matcha-latte', 'Creamy green tea latte', 4.50),
+    (16, 16, 'Iced Coffee', 'iced-coffee-smooth', 'Cold brewed iced coffee', 3.75),
+    (16, 27, 'Peach Smoothie', 'peach-smoothie', 'Sweet peach blended smoothie', 5.00);
+
+INSERT INTO order_status (status) VALUES
+    ('confirmed'),
+    ('preparing'),
+    ('shipped'),
+    ('delivered');
 
 COMMIT;
