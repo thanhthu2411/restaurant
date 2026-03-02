@@ -84,38 +84,44 @@
           </a>
         </li>
       </ul>
-    </div> -->
-
-    <!-- <div class="deal-res-container">
+    </div>  -->
+    <div class="deal-res-container">
         <h1>Top Deals for You</h1>
         <ul class="res-info-list">
-            <% dealRes.forEach((res) => { %>
+            <% dealRestaurants.forEach((res) => { %>
                 <li class="res-card">
-                    <img src="/<%= res.images[0] %>" alt="restaurant photo">
+                  <a class="res-link" href="/restaurant/<%= res.slug %>">
+                    <img src="/images/restaurants/<%= res.slug %>.jpg" alt="restaurant photo">
                     <div class="res-info">
-                        <p class="discount-info"><%= res.discount.description%></p>
-                        <p class="res-name"><a href="/restaurant/<%= res.id %>"><%= res.name%></a></p>
+                        <p class="discount-info"><%= res.dealName%></p>
+                        <p class="res-name"><%= res.name%></p>
                     </div>
+
+                  </a>
                 </li>
             <% }) %>
         </ul>
-    </div> -->
-
+    </div>
+    
     <div class="near-res-container">
         <h1>Top Restaurants Near You</h1>
         <ul class="res-info-list">
-            <% nearRes.forEach((res) => { %>
+            <% nearRestaurants.forEach((res) => { %>
+
+                <% const currentTime = new Date().toLocaleTimeString().slice(0,8);
+                    const isOpen = (currentTime >= res.closeHour && currentTime >= res.openHour) ? 'Open' : 'Closed';
+                %>
                 <li class="res-card">
-                    <img src="/<%= res.images[0] %>" alt="restaurant photo">
+                  <a class="res-link" href="/restaurant/<%= res.slug %>">
+                    <img src="/images/restaurants/<%= res.slug %>.jpg" alt="restaurant photo">
                     <div class="res-info">
-                        <p class="res-name"><a href="/restaurant/<%= res.id %>"><%= res.name%></a></p>
+                        <p class="res-name"><%= res.name%></p>
                         <div class="res-delivery">
-                            <span><%= res.distanceMiles%> miles</span> •
-                            <span><%= res.deliveryTimeMinutes%> mins</span> •
-                            <span><%= res.deliveryFee%> mins</span>
+                            <span>$<%= res.deliveryFee%></span> •
+                            <span><%= res.deliveryMinutes%> mins</span>
                         </div>
-                        <p class="open-status"><%= res.isOpen ? 'Open' : 'Closed' %></p>
-                        <button class="heart-btn" data-id = ${rest.id}>
+                        <p class="open-status"><%= isOpen %></p>
+                        <!-- <button class="heart-btn" data-id = ${rest.id}>
                             <svg
                             class="heart"
                             viewBox="0 0 24 24"
@@ -124,28 +130,35 @@
                             >
                             <path d="M12 21s-6.7-4.35-9.33-7.35C-1.33 9.65 1.34 3 6.67 3c2.35 0 4.33 1.5 5.33 3 1-1.5 2.98-3 5.33-3 5.33 0 8 6.65 4 10.65C18.7 16.65 12 21 12 21z"/>
                             </svg>
-                        </button>
+                        </button> -->
                     </div>
+                  </a>
                 </li>
             <% }) %>
         </ul>
     </div>
 
-    <div class="top-res-container">
+    <!-- top rating restaurant  -->
+     <% if(topRestaurants.length != 0) {%>
+      <div class="top-res-container">
         <h1>Top Favorite Restaurants</h1>
         <ul class="res-info-list">
-            <% nearRes.forEach((res) => { %>
+            <% topRestaurants.forEach((res) => { %>
+
+                <% const currentTime = new Date().toLocaleTimeString().slice(0,8);
+                    const isOpen = (currentTime >= res.closeHour && currentTime >= res.openHour) ? 'Open' : 'Closed';
+                %>
                 <li class="res-card">
-                    <img src="/<%= res.images[0] %>" alt="restaurant photo">
+                  <a class="res-link" href="/restaurant/<%= res.slug %>">
+                    <img src="/images/restaurants/<%= res.slug %>.jpg" alt="restaurant photo">
                     <div class="res-info">
-                        <p class="res-name"><a href="/restaurant/<%= res.id %>"><%= res.name%></a></p>
+                        <p class="res-name"><%= res.name%></p>
                         <div class="res-delivery">
-                            <span><%= res.distanceMiles%> miles</span> •
-                            <span><%= res.deliveryTimeMinutes%> mins</span> •
-                            <span><%= res.deliveryFee%> mins</span>
+                            <span>$<%= res.deliveryFee%></span> •
+                            <span><%= res.deliveryMinutes%> mins</span>
                         </div>
-                        <p class="open-status"><%= res.isOpen ? 'Open' : 'Closed' %></p>
-                        <button class="heart-btn" data-id = ${rest.id}>
+                        <p class="open-status"><%= isOpen %></p>
+                        <!-- <button class="heart-btn" data-id = ${rest.id}>
                             <svg
                             class="heart"
                             viewBox="0 0 24 24"
@@ -154,13 +167,51 @@
                             >
                             <path d="M12 21s-6.7-4.35-9.33-7.35C-1.33 9.65 1.34 3 6.67 3c2.35 0 4.33 1.5 5.33 3 1-1.5 2.98-3 5.33-3 5.33 0 8 6.65 4 10.65C18.7 16.65 12 21 12 21z"/>
                             </svg>
-                        </button>
+                        </button> -->
                     </div>
+                  </a>
                 </li>
             <% }) %>
         </ul>
     </div>
+      <% } %>
 
+      <% if (openRestaurants.length != 0) { %>
+      <div class="open-res-container">
+        <h1>Open Restaurants</h1>
+        <ul class="res-info-list">
+            <% openRestaurants.forEach((res) => { %>
+
+                <% const currentTime = new Date().toLocaleTimeString().slice(0,8);
+                    const isOpen = (currentTime >= res.closeHour && currentTime >= res.openHour) ? 'Open' : 'Closed';
+                %>
+                <li class="res-card">
+                  <a class="res-link" href="/restaurant/<%= res.slug %>">
+                    <img src="/images/restaurants/<%= res.slug %>.jpg" alt="restaurant photo">
+                    <div class="res-info">
+                        <p class="res-name"><%= res.name%></p>
+                        <div class="res-delivery">
+                            <span>$<%= res.deliveryFee%></span> •
+                            <span><%= res.deliveryMinutes%> mins</span>
+                        </div>
+                        <p class="open-status"><%= isOpen %></p>
+                        <!-- <button class="heart-btn" data-id = ${rest.id}>
+                            <svg
+                            class="heart"
+                            viewBox="0 0 24 24"
+                            width="24"
+                            height="24"
+                            >
+                            <path d="M12 21s-6.7-4.35-9.33-7.35C-1.33 9.65 1.34 3 6.67 3c2.35 0 4.33 1.5 5.33 3 1-1.5 2.98-3 5.33-3 5.33 0 8 6.65 4 10.65C18.7 16.65 12 21 12 21z"/>
+                            </svg>
+                        </button> -->
+                    </div>
+                  </a>
+                </li>
+            <% }) %>
+        </ul>
+    </div>
+    <% } %>
   </section>
 </main>
 <%- include('partials/footer')%>

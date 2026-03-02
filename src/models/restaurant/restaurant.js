@@ -1,308 +1,125 @@
-const restaurants = {
-  "rest_001": {
-    id: "rest_001",
-    name: "Hip Sip",
-    rating: { score: 4.5, count: 50 },
-    distanceMiles: 0.3,
-    deliveryTimeMinutes: "20–30",
-    deliveryFee: 1.49,
-    discount: { type: "percentage", value: 20, description: "20% off $15+" },
-    priceRange: "$$",
-    isOpen: true,
-    images: [
-      "images/dishes/hip-sip1.jpg",
-      "images/dishes/hip-sip2.jpg",
-      "images/dishes/hip-sip3.jpg",
-    ],
-    tags: ["Cafe", "Desserts", "Drinks"],
-  },
-  "rest_002": {
-    id: "rest_002",
-    name: "Burger Kingdom",
-    rating: { score: 4.2, count: 120 },
-    distanceMiles: 1.1,
-    deliveryTimeMinutes: "25–35",
-    deliveryFee: 0,
-    discount: null,
-    priceRange: "$",
-    isOpen: true,
-    images: [
-      "images/dishes/burger-kingdom1.jpg",
-      "images/dishes/burger-kingdom2.jpg",
-      "images/dishes/burger-kingdom3.jpg",
-    ],
-    tags: ["Burgers", "Fast Food"],
-  },
-  "rest_003": {
-    id: "rest_003",
-    name: "Green Bowl",
-    rating: { score: 4.8, count: 230 },
-    distanceMiles: 2.0,
-    deliveryTimeMinutes: "30–40",
-    deliveryFee: 2.99,
-    discount: { type: "flat", value: 5, description: "$5 off $25+" },
-    priceRange: "$$$",
-    isOpen: false,
-    images: [
-      "images/dishes/green-bowl1.jpg",
-      "images/dishes/green-bowl2.jpg",
-      "images/dishes/green-bowl3.jpg",
-    ],
-    tags: ["Healthy", "Salads", "Vegan"],
-  },
-  "rest_004": {
-    id: "rest_004",
-    name: "Golden Wok",
-    rating: { score: 4.4, count: 180 },
-    distanceMiles: 1.6,
-    deliveryTimeMinutes: "25–40",
-    deliveryFee: 1.99,
-    discount: null,
-    priceRange: "$$",
-    isOpen: true,
-    images: [
-      "images/dishes/golden-wok1.jpg",
-      "images/dishes/golden-wok2.jpg",
-      "images/dishes/golden-wok3.jpg",
-    ],
-    tags: ["Chinese", "Asian"],
-  },
-  "rest_005": {
-    id: "rest_005",
-    name: "Slice Haven",
-    rating: { score: 4.6, count: 310 },
-    distanceMiles: 0.9,
-    deliveryTimeMinutes: "20–30",
-    deliveryFee: 0.99,
-    discount: {
-      type: "percentage",
-      value: 15,
-      description: "15% off orders $20+",
-    },
-    priceRange: "$",
-    isOpen: true,
-    images: [
-      "images/dishes/slice-haven1.jpg",
-      "images/dishes/slice-haven2.jpg",
-      "images/dishes/slice-haven3.jpg",
-    ],
-    tags: ["Pizza", "Italian"],
-  },
-  "rest_006": {
-    id: "rest_006",
-    name: "Taco Fiesta",
-    rating: { score: 4.3, count: 140 },
-    distanceMiles: 1.3,
-    deliveryTimeMinutes: "20–35",
-    deliveryFee: 1.49,
-    discount: null,
-    priceRange: "$",
-    isOpen: true,
-    images: [
-      "images/dishes/taco-fiesta1.jpg",
-      "images/dishes/taco-fiesta2.jpg",
-      "images/dishes/taco-fiesta3.jpg",
-    ],
-    tags: ["Mexican", "Tacos"],
-  },
-  "rest_007": {
-    id: "rest_007",
-    name: "Seoul Street",
-    rating: { score: 4.7, count: 95 },
-    distanceMiles: 2.5,
-    deliveryTimeMinutes: "30–45",
-    deliveryFee: 2.49,
-    discount: { type: "flat", value: 4, description: "$4 off $30+" },
-    priceRange: "$$",
-    isOpen: true,
-    images: [
-      "images/dishes/seoul-street1.jpg",
-      "images/dishes/seoul-street2.jpg",
-      "images/dishes/seoul-street3.jpg",
-    ],
-    tags: ["Korean", "BBQ"],
-  },
-  "rest_008": {
-    id: "rest_008",
-    name: "Pho Corner",
-    rating: { score: 4.9, count: 420 },
-    distanceMiles: 1.8,
-    deliveryTimeMinutes: "25–40",
-    deliveryFee: 1.99,
-    discount: null,
-    priceRange: "$$",
-    isOpen: true,
-    images: [
-      "images/dishes/pho-corner1.jpg",
-      "images/dishes/pho-corner2.jpg",
-      "images/dishes/pho-corner3.jpg",
-    ],
-    tags: ["Vietnamese", "Noodles"],
-  },
-  "rest_009": {
-    id: "rest_009",
-    name: "Curry Leaf",
-    rating: { score: 4.1, count: 60 },
-    distanceMiles: 3.0,
-    deliveryTimeMinutes: "35–50",
-    deliveryFee: 3.49,
-    discount: null,
-    priceRange: "$$",
-    isOpen: true,
-    images: [
-      "images/dishes/curry-leaf1.jpg",
-      "images/dishes/curry-leaf2.jpg",
-      "images/dishes/curry-leaf3.jpg",
-    ],
-    tags: ["Indian", "Curry"],
-  },
-  "rest_010": {
-    id: "rest_010",
-    name: "Sushi Go",
-    rating: { score: 4.6, count: 275 },
-    distanceMiles: 2.2,
-    deliveryTimeMinutes: "30–45",
-    deliveryFee: 2.99,
-    discount: { type: "percentage", value: 10, description: "10% off $25+" },
-    priceRange: "$$$",
-    isOpen: true,
-    images: [
-      "images/dishes/sushi-go1.jpg",
-      "images/dishes/sushi-go2.jpg",
-      "images/dishes/sushi-go3.jpg",
-    ],
-    tags: ["Japanese", "Sushi"],
-  },
-  "rest_011": {
-    id: "rest_011",
-    name: "Morning Brew",
-    rating: { score: 4.4, count: 88 },
-    distanceMiles: 0.5,
-    deliveryTimeMinutes: "15–25",
-    deliveryFee: 0,
-    discount: null,
-    priceRange: "$",
-    isOpen: true,
-    images: [
-      "images/dishes/morning-brew1.jpg",
-      "images/dishes/morning-brew2.jpg",
-      "images/dishes/morning-brew3.jpg",
-    ],
-    tags: ["Coffee", "Breakfast"],
-  },
-  "rest_012": {
-    id: "rest_012",
-    name: "Fire Grill",
-    rating: { score: 4.0, count: 70 },
-    distanceMiles: 3.4,
-    deliveryTimeMinutes: "35–50",
-    deliveryFee: 3.99,
-    discount: null,
-    priceRange: "$$",
-    isOpen: false,
-    images: [
-      "images/dishes/fire-grill1.jpg",
-      "images/dishes/fire-grill2.jpg",
-      "images/dishes/fire-grill3.jpg",
-    ],
-    tags: ["American", "Grill"],
-  },
-  "rest_013": {
-    id: "rest_013",
-    name: "Sweet Cravings",
-    rating: { score: 4.8, count: 155 },
-    distanceMiles: 1.0,
-    deliveryTimeMinutes: "20–30",
-    deliveryFee: 1.29,
-    discount: { type: "flat", value: 3, description: "$3 off desserts" },
-    priceRange: "$",
-    isOpen: true,
-    images: [
-      "images/dishes/sweet-cravings1.jpg",
-      "images/dishes/sweet-cravings2.jpg",
-      "images/dishes/sweet-cravings3.jpg",
-    ],
-    tags: ["Desserts", "Bakery"],
-  },
-  "rest_014": {
-    id: "rest_014",
-    name: "Mediterraneo",
-    rating: { score: 4.5, count: 110 },
-    distanceMiles: 2.7,
-    deliveryTimeMinutes: "30–45",
-    deliveryFee: 2.49,
-    discount: null,
-    priceRange: "$$",
-    isOpen: true,
-    images: [
-      "images/dishes/mediterraneo1.jpg",
-      "images/dishes/mediterraneo2.jpg",
-      "images/dishes/mediterraneo3.jpg",
-    ],
-    tags: ["Mediterranean", "Healthy"],
-  },
-  "rest_015": {
-    id: "rest_015",
-    name: "Wing Stopper",
-    rating: { score: 4.1, count: 205 },
-    distanceMiles: 1.4,
-    deliveryTimeMinutes: "25–35",
-    deliveryFee: 0.99,
-    discount: { type: "percentage", value: 10, description: "10% off wings" },
-    priceRange: "$",
-    isOpen: true,
-    images: [
-      "images/dishes/wing-stopper1.jpg",
-      "images/dishes/wing-stopper2.jpg",
-      "images/dishes/wing-stopper3.jpg",
-    ],
-    tags: ["Wings", "Fast Food", "Chicken"],
-  },
+import db from "../db.js";
+
+
+const getNearRestaurant = async () => {
+    const query = `SELECT * FROM restaurants 
+            WHERE delivery_minutes <= 15
+            ORDER BY delivery_minutes`;
+    const result = await db.query(query);
+
+    return result.rows.map(r => ({
+        id: r.id,
+        ownerId: r.owner_id,
+        dealId: r.deal_id,
+        name: r.name,
+        slug: r.slug,
+        address: r.address,
+        openHour: r.open_hour,
+        closeHour: r.close_hour,
+        deliveryFee: r.delivery_fee,
+        deliveryMinutes: r.delivery_minutes,
+        createdAt: r.created_at
+    }));
+
+}
+
+const getDealRestaurant = async () => {
+    const query = `SELECT r.id, r.owner_id, r.deal_id, r.name as restaurant_name, r.slug as restaurant_slug, r.address, r.open_hour, r.close_hour,
+                    r.delivery_fee, r.delivery_minutes, d.name as deal_name, d.code as deal_code, d.description as deal_description, d.expiration_date as expiration_date, d.amount as deal_amount FROM deals d 
+        JOIN restaurants r ON d.id = r.deal_id
+        WHERE r.deal_id IS NOT NULL`
+
+    const result = await db.query(query);
+    return result.rows.map(r => ({
+        id: r.id,
+        ownerId: r.owner_id,
+        dealId: r.deal_id,
+        name: r.restaurant_name,
+        slug: r.restaurant_slug,
+        address: r.address,
+        openHour: r.open_hour,
+        closeHour: r.close_hour,
+        deliveryFee: r.delivery_fee,
+        deliveryMinutes: r.delivery_minutes,
+        dealName: r.deal_name,
+        dealCode: r.deal_code,
+        dealDescription: r.deal_description,
+        expirationDate: r.expiration_date,
+        dealAmount: r.deal_amount
+    }));
+}
+
+const getTopRestaurant = async () => {
+    const query = `
+        SELECT r.id,r.owner_id, r.deal_id, r.name AS restaurant_name,r.slug AS restaurant_slug, r.address,
+            r.open_hour, r.close_hour, r.delivery_fee, r.delivery_minutes, AVG(re.rating) AS average_rating
+        FROM restaurants r
+        JOIN review re ON re.restaurant_id = r.id
+        GROUP BY 
+            r.id, r.owner_id, r.deal_id, r.name, r.slug, r.address, r.open_hour,
+            r.close_hour, r.delivery_fee, r.delivery_minutes
+        HAVING AVG(re.rating) >= 4.5
+        ORDER BY average_rating DESC
+    `;
+
+    const result = await db.query(query);
+
+    return result.rows.map(r => ({
+        id: r.id,
+        ownerId: r.owner_id,
+        dealId: r.deal_id,
+        name: r.restaurant_name,
+        slug: r.restaurant_slug,
+        address: r.address,
+        openHour: r.open_hour,
+        closeHour: r.close_hour,
+        deliveryFee: r.delivery_fee,
+        deliveryMinutes: r.delivery_minutes,
+        averageRating: r.average_rating
+    }));
 };
 
-const getAllRestaurant = () => {
-    return restaurants;
+const getRestaurantBySlug = async (restaurantSlug) => {
+    const query = `SELECT * FROM restaurants
+        WHERE slug = $1`;
+    const result = await db.query(query, [restaurantSlug]);
+    return result.rows.map(r => ({
+        id: r.id,
+        ownerId: r.owner_id,
+        dealId: r.deal_id,
+        name: r.name,
+        slug: r.slug,
+        address: r.address,
+        openHour: r.open_hour,
+        closeHour: r.close_hour,
+        deliveryFee: r.delivery_fee,
+        deliveryMinutes: r.delivery_minutes,
+        createdAt: r.created_at
+    }));
 }
 
-const getTopRestaurant = () => {
-    const topRestaurantArray = [];
+const getOpenRestaurant = async () => {
 
-    Object.values(restaurants).forEach((res) => {
-        if (res.rating.score >= 4.5) {
-            topRestaurantArray.push(res);
-        }
-    })
+    const query = `SELECT * FROM restaurants
+        WHERE CURRENT_TIME BETWEEN open_hour AND close_hour`;
+    
+    const result = await db.query(query);
+    return result.rows.map(r => ({
+        id: r.id,
+        ownerId: r.owner_id,
+        dealId: r.deal_id,
+        name: r.name,
+        slug: r.slug,
+        address: r.address,
+        openHour: r.open_hour,
+        closeHour: r.close_hour,
+        deliveryFee: r.delivery_fee,
+        deliveryMinutes: r.delivery_minutes,
+        createdAt: r.created_at
+    }));
+};
 
-    return topRestaurantArray;
-}
-
-const getNearRestaurant = () => {
-    const nearRestaurantArray = [];
-    Object.values(restaurants).forEach((res) => {
-        if(res.distanceMiles <= 2.0) {
-            nearRestaurantArray.push(res);
-        }
-    })
-
-    return nearRestaurantArray;
-}
-
-const getDealRestaurant = () => {
-    const dealRestaurantArray = [];
-    Object.values(restaurants).forEach((res) => {
-        if (res.discount) {
-            dealRestaurantArray.push(res);
-        }
-    })
-
-    return dealRestaurantArray;
-}
-
-const getRestaurantById = (resId) => {
-  return restaurants[resId] || null;
-}
-
-export {getAllRestaurant, getDealRestaurant, getNearRestaurant, getTopRestaurant, getRestaurantById};
+export {getNearRestaurant, getDealRestaurant, getRestaurantBySlug, getTopRestaurant, getOpenRestaurant};
 
 
 

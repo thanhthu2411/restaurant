@@ -58,6 +58,7 @@
 }
 
 /* deal, near, top restaurant  */
+.open-res-container,
 .deal-res-container,
 .near-res-container,
 .top-res-container {
@@ -75,24 +76,27 @@
       width: 380px;
       flex-shrink: 0;
 
-      img {
-        width: 100%;
-        height: 180px;
-        object-fit: cover;
-        border-radius: 20px;
-      }
+      .res-link {
+        color: black;
+        text-decoration: none;
 
-      .res-info {
-        margin-left: 8px;
-
-        p {
-          margin: 0;
-          margin-top: 0.5rem;
+        img {
+          width: 100%;
+          height: 180px;
+          object-fit: cover;
+          border-radius: 20px;
         }
 
-        .res-name {
-          font-weight: 700;
-          a {
+        .res-info {
+          margin-left: 8px;
+
+          p {
+            margin: 0;
+            margin-top: 0.5rem;
+          }
+
+          .res-name {
+            font-weight: bold;
             color: black;
             text-decoration: none;
           }
@@ -103,11 +107,25 @@
 }
 
 .deal-res-container {
-  .discount-info {
-    color: red;
+  .res-info-list {
+    .res-card {
+      width: 230px;
+
+      .res-link {
+        img {
+          height: 220px;
+        }
+
+        .discount-info {
+          color: red;
+          font-weight: bold;
+        }
+      }
+    }
   }
 }
 
+.open-res-container,
 .near-res-container,
 .top-res-container {
   .res-info {
@@ -118,7 +136,7 @@
     }
 
     .open-status {
-        color: red;
+      color: red;
     }
 
     .heart-btn {

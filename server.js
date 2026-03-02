@@ -6,6 +6,8 @@ import path from "path";
 import router from "./src/controllers/routes.js";
 import {addLocalVariables} from "./src/middleware/global.js"
 
+import { setupDatabase, testConnection } from "./src/models/setup.js";
+
 //import session, flash, databaseSetup, databaseConnection
 
 /**
@@ -107,9 +109,9 @@ if (NODE_ENV.includes('dev')) {
 }
 
 // START the server and listen on the specified port
-app.listen(PORT, () => {
+app.listen(PORT, async () => {
     //SET UP DATABASE
-
-    
+    await setupDatabase();
+    await testConnection();
     console.log(`Server is running on http://127.0.0.1:${PORT}`)
 })

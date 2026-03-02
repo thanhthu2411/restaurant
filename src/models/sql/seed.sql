@@ -7,13 +7,15 @@ DROP TABLE IF EXISTS review CASCADE;
 DROP TABLE IF EXISTS cart_dish CASCADE;
 DROP TABLE IF EXISTS order_dish CASCADE;
 DROP TABLE IF EXISTS cart CASCADE;
-DROP TABLE IF EXISTS order CASCADE;
+DROP TABLE IF EXISTS orders CASCADE;
 DROP TABLE IF EXISTS dishes CASCADE;
+DROP TABLE IF EXISTS restaurant_category CASCADE;
 DROP TABLE IF EXISTS restaurants CASCADE;
 DROP TABLE IF EXISTS users CASCADE;
 DROP TABLE IF EXISTS deals CASCADE;
 DROP TABLE IF EXISTS order_status CASCADE;
 DROP TABLE IF EXISTS categories CASCADE;
+DROP TABLE IF EXISTS order_status CASCADE;
 DROP TABLE IF EXISTS roles CASCADE;
 
 CREATE TABLE roles (
@@ -38,7 +40,7 @@ CREATE TABLE users (
     password VARCHAR(255) NOT NULL,
     address TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
 );
 
@@ -49,13 +51,12 @@ CREATE TABLE deals (
     description TEXT,
     expiration_date TIMESTAMP,
     amount DECIMAL DEFAULT 0,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE restaurants (
     id SERIAL PRIMARY KEY,
     owner_id INTEGER REFERENCES users(id),
-     category_id INTEGER REFERENCES categories(id),
     deal_id INTEGER REFERENCES deals(id),
     name VARCHAR(255) NOT NULL,
     slug VARCHAR(255) UNIQUE NOT NULL,
@@ -64,7 +65,7 @@ CREATE TABLE restaurants (
     close_hour TIME DEFAULT '22:00:00',
     delivery_fee DECIMAL DEFAULT 3.99,
     delivery_minutes INTEGER DEFAULT 15,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE restaurant_category (
@@ -78,18 +79,18 @@ CREATE TABLE dishes (
     id SERIAL PRIMARY KEY,
     restaurant_id INTEGER REFERENCES restaurants(id),
     category_id INTEGER REFERENCES categories(id),
-    name VARCHAR(200) UNIQUE NOT NULL,
+    name VARCHAR(200) NOT NULL,
     slug VARCHAR(255) UNIQUE NOT NULL,
     description TEXT,
     price DECIMAL NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
 );
 
 CREATE TABLE order_status (
     id SERIAL PRIMARY KEY,
     status VARCHAR(20) CHECK (status IN ('confirmed', 'preparing', 'delivered', 'shipped')),
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
 );
 
@@ -104,7 +105,7 @@ CREATE TABLE orders (
     delivery_fee DECIMAL DEFAULT 3.99,
     delivery_minutes INTEGER DEFAULT 15,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE order_dish (
@@ -118,7 +119,7 @@ CREATE TABLE order_dish (
 CREATE TABLE cart (
     id SERIAL PRIMARY KEY,
     user_id INTEGER REFERENCES users(id),
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE cart_dish (
@@ -133,7 +134,7 @@ CREATE TABLE review (
     user_id INTEGER REFERENCES users(id),
     rating INTEGER CHECK (rating < 6 AND rating > 0),
     content TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
 );
 
