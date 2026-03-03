@@ -7,7 +7,7 @@ const getDishByRestaurantSlug = async (resSlug) => {
         WHERE r.slug = $1`;
     
     const result = await db.query(query, [resSlug]);
-    console.log(result.rows);
+    // console.log(result.rows);
     return result.rows.map(d => ({
         id: d.id,
         restaurantId: d.restaurant_id,

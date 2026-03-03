@@ -40,7 +40,7 @@
           %>
         <div class="basic-info">
           <% if (restaurant.averageRating) { %>
-            <p><%= restaurant.averageRating %></p>
+            <p><%= Number(restaurant.averageRating).toFixed(1) %>&#11088;</p>
           <%} else {%>
             <p>No Rating</p>
           <%  } %>
@@ -150,10 +150,10 @@
         <h1>Ratings & Review</h1>
         <button class="add-review-btn">Add Review</button>
 
-        <% if (restaurant.averageRating) { %>
+        <% if (reviews[0].id ) { %>
           <div class="rating-review-container">
             <div class="rating-container">
-              <h2><%= restaurant.averageRating %></h2>
+              <h2><%= Number(restaurant.averageRating).toFixed(1) %></h2>
 
               <% if (restaurant.averageRating < 2) { %>
                 <span>★☆☆☆☆</span>
@@ -165,24 +165,29 @@
                 <span>★★★★☆</span>
               <% } else { %>
                 <span>★★★★★</span>
-        <% } %>
+              <% } %>
               
-              <p>190+ Ratings</p>
+              <p><%= reviews.length %></p>
             </div>
             <div class="review-container">
-              <div class="review-card">
-                <p class="review">
-                  First time trying it and I gotta say: the kats...
-                </p>
-                <span class="review-date">★★★★☆ &#9679; 11/26/2026</span>
+              <% reviews.forEach((review) => { %>
+                <div class="review-card">
+                <p class="review"><%= review.content %></p>
+                <span class="review-date">
+                  <% if (review.rating < 2) { %>
+                    <span>★☆☆☆☆</span>
+                  <% } else if (review.rating < 3) { %>
+                    <span>★★☆☆☆</span>
+                  <% } else if (review.rating < 4) { %>
+                    <span>★★★☆☆</span>
+                  <% } else if (review.rating < 5) { %>
+                    <span>★★★★☆</span>
+                  <% } else { %>
+                    <span>★★★★★</span>
+                  <% } %>
+                  &#9679; <%= review.createdAt %></span>
               </div>
-              <div class="review-card">
-                <p class="review">
-                  First time trying it and I gotta say: the katsu fried chicken in
-                  the cupbop was...
-                </p>
-                <span class="review-date">★★★★☆ &#9679; 11/26/2026</span>
-              </div>
+              <% }) %>
             </div>
         </div>
           <%} else {%>

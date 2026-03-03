@@ -1,56 +1,54 @@
 import db from "../db.js";
 
-
 const getNearRestaurant = async () => {
-    const query = `SELECT * FROM restaurants 
+  const query = `SELECT * FROM restaurants 
             WHERE delivery_minutes <= 15
             ORDER BY delivery_minutes`;
-    const result = await db.query(query);
+  const result = await db.query(query);
 
-    return result.rows.map(r => ({
-        id: r.id,
-        ownerId: r.owner_id,
-        dealId: r.deal_id,
-        name: r.name,
-        slug: r.slug,
-        address: r.address,
-        openHour: r.open_hour,
-        closeHour: r.close_hour,
-        deliveryFee: r.delivery_fee,
-        deliveryMinutes: r.delivery_minutes,
-        createdAt: r.created_at
-    }));
-
-}
+  return result.rows.map((r) => ({
+    id: r.id,
+    ownerId: r.owner_id,
+    dealId: r.deal_id,
+    name: r.name,
+    slug: r.slug,
+    address: r.address,
+    openHour: r.open_hour,
+    closeHour: r.close_hour,
+    deliveryFee: r.delivery_fee,
+    deliveryMinutes: r.delivery_minutes,
+    createdAt: r.created_at,
+  }));
+};
 
 const getDealRestaurant = async () => {
-    const query = `SELECT r.id, r.owner_id, r.deal_id, r.name as restaurant_name, r.slug as restaurant_slug, r.address, r.open_hour, r.close_hour,
+  const query = `SELECT r.id, r.owner_id, r.deal_id, r.name as restaurant_name, r.slug as restaurant_slug, r.address, r.open_hour, r.close_hour,
                     r.delivery_fee, r.delivery_minutes, d.name as deal_name, d.code as deal_code, d.description as deal_description, d.expiration_date as expiration_date, d.amount as deal_amount FROM deals d 
         JOIN restaurants r ON d.id = r.deal_id
-        WHERE r.deal_id IS NOT NULL`
+        WHERE r.deal_id IS NOT NULL`;
 
-    const result = await db.query(query);
-    return result.rows.map(r => ({
-        id: r.id,
-        ownerId: r.owner_id,
-        dealId: r.deal_id,
-        name: r.restaurant_name,
-        slug: r.restaurant_slug,
-        address: r.address,
-        openHour: r.open_hour,
-        closeHour: r.close_hour,
-        deliveryFee: r.delivery_fee,
-        deliveryMinutes: r.delivery_minutes,
-        dealName: r.deal_name,
-        dealCode: r.deal_code,
-        dealDescription: r.deal_description,
-        expirationDate: r.expiration_date,
-        dealAmount: r.deal_amount
-    }));
-}
+  const result = await db.query(query);
+  return result.rows.map((r) => ({
+    id: r.id,
+    ownerId: r.owner_id,
+    dealId: r.deal_id,
+    name: r.restaurant_name,
+    slug: r.restaurant_slug,
+    address: r.address,
+    openHour: r.open_hour,
+    closeHour: r.close_hour,
+    deliveryFee: r.delivery_fee,
+    deliveryMinutes: r.delivery_minutes,
+    dealName: r.deal_name,
+    dealCode: r.deal_code,
+    dealDescription: r.deal_description,
+    expirationDate: r.expiration_date,
+    dealAmount: r.deal_amount,
+  }));
+};
 
 const getTopRestaurant = async () => {
-    const query = `
+  const query = `
         SELECT r.id,r.owner_id, r.deal_id, r.name AS restaurant_name,r.slug AS restaurant_slug, r.address,
             r.open_hour, r.close_hour, r.delivery_fee, r.delivery_minutes, AVG(re.rating) AS average_rating
         FROM restaurants r
@@ -62,25 +60,25 @@ const getTopRestaurant = async () => {
         ORDER BY average_rating DESC
     `;
 
-    const result = await db.query(query);
+  const result = await db.query(query);
 
-    return result.rows.map(r => ({
-        id: r.id,
-        ownerId: r.owner_id,
-        dealId: r.deal_id,
-        name: r.restaurant_name,
-        slug: r.restaurant_slug,
-        address: r.address,
-        openHour: r.open_hour,
-        closeHour: r.close_hour,
-        deliveryFee: r.delivery_fee,
-        deliveryMinutes: r.delivery_minutes,
-        averageRating: r.average_rating
-    }));
+  return result.rows.map((r) => ({
+    id: r.id,
+    ownerId: r.owner_id,
+    dealId: r.deal_id,
+    name: r.restaurant_name,
+    slug: r.restaurant_slug,
+    address: r.address,
+    openHour: r.open_hour,
+    closeHour: r.close_hour,
+    deliveryFee: r.delivery_fee,
+    deliveryMinutes: r.delivery_minutes,
+    averageRating: r.average_rating,
+  }));
 };
 
 const getRestaurantBySlug = async (restaurantSlug) => {
-    const query = `SELECT r.id, r.owner_id, r.deal_id, r.name AS restaurant_name,r.slug AS restaurant_slug, r.address,
+  const query = `SELECT r.id, r.owner_id, r.deal_id, r.name AS restaurant_name,r.slug AS restaurant_slug, r.address,
             r.open_hour, r.close_hour, r.delivery_fee, r.delivery_minutes, AVG(re.rating) AS average_rating,
             d.name as deal_name, d.code as deal_code, d.description as deal_description, d.expiration_date as expiration_date, d.amount as deal_amount 
         FROM restaurants r
@@ -92,53 +90,75 @@ const getRestaurantBySlug = async (restaurantSlug) => {
             r.close_hour, r.delivery_fee, r.delivery_minutes,
             d.name, d.code, d.description, d.expiration_date, d.amount`;
 
-    const result = await db.query(query, [restaurantSlug]);
-    const r = result.rows[0];
+  const result = await db.query(query, [restaurantSlug]);
+  const r = result.rows[0];
 
-    return {
-        id: r.id,
-        ownerId: r.owner_id,
-        dealId: r.deal_id,
-        name: r.restaurant_name,
-        slug: r.restaurant_slug,
-        address: r.address,
-        openHour: r.open_hour,
-        closeHour: r.close_hour,
-        deliveryFee: r.delivery_fee,
-        deliveryMinutes: r.delivery_minutes,
-        averageRating: r.average_rating,
-        dealName: r.deal_name,
-        dealCode: r.deal_code,
-        dealDescription: r.deal_description,
-        expirationDate: r.expiration_date,
-        dealAmount: r.deal_amount
-    };
-}
-
-const getOpenRestaurant = async () => {
-
-    const query = `SELECT *
-        FROM restaurants
-        WHERE CURRENT_TIME BETWEEN open_hour AND close_hour`;
-    
-    const result = await db.query(query);
-
-    return result.rows.map(r => ({
-        id: r.id,
-        ownerId: r.owner_id,
-        dealId: r.deal_id,
-        name: r.name,
-        slug: r.slug,
-        address: r.address,
-        openHour: r.open_hour,
-        closeHour: r.close_hour,
-        deliveryFee: r.delivery_fee,
-        deliveryMinutes: r.delivery_minutes,
-        createdAt: r.created_at
-    }));
+  return {
+    id: r.id,
+    ownerId: r.owner_id,
+    dealId: r.deal_id,
+    name: r.restaurant_name,
+    slug: r.restaurant_slug,
+    address: r.address,
+    openHour: r.open_hour,
+    closeHour: r.close_hour,
+    deliveryFee: r.delivery_fee,
+    deliveryMinutes: r.delivery_minutes,
+    averageRating: r.average_rating,
+    dealName: r.deal_name,
+    dealCode: r.deal_code,
+    dealDescription: r.deal_description,
+    expirationDate: r.expiration_date,
+    dealAmount: r.deal_amount,
+  };
 };
 
-export {getNearRestaurant, getDealRestaurant, getRestaurantBySlug, getTopRestaurant, getOpenRestaurant};
+const getOpenRestaurant = async () => {
+  const query = `SELECT *
+        FROM restaurants
+        WHERE CURRENT_TIME BETWEEN open_hour AND close_hour`;
 
+  const result = await db.query(query);
 
+  return result.rows.map((r) => ({
+    id: r.id,
+    ownerId: r.owner_id,
+    dealId: r.deal_id,
+    name: r.name,
+    slug: r.slug,
+    address: r.address,
+    openHour: r.open_hour,
+    closeHour: r.close_hour,
+    deliveryFee: r.delivery_fee,
+    deliveryMinutes: r.delivery_minutes,
+    createdAt: r.created_at,
+  }));
+};
 
+// get rating and review for a restaurant
+const getReviewByRestaurant = async (resSlug) => {
+  const query = `SELECT r.id, r.restaurant_id, r.user_id, r.rating,
+                    r.content, r.created_at
+                FROM restaurants re LEFT JOIN review r
+                    ON r.restaurant_id = re.id
+                WHERE re.slug = $1;`;
+  const result = await db.query(query, [resSlug]);
+    // console.log(result.rows);
+  return result.rows.map(review => ({
+    id: review.id,
+    restaurantId: review.restaurant_id,
+    userId: review.user_id,
+    rating: review.rating,
+    content: review.content,
+    createdAt: new Date(review.created_at).toISOString().slice(0,10)
+  })) 
+};
+
+export {
+  getNearRestaurant,
+  getDealRestaurant,
+  getRestaurantBySlug,
+  getTopRestaurant,
+  getOpenRestaurant,
+  getReviewByRestaurant
+};

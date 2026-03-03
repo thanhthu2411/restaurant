@@ -1,6 +1,6 @@
 //define homePage(), restaurantPage(), 
 
-import { getDealRestaurant, getNearRestaurant, getRestaurantBySlug, getTopRestaurant, getOpenRestaurant } from "../models/restaurant/restaurant.js";
+import { getDealRestaurant, getNearRestaurant, getRestaurantBySlug, getTopRestaurant, getOpenRestaurant, getReviewByRestaurant } from "../models/restaurant/restaurant.js";
 import { getDishByRestaurantSlug } from "../models/dish/dish.js";
 
 const homePage = async (req, res) => {
@@ -22,11 +22,13 @@ const restaurantDetailPage = async (req, res) => {
     const resSlug = req.params.resSlug;
     const restaurant = await getRestaurantBySlug(resSlug);
     const dishes = await getDishByRestaurantSlug(resSlug);
+    const reviews = await getReviewByRestaurant(resSlug);
 
     res.render('restaurant', {
         title: `${restaurant.name}`,
         restaurant: restaurant,
-        dishes: dishes
+        dishes: dishes,
+        reviews: reviews
     })
 }
 
