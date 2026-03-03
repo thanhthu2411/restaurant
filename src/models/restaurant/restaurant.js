@@ -80,30 +80,49 @@ const getTopRestaurant = async () => {
 };
 
 const getRestaurantBySlug = async (restaurantSlug) => {
-    const query = `SELECT * FROM restaurants
-        WHERE slug = $1`;
+    const query = `SELECT r.id, r.owner_id, r.deal_id, r.name AS restaurant_name,r.slug AS restaurant_slug, r.address,
+            r.open_hour, r.close_hour, r.delivery_fee, r.delivery_minutes, AVG(re.rating) AS average_rating,
+            d.name as deal_name, d.code as deal_code, d.description as deal_description, d.expiration_date as expiration_date, d.amount as deal_amount 
+        FROM restaurants r
+        LEFT JOIN review re ON re.restaurant_id = r.id
+        LEFT JOIN deals d ON d.id = r.deal_id
+        WHERE slug = $1
+        GROUP BY 
+            r.id, r.owner_id, r.deal_id, r.name, r.slug, r.address, r.open_hour,
+            r.close_hour, r.delivery_fee, r.delivery_minutes,
+            d.name, d.code, d.description, d.expiration_date, d.amount`;
+
     const result = await db.query(query, [restaurantSlug]);
-    return result.rows.map(r => ({
+    const r = result.rows[0];
+
+    return {
         id: r.id,
         ownerId: r.owner_id,
         dealId: r.deal_id,
-        name: r.name,
-        slug: r.slug,
+        name: r.restaurant_name,
+        slug: r.restaurant_slug,
         address: r.address,
         openHour: r.open_hour,
         closeHour: r.close_hour,
         deliveryFee: r.delivery_fee,
         deliveryMinutes: r.delivery_minutes,
-        createdAt: r.created_at
-    }));
+        averageRating: r.average_rating,
+        dealName: r.deal_name,
+        dealCode: r.deal_code,
+        dealDescription: r.deal_description,
+        expirationDate: r.expiration_date,
+        dealAmount: r.deal_amount
+    };
 }
 
 const getOpenRestaurant = async () => {
 
-    const query = `SELECT * FROM restaurants
+    const query = `SELECT *
+        FROM restaurants
         WHERE CURRENT_TIME BETWEEN open_hour AND close_hour`;
     
     const result = await db.query(query);
+
     return result.rows.map(r => ({
         id: r.id,
         ownerId: r.owner_id,

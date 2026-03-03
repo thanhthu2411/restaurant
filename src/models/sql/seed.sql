@@ -175,9 +175,9 @@ INSERT INTO categories (category_name, slug) VALUES
     ('smoothies', 'smoothies');
 
 INSERT INTO deals (name, code, description, expiration_date, amount) VALUES
-    ('$5 off', '5OFF', '$5 off for total order', '2026-12-31', 5.00),
-    ('$15 off', '15OFF', '$15 off for total order', '2026-12-01', 15.00),
-    ('$10 off', '10OFF', '$10 off for total order', '2026-12-01', 10.00);
+    ('$5 off', '5OFF', '$5 OFF for Total Order', '2026-12-31', 5.00),
+    ('$15 off', '15OFF', '$15 OFF for Total Order', '2026-12-01', 15.00),
+    ('$10 off', '10OFF', '$10 OFF for Total Order', '2026-12-01', 10.00);
 
 INSERT INTO users (role_id, name, email, password, address) VALUES
     (2, 'Bubble Home Owner', 'bubblehome.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '123 Boba St'),
@@ -276,7 +276,7 @@ INSERT INTO dishes (restaurant_id, category_id, name, slug, description, price) 
     (3, 24, 'Chicken Sandwich', 'chicken-sandwich', 'Crispy chicken sandwich with pickles', 6.75),
     (3, 23, 'Late Night Nuggets', 'late-night-nuggets', 'Chicken nuggets for late cravings', 5.50),
 
-    -- Curry Puff Corner (Thai)
+    -- Curry Puff Corner (Thai) /i'm here
     (4, 7, 'Chicken Curry Puff', 'chicken-curry-puff', 'Flaky pastry filled with chicken curry', 3.50),
     (4, 7, 'Beef Curry Puff', 'beef-curry-puff', 'Savory beef-filled pastry', 3.75),
     (4, 7, 'Thai Fried Rice', 'thai-fried-rice', 'Fried rice with Thai seasoning', 7.25),

@@ -6,23 +6,24 @@
     <div class="hero-container">
       <div class="hero-img-container">
         <img
-          src="/images/dishes/hip-sip1.jpg"
+          src="/images/restaurants/<%= restaurant.slug %>.jpg"
           class="restaurant-background"
           alt="restaurant background image"
         />
         <img
-          src="/images/restaurants/tacos.png"
+          src="/images/restaurants/<%= restaurant.slug%>-logo.png"
           class="restaurant-logo"
           alt="restaurant logo"
         />
       </div>
       <div class="header-form-container">
-        <h1>Burger King</h1>
+        <h1><%= restaurant.name %></h1>
         <form
-          action="/restaurant/rest_006?q=input"
+          action="/restaurant/<%= restaurant.slug%>"
           class="restaurant-search-form"
+          method="get"
         >
-          <input name="q" type="text" placeholder="Search" />
+          <input name="q" type="text" placeholder="Search <%= restaurant.name %>" />
           <button class="search-btn" type="submit" aria-label="submit button">
             <svg class="icon">
               <use xlink:href="/images/sprite.symbol.svg#search"></use>
@@ -31,56 +32,74 @@
         </form>
       </div>
       <div class="restaurant-info-container">
+        <%
+          const currentTime = new Date().toTimeString().slice(0, 8); // HH:MM:SS
+          const isOpen = (currentTime >= restaurant.openHour && currentTime <= restaurant.closeHour)
+              ? 'Open'
+              : 'Closed';
+          %>
         <div class="basic-info">
-          <p>rating</p>
+          <% if (restaurant.averageRating) { %>
+            <p><%= restaurant.averageRating %></p>
+          <%} else {%>
+            <p>No Rating</p>
+          <%  } %>
           <span>&#9679;</span>
-          <p>Open/close hours</p>
-          <p class="address">address</p>
+          <p><%= restaurant.openHour.slice(0,5)%> - <%= restaurant.closeHour.slice(0,5)%></p>
+          <span>&#9679;</span>
+          <p style="color: red;"><%= isOpen%></p>
+          <p class="address"><%= restaurant.address%></p>
         </div>
         <div class="delivery-info">
-          <p class="delivery-fee">delivery fee<br /><span>$1.49</span></p>
-          <p>delivery time<br /><span>17mins</span></p>
-          <!-- <p>delivery distance</p> -->
+          <p class="delivery-fee">delivery fee<br /><span>$<%= restaurant.deliveryFee%></span></p>
+          <p>delivery time<br /><span><%= restaurant.deliveryMinutes %> mins</span></p>
         </div>
       </div>
     </div>
 
     <!-- RESTAURANT MAIN SECTION  -->
     <div class="restaurant-main-container">
-      <!-- if hasDeals -->
+      
+       <% if (restaurant.dealName) {%>
       <div class="restaurant-deal-container">
         <h1>Deals and Savings</h1>
         <div class="deals-container">
           <div class="deal-card">
-            <p>Save 50% (up to $15) when you order $20 or more</p>
-            <span>Expires tomorrow by 1:00 AM</span>
+            <p><%= restaurant.dealDescription %></p>
+            <span>Expires tomorrow by <%= new Date(restaurant.expirationDate).toLocaleDateString() %></span>
+              <p class="deal-code">Code: <%= restaurant.dealCode %></p>
           </div>
         </div>
       </div>
+      <% } %>
 
       <div class="restaurant-menu-container">
         <h1>Our Menu</h1>
         <div class="menu-container">
-          <!-- forEach dishes in the restaurant  -->
-          <div
+          <!-- for each dish in restaurant  -->
+           <% dishes.forEach((dish) => { %>
+            <div
             class="dish-card"
             role="button"
-            data-name="chicken-alfredo"
-            data-description="test"
-            data-img-url="/images/dishes/burger-kingdom1.jpg"
+            data-name="<%= dish.name%>"
+            data-description="<%=dish.description%>"
+            data-img-url="/images/dishes/<%=restaurant.slug%>-<%=dish.slug%>.jpg"
           >
             <div class="dish-img-container">
-              <img class="dish-img" src="/images/dishes/burger-kingdom1.jpg" />
+              <img class="dish-img" src="/images/dishes/<%=restaurant.slug%>-<%=dish.slug%>.jpg" />
             </div>
             <div class="dish-info-container">
-              <span class="dish-name">Cheese Burger</span>
+              <span class="dish-name"><%= dish.name%></span>
               <span class="dish-description"
-                >Our classic breakfast sandwich has 18g of protein with...</span
+                ><%= dish.description.slice(0, 18)%>...</span
               >
-              <span class="price">$6.99</span>
+              <span class="price">$<%= dish.price %></span>
             </div>
             <div class="add-icon">&#43;</div>
           </div>
+
+           <% }) %>
+        
         </div>
       </div>
       <!-- expand dish info when being clicked  -->
@@ -100,60 +119,76 @@
         </div>
       </div>
 
-      <!-- if (orderHistory)  -->
+      <!-- if co order history  -->
       <div class="restaurant-history-container">
         <h1>Order Again</h1>
         <div class="menu-container">
-          <!-- forEach dishes in the restaurant  -->
-          <div
+          <!-- forEach dishes in the order history  -->
+          <!-- <div
             class="dish-card"
             role="button"
             data-name="chicken-alfredo"
             data-description="test"
-            data-img-url="/images/dishes/burger-kingdom1.jpg"
+            data-img-url="/images/dishes/restaurant.slug- dish.slug.jpg"
           >
             <div class="dish-img-container">
-              <img class="dish-img" src="/images/dishes/burger-kingdom1.jpg" />
+              <img class="dish-img" src="/images/dishes/restaurant.slugdish.slug.jpg" />
             </div>
             <div class="dish-info-container">
-              <span class="dish-name">Cheese Burger</span>
+              <span class="dish-name">dish name</span>
               <span class="dish-description"
-                >Our classic breakfast sandwich has 18g of protein with...</span
+                >dish description</span
               >
-              <span class="price">$6.99</span>
+              <span class="price">$dish price</span>
             </div>
             <div class="add-icon">&#43;</div>
-          </div>
+          </div> -->
         </div>
       </div>
 
       <div class="restaurant-rating-container">
         <h1>Ratings & Review</h1>
-        <!-- if (hasReview) -->
-
         <button class="add-review-btn">Add Review</button>
-        <div class="rating-review-container">
-          <div class="rating-container">
-            <h2>4.4</h2>
-            <span>★★★★☆</span>
-            <p>190+ Ratings</p>
-          </div>
-          <div class="review-container">
-            <div class="review-card">
-              <p class="review">
-                First time trying it and I gotta say: the kats...
-              </p>
-              <span class="review-date">★★★★☆ &#9679; 11/26/2026</span>
+
+        <% if (restaurant.averageRating) { %>
+          <div class="rating-review-container">
+            <div class="rating-container">
+              <h2><%= restaurant.averageRating %></h2>
+
+              <% if (restaurant.averageRating < 2) { %>
+                <span>★☆☆☆☆</span>
+              <% } else if (restaurant.averageRating < 3) { %>
+                <span>★★☆☆☆</span>
+              <% } else if (restaurant.averageRating < 4) { %>
+                <span>★★★☆☆</span>
+              <% } else if (restaurant.averageRating < 5) { %>
+                <span>★★★★☆</span>
+              <% } else { %>
+                <span>★★★★★</span>
+        <% } %>
+              
+              <p>190+ Ratings</p>
             </div>
-            <div class="review-card">
-              <p class="review">
-                First time trying it and I gotta say: the katsu fried chicken in
-                the cupbop was...
-              </p>
-              <span class="review-date">★★★★☆ &#9679; 11/26/2026</span>
+            <div class="review-container">
+              <div class="review-card">
+                <p class="review">
+                  First time trying it and I gotta say: the kats...
+                </p>
+                <span class="review-date">★★★★☆ &#9679; 11/26/2026</span>
+              </div>
+              <div class="review-card">
+                <p class="review">
+                  First time trying it and I gotta say: the katsu fried chicken in
+                  the cupbop was...
+                </p>
+                <span class="review-date">★★★★☆ &#9679; 11/26/2026</span>
+              </div>
             </div>
-          </div>
         </div>
+          <%} else {%>
+            <p>No Review Available</p>
+          <%  } %>
+        
       </div>
 
       <div class="review-form-container">
@@ -173,7 +208,7 @@
                 id="rating"
                 class="rating-input"
                 name="rating"
-                min="0"
+                min="1"
                 max="5"
                 step="1"
               />
@@ -190,7 +225,7 @@
               ></textarea>
             </div>
             <div class="form-btn-container">
-              <a class="cancel-review-btn" href="/restaurant/restSlug"
+              <a class="cancel-review-btn" href="/restaurant/<%=restaurant.slug%>"
                 >Cancel</a
               >
               <button type="submit" class="save-review-btn">Save</button>

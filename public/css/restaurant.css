@@ -107,10 +107,15 @@
         color: darkred;
         font-weight: bold;
       }
+
       span {
         font-size: 1rem;
         font-style: italic;
         font-weight: lighter;
+      }
+
+      .deal-code {
+        margin-top: 0.8rem;
       }
     }
   }
@@ -139,7 +144,8 @@
 
       .dish-img-container {
         .dish-img {
-          width: 95%;
+          /* width: 100%; */
+          width: 250px;
           height: 150px;
           object-fit: cover;
           border-radius: 10px;
@@ -191,7 +197,8 @@
   top: 0;
   left: 0;
   width: 100%;
-  padding: 2rem 0;
+  height: 100vh;
+  padding: 4.5rem 0;
 
   .wrapper {
     display: grid;
@@ -200,7 +207,7 @@
     margin: 0 auto;
     width: 90%;
     max-width: 600px;
-    height: 90dvh;
+    height: 80dvh;
     background-color: aliceblue;
     padding: 1rem 1rem;
 
@@ -550,6 +557,12 @@
     .menu-container {
       .dish-card {
         max-width: 360px;
+
+        .dish-img-container {
+          .dish-img {
+            width: 95%;
+          }
+        }
       }
     }
   }

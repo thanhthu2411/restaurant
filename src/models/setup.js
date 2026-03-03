@@ -23,6 +23,7 @@ const setupDatabase = async () => {
 
   if(hasData) {
     console.log('Database already seeded.');
+    return true;
   }
 
   console.log('Seeding database...');

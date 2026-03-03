@@ -1,10 +1,10 @@
 import {Router} from 'express';
-import { homePage } from './index.js';
+import { homePage, restaurantDetailPage } from './index.js';
 
 const router = Router();
 
 router.get('/', homePage);
-// router.get('/restaurant/:resId', restaurantPage);
+router.get('/restaurant/:resSlug', restaurantDetailPage);
 // router.get('')
 
 // /dish/search
