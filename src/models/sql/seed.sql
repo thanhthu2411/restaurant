@@ -393,4 +393,17 @@ INSERT INTO order_status (status) VALUES
     ('shipped'),
     ('delivered');
 
+DO $$
+DECLARE
+    user_role_id INTEGER;
+BEGIN
+    SELECT id INTO user_role_id FROM roles WHERE role_name = 'user';
+    IF user_role_id IS NOT NULL THEN
+        EXECUTE format(
+            'ALTER TABLE users ALTER COLUMN role_id SET DEFAULT %s',
+            user_role_id
+        );
+    END IF;
+END $$;
+
 COMMIT;
