@@ -11,6 +11,7 @@ const addLocalVariables = (req, res, next) => {
     res.locals.isLoggedIn = false;
     if (req.session && req.session.user) {
         res.locals.isLoggedIn = true;
+        res.locals.user = req.session.user;
     }
 
     next();

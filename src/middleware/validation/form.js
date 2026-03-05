@@ -59,7 +59,7 @@ const registrationValidation = [
 ];
 
 const loginValidation = [
-  body('emmail')
+  body('email')
     .trim()
     .isEmail()
     .normalizeEmail()

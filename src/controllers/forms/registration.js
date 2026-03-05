@@ -24,7 +24,7 @@ const processRegistrationForm = async (req, res) => {
 
   if (!errors.isEmpty()) {
     console.error("Registration errors:", errors.array());
-    res.redirect("/register");
+    return res.redirect("/register");
   }
 
   const { name, address, email, password } = req.body;
@@ -37,7 +37,7 @@ const processRegistrationForm = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await saveUser(name, address, email, hashedPassword);
+    await saveUser(name, email, hashedPassword, address);
     console.log("Register successfully");
     res.redirect("/login");
   } catch (error) {
