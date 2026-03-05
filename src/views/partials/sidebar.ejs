@@ -7,13 +7,14 @@
     </button>
   </div>
 
+  <% if (isLoggedIn) { %>
   <div class="user-profile-container">
     <div class="user-avatar">T</div>
     <div class="user-info-container">
       <p class="user-name">Thu Dong</p>
     </div>
   </div>
-
+  <% } %>
   <ul class="sidebar-list-container">
     <li>
       <a href="/">
@@ -23,6 +24,8 @@
         <span class="item-text show">Home</span>
       </a>
     </li>
+
+    <% if (isLoggedIn) { %>
     <li>
       <a href="/">
         <svg class="icon">
@@ -32,11 +35,13 @@
       </a>
     </li>
     <li>
-      <a href="/">
+      <a href="/cart/userId">
         <img class="cart-img" src="/images/cart.png" alt="cart icon" />
         <span class="item-text show">Cart</span>
       </a>
     </li>
+      <% } %>
+
     <li>
       <a href="/contact">
         <svg class="icon">
@@ -45,5 +50,15 @@
         <span class="item-text show">Contact Us</span>
       </a>
     </li>
+    <% if (isLoggedIn) { %>
+    <li>
+      <a href="/logout">
+        <svg class="icon">
+          <use xlink:href="/images/sprite.symbol.svg#logout"></use>
+        </svg>
+        <span class="item-text show">Log Out</span>
+      </a>
+    </li>
+    <%  } %>
   </ul>
 </section>

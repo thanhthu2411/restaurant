@@ -52,10 +52,26 @@ const registrationValidation = [
     .withMessage("Password must contain at least uppercase letter")
     .matches(/[!@#$%^&*()_+\-=\[\]{};':"\\|,.<>\/?]/)
     .withMessage("Password must contain at least one special character"),
-    
+
   body("passwordConfirm")
     .custom((value, { req }) => value === req.body.password)
     .withMessage("Passwords must match"),
 ];
 
-export {contactValidation, registrationValidation};
+const loginValidation = [
+  body('emmail')
+    .trim()
+    .isEmail()
+    .normalizeEmail()
+    .withMessage('Must be a valid email address')
+    .isLength({ max: 255 })
+    .withMessage("Email address is too long"),
+  
+    body('password')
+      .notEmpty()
+      .withMessage('Password is required')
+      .isLength({min:8, max:128})
+      .withMessage("Password must be between 8 and 128 characters"),
+];
+
+export {contactValidation, registrationValidation, loginValidation};

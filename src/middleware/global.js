@@ -8,6 +8,11 @@ const addLocalVariables = (req, res, next) => {
 
     res.locals.queryParams = {...req.query};
 
+    res.locals.isLoggedIn = false;
+    if (req.session && req.session.user) {
+        res.locals.isLoggedIn = true;
+    }
+
     next();
 };
 

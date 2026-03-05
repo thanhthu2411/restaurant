@@ -26,6 +26,7 @@
 </head>
 <body>
     <header>
+
         <div class="header-left">
             <button class="menu-btn" aria-label="menu button">
                 <svg class="icon"><use xlink:href="/images/sprite.symbol.svg#menu"></use></svg>
@@ -42,9 +43,16 @@
             </form>
         </div>
         <div class="header-right">
+            <% if (isLoggedIn) { %>
             <button>
                 <img class="cart-img" src="/images/cart.png" alt="cart icon">
                 <span class="cart-num">0</span>
             </button>
+            <% } else { %>
+                <a href="/login">Login</a>
+                <a href="/register">Register</a>
+            <% } %>
         </div>
     </header>
+
+      <%- include('sidebar') %>
