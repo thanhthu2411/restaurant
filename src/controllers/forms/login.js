@@ -15,7 +15,9 @@ const processLogin = async (req, res) => {
     const errors = validationResult(req);
 
     if(!errors.isEmpty()) {
-        console.log('Error', errors.array());
+        errors.array().forEach(error => {
+            req.flash('error', error.msg);
+        });
         return res.redirect('/login');
     }
 
@@ -24,23 +26,24 @@ const processLogin = async (req, res) => {
     try {
         const user = await findUserbyEmail(email);
         if(!user) {
-            console.log("User not found. Invalid email or password.");
+            req.flash('error', 'Invalid email or password')            
             return res.redirect('/login');
         }
 
         const isMatched = verifyPassword(password, user.password);
         if (!isMatched) {
-            console.log("Invalid email or password");
+            req.flash('error', 'Invalid email or password')            
             return res.redirect('/login');
         };
 
         delete user.password;
 
         req.session.user = user;
-        console.log('welcome back');
+        req.flash('success', `Welcome back, ${user.name}`);
         res.redirect('/');
     } catch(error) {
         console.error("Error logging in", error);
+        req.flash('error', 'Unable to sign you in. Please try again later!')
         res.redirect("/login");
 
     }
