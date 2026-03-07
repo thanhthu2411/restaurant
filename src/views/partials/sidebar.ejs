@@ -27,15 +27,18 @@
     </li>
 
     <% if (isLoggedIn) { %>
-    <li>
-      <a href="/">
-        <svg class="icon">
-          <use xlink:href="/images/sprite.symbol.svg#bookmark"></use>
-        </svg>
-        <span class="item-text show">Order History</span>
-      </a>
-    </li>
-    <li>
+      <% if (user.roleName.toLowerCase() === 'user') { %>
+        <li>
+          <a href="/">
+            <svg class="icon">
+              <use xlink:href="/images/sprite.symbol.svg#bookmark"></use>
+            </svg>
+            <span class="item-text show">Order History</span>
+          </a>
+        </li>
+      <% } %>
+
+        <li>
       <a href="/cart/userId">
         <img class="cart-img" src="/images/cart.png" alt="cart icon" />
         <span class="item-text show">Cart</span>

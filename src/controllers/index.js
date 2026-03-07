@@ -2,6 +2,7 @@
 
 import { getDealRestaurant, getNearRestaurant, getRestaurantBySlug, getTopRestaurant, getOpenRestaurant, getReviewByRestaurant } from "../models/restaurant/restaurant.js";
 import { getDishByRestaurantSlug } from "../models/dish/dish.js";
+import { getUserDishHistorybyRest } from "../models/order&cart/order.js";
 
 const homePage = async (req, res) => {
     const dealRestarantList = await getDealRestaurant();
@@ -24,11 +25,17 @@ const restaurantDetailPage = async (req, res) => {
     const dishes = await getDishByRestaurantSlug(resSlug);
     const reviews = await getReviewByRestaurant(resSlug);
 
+    let dishHistory = null;
+    if (req.session && req.session.user) {
+        const userId = req.session.user.id;
+        dishHistory = await getUserDishHistorybyRest(userId, resSlug);
+    }
     res.render('restaurant', {
         title: `${restaurant.name}`,
         restaurant: restaurant,
         dishes: dishes,
-        reviews: reviews
+        reviews: reviews,
+        dishHistory: dishHistory 
     })
 }
 

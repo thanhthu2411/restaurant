@@ -11,6 +11,9 @@ import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
 import { caCert } from "./src/models/db.js";
 import { startSessionCleanup } from "./src/utils/session-cleanup.js";
+
+import flash from './src/middleware/flash.js';
+
 //import session, flash, databaseSetup, databaseConnection
 
 /**
@@ -69,6 +72,7 @@ app.use(express.json());
 app.use(addLocalVariables);
 
 // FLASH MESSAGE
+app.use(flash);
 
 /**
  * Declare ROUTES

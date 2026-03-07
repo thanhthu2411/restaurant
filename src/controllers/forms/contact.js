@@ -15,7 +15,9 @@ const showContactForm = (req, res) => {
 const processContactSubmission = async (req, res) => {
     const errors = validationResult(req);
     if(!errors.isEmpty()) {
-        console.error('Validation errors:', errors.array());
+        errors.array().forEach(error => {
+            req.flash('error', error.msg);
+        })
         return res.redirect('/contact');
     }
 
@@ -23,10 +25,11 @@ const processContactSubmission = async (req, res) => {
 
     try {
         await insertContactForm (subject, message);
-        console.log('Contact form submitted successfully. Please log in to enjoy Foodie');
+        req.flash('success', 'Thank you for contacting us! We will respond soon.');        
         res.redirect('/contact');
     } catch(error) {
         console.error('Error saving contact form:', error);
+        req.flash('error', 'Unable to submit your message. Please try again later.');
         res.redirect('/contact');
     }
 };

@@ -265,7 +265,7 @@
   margin-top: 3.5rem;
   position: relative;
 
-  .add-review-btn {
+  .add-review-btn, .add-review-btn2 {
     position: absolute;
     top: 3px;
     right: 20px;

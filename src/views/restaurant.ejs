@@ -118,36 +118,44 @@
         </div>
       </div>
 
-      <!-- if co order history  -->
+      <!-- dish history  -->
+      <% if(dishHistory && isLoggedIn) { %>
       <div class="restaurant-history-container">
         <h1>Order Again</h1>
         <div class="menu-container">
-          <!-- forEach dishes in the order history  -->
-          <!-- <div
+          <% dishHistory.forEach((dish) => { %>
+            <div
             class="dish-card"
             role="button"
-            data-name="chicken-alfredo"
-            data-description="test"
-            data-img-url="/images/dishes/restaurant.slug- dish.slug.jpg"
+            data-name="<%= dish.name%>"
+            data-description="<%=dish.description%>"
+            data-img-url="/images/dishes/<%=restaurant.slug%>-<%=dish.slug%>.jpg"
           >
             <div class="dish-img-container">
-              <img class="dish-img" src="/images/dishes/restaurant.slugdish.slug.jpg" />
+              <img class="dish-img" src="/images/dishes/<%=restaurant.slug%>-<%=dish.slug%>.jpg" />
             </div>
             <div class="dish-info-container">
-              <span class="dish-name">dish name</span>
+              <span class="dish-name"><%= dish.name%></span>
               <span class="dish-description"
-                >dish description</span
+                ><%= dish.description.slice(0, 18)%>...</span
               >
-              <span class="price">$dish price</span>
+              <span class="price">$<%= dish.price %></span>
             </div>
             <div class="add-icon">&#43;</div>
-          </div> -->
+          </div>
+
+          <% }) %>
         </div>
       </div>
+      <% } %>
 
       <div class="restaurant-rating-container">
         <h1>Ratings & Review</h1>
-        <button class="add-review-btn">Add Review</button>
+        <% if (isLoggedIn) { %>
+          <button class="add-review-btn">Add Review</button>
+        <% } else { %>
+          <a href="/login" class="add-review-btn2">Add Review</a>
+        <% } %>
 
         <% if (reviews[0].id ) { %>
           <div class="rating-review-container">
