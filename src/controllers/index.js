@@ -25,7 +25,7 @@ const restaurantDetailPage = async (req, res) => {
     const dishes = await getDishByRestaurantSlug(resSlug);
     const reviews = await getReviewByRestaurant(resSlug);
 
-    let dishHistory = null;
+    let dishHistory = [];
     if (req.session && req.session.user) {
         const userId = req.session.user.id;
         dishHistory = await getUserDishHistorybyRest(userId, resSlug);

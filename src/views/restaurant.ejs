@@ -81,6 +81,7 @@
             class="dish-card"
             role="button"
             data-name="<%= dish.name%>"
+            data-slug="<%= dish.slug %>"
             data-description="<%=dish.description%>"
             data-img-url="/images/dishes/<%=restaurant.slug%>-<%=dish.slug%>.jpg"
           >
@@ -114,12 +115,18 @@
             <p></p>
             <img src="" />
           </div>
-          <a href="" class="add-to-cart-btn"> Add to Cart </a>
+        <% if (isLoggedIn) { %>
+          <form id="add-to-cart-form" method="post" class="add-to-cart-form">
+            <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+          </form>
+        <% } else { %>
+          <a href="/login" class="add-to-card-btn2">Add to Cart</a>
+        <% } %>
         </div>
       </div>
 
       <!-- dish history  -->
-      <% if(dishHistory && isLoggedIn) { %>
+      <% if(dishHistory.length != 0 && isLoggedIn) { %>
       <div class="restaurant-history-container">
         <h1>Order Again</h1>
         <div class="menu-container">
@@ -210,8 +217,7 @@
               <use xlink:href="/images/sprite.symbol.svg#close"></use>
             </svg>
           </button>
-          <!-- action should be a route to run ProcessReviewInput() -->
-          <form action="/restaurant/restSlug" method="post" class="review-form">
+          <form action="/restaurant/<%= restaurant.slug %>/review" method="post" class="review-form">
             <h3>How would you rate restaurant Name?</h3>
             <div class="form-group">
               <label for="rating">Rating (1 to 5)</label>
@@ -233,6 +239,8 @@
                 class="review-input"
                 minlength="2"
                 rows="10"
+                minlength="1"
+                maxlength="2000"
                 placeholder="Please enter your review here"
               ></textarea>
             </div>

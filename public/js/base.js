@@ -1,8 +1,9 @@
-import { SideBarHandler } from "./header.js";
+import { SideBarHandler, cartBtnHandler } from "./header.js";
 import { dishCardHandler, reviewFormHandler } from "./restaurant.js";
 
 function init() {
     SideBarHandler();
+    cartBtnHandler();
     dishCardHandler();
     reviewFormHandler();
 }

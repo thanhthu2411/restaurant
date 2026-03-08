@@ -15,7 +15,6 @@ const getUserDishHistorybyRest = async (userId, restaurantSlug) => {
   `;
 
   const result = await db.query(query, [userId, restaurantSlug]);
-
   return result.rows;
 };
 

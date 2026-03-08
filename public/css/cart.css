@@ -1,0 +1,41 @@
+.cart-modal-container {
+    position: fixed;
+    top: 0;
+    right: 0;
+    width: 85%;
+    max-width: 550px;
+    transform: translateX(100%);
+    transition: all 0.3s ease;
+    height: 100vh;
+    z-index: 200;
+    background-color: rgb(255, 255, 255);
+    padding: 1.5rem 1.5rem;
+
+    .wrapper {
+        .close-btn {
+            padding: 0.5rem;
+            border-radius: 50%;
+            &:hover {
+                background-color: lightgray;
+            }
+        }
+    }
+
+    .cart-restaurant-container {
+        display: block;
+        margin: 1.5rem auto;
+
+        .help-text {
+            text-align: center;
+            line-height: 1.5;
+            color: gray;
+            font-weight: bold;
+            margin-top: 4rem;
+        }
+    }
+}
+
+
+.cart-open {
+    transform: translateX(0);
+}

@@ -122,10 +122,13 @@ CREATE TABLE cart (
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+ALTER TABLE cart
+ADD CONSTRAINT unique_user_cart UNIQUE (user_id);
+
 CREATE TABLE cart_dish (
     cart_id INTEGER REFERENCES cart(id),
     dish_id INTEGER REFERENCES dishes(id),
-    quantity INTEGER DEFAULT 0,
+    quantity INTEGER DEFAULT 0 CHECK(quantity>=0),
     PRIMARY KEY (cart_id, dish_id));
 
 CREATE TABLE review (
@@ -392,6 +395,9 @@ INSERT INTO order_status (status) VALUES
     ('preparing'),
     ('shipped'),
     ('delivered');
+
+INSERT INTO cart (user_id)
+SELECT generate_series(1, 16);
 
 DO $$
 DECLARE

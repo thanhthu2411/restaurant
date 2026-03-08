@@ -69,10 +69,10 @@ app.use(express.json());
 
 
 //Global middleware
-app.use(addLocalVariables);
 
 // FLASH MESSAGE
 app.use(flash);
+app.use(addLocalVariables);
 
 /**
  * Declare ROUTES

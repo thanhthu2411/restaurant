@@ -44,7 +44,7 @@
         </div>
         <div class="header-right">
             <% if (isLoggedIn) { %>
-            <button>
+            <button class="cart-btn">
                 <img class="cart-img" src="/images/cart.png" alt="cart icon">
                 <span class="cart-num">0</span>
             </button>
@@ -56,6 +56,9 @@
     </header>
 
       <%- include('sidebar') %>
+      <% if(isLoggedIn) { %> 
+            <%- include('cart')%>
+        <% } %>
 
       <% 
             const messages = flash();

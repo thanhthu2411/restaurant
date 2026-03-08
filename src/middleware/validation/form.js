@@ -74,4 +74,24 @@ const loginValidation = [
       .withMessage("Password must be between 8 and 128 characters"),
 ];
 
-export {contactValidation, registrationValidation, loginValidation};
+const reviewValidation = [
+  body('rating')
+    .toInt()
+    .isInt({min:1, max:5})
+    .withMessage('Rating must be an integer between 1 and 5'),
+  body('review')
+    .trim()
+    .isLength({min: 1, max:2000})
+    .withMessage('Review must be between 1 and 2000 characters.')
+    .escape()
+    .custom((value) => {
+      const words = value.trim().split(/\s+/);
+      const uniqueWords = new Set(words);
+      if (words.length > 20 && uniqueWords.size / words.length < 0.3) {
+        throw new Error("Message appears to be spam");
+      }
+      return true;
+    })
+];
+
+export {contactValidation, registrationValidation, loginValidation, reviewValidation};

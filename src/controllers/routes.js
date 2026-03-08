@@ -6,10 +6,13 @@ import loginRouter from './forms/login.js';
 import {processLogout} from './forms/login.js';
 import { requireLogin } from '../middleware/auth.js';
 
+import { reviewValidation } from '../middleware/validation/form.js';
+import { processReviewForm } from './forms/review.js';
 const router = Router();
 
 router.get('/', homePage);
 router.get('/restaurant/:resSlug', restaurantDetailPage);
+router.post('/restaurant/:resSlug/review', reviewValidation, processReviewForm);
 
 router.use('/contact', contactRouter);
 router.use('/register', registerRouter);

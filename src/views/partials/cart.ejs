@@ -1,0 +1,49 @@
+<section class="cart-modal-container">
+  <div class="wrapper">
+    <button class="close-btn" aria-label="close button">
+      <svg class="icon">
+        <use xlink:href="/images/sprite.symbol.svg#close"></use>
+      </svg>
+    </button>
+  </div>
+
+
+  <div class="cart-restaurant-container">
+    <%if (Object.values(cart) > 0) { %>
+
+        <% Object.values(cart).forEach(rest => { %>
+            <% if(rest.dishes.length > 0) { %>
+                <div class="cart-rest-card">
+                    <a href="/restaurant/<%= rest.restaurantSlug %>"><%= rest.restaurantName %></a>
+                    
+                    <%rest.dishes.forEach(dish => { %>
+                        <%if (dish.quantity > 0) { %>
+                            <div class="cart-dish-container">
+                                <img src="/images/dishes/<%=rest.restaurantSlug %>-<%=dish.dishSlug%>.jpg">
+                                <div class="dish-info">
+                                    <p><%= dish.dishName %></p>
+                                    <p><%= dish.price %></p>
+                                </div>
+                                <div class="dish-quantity">
+                                    <% if(dish.quantity > 0 ) { %>
+                                        <form action="/cart/decrease/<%= dish.dishSlug %>" method="POST">
+                                            <button>-</button>
+                                        </form>                                
+                                    <% } %>
+                                    <span><%= dish.quantity%></span>
+                                    <form action="/cart/increase/<%= dish.dishSlug %>" method="POST">
+                                        <button>+</button>
+                                    </form>                            
+                                </div>
+                            </div>
+                        <% } %>
+                        
+                    <% }) %>
+                </div>
+            <% } %>
+        <% }) %>
+    <% } else { %>
+        <p class="help-text">The cart is empty.<br>Add items to start.</p>
+    <% } %>
+  </div>
+</section>

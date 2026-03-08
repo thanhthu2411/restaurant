@@ -5,6 +5,8 @@ import {
   saveUser,
   emailExist,
 } from "../../models/forms/registration.js";
+import { createCartforUser } from "../../models/order&cart/cart.js";
+
 import bcrypt from "bcrypt";
 import { validationResult } from "express-validator";
 import { registrationValidation } from "../../middleware/validation/form.js";
@@ -40,7 +42,9 @@ const processRegistrationForm = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    await saveUser(name, email, hashedPassword, address);
+    const newUser = await saveUser(name, email, hashedPassword, address);
+    const cart = await createCartforUser(newUser.id);
+    // console.log(cart);
     req.flash('success', 'Register successfully');
     res.redirect("/login");
   } catch (error) {
