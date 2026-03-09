@@ -9,7 +9,7 @@
 
 
   <div class="cart-restaurant-container">
-    <%if (Object.values(cart) > 0) { %>
+    <% if (Object.values(cart).length > 0) { %>
 
         <% Object.values(cart).forEach(rest => { %>
             <% if(rest.dishes.length > 0) { %>
@@ -19,12 +19,11 @@
                     <%rest.dishes.forEach(dish => { %>
                         <%if (dish.quantity > 0) { %>
                             <div class="cart-dish-container">
-                                <img src="/images/dishes/<%=rest.restaurantSlug %>-<%=dish.dishSlug%>.jpg">
+                                <img class="dish-img" src="/images/dishes/<%=rest.restaurantSlug %>-<%=dish.dishSlug%>.jpg">
                                 <div class="dish-info">
                                     <p><%= dish.dishName %></p>
-                                    <p><%= dish.price %></p>
-                                </div>
-                                <div class="dish-quantity">
+                                    <p class="dish-price">$<%= dish.price %></p>
+                                </div>                                         <div class="dish-quantity">
                                     <% if(dish.quantity > 0 ) { %>
                                         <form action="/cart/decrease/<%= dish.dishSlug %>" method="POST">
                                             <button>-</button>
@@ -34,11 +33,13 @@
                                     <form action="/cart/increase/<%= dish.dishSlug %>" method="POST">
                                         <button>+</button>
                                     </form>                            
-                                </div>
+                                    </div>
                             </div>
                         <% } %>
                         
                     <% }) %>
+                    
+                    <a class="checkout-link" href="checkout/<%= rest.restaurantId %>">Checkout</a>
                 </div>
             <% } %>
         <% }) %>

@@ -20,6 +20,7 @@ const addLocalVariables = async (req, res, next) => {
       const userId = req.session.user.id;
       const cart = await getCartbyUser(userId);
       res.locals.cart = cart;
+      console.log(cart);
     }
 
     next();

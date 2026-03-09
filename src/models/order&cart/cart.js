@@ -8,11 +8,11 @@ const createCartforUser = async (userId) => {
 };
 
 const getCartbyUser = async (userId) => {
-  const query = `SELECT c.id as cartId, 
-        r.id as restaurantId, r.slug as restaurantSlug, r.name as restaurantName, r.open_hour as openHour, r.close_hour as closeHour,
-        r.delivery_fee as deliveryFee, r.delivery_minutes as deliveryMinutes,
-        d.id as dishId, d.slug as dishSlug, d.name as dishName, d.price as dishPrice,
-        cd.quantity as dishQuantity 
+  const query = `SELECT c.id as "cartId", 
+        r.id as "restaurantId", r.slug as "restaurantSlug", r.name as "restaurantName", r.open_hour as "openHour", r.close_hour as "closeHour",
+        r.delivery_fee as "deliveryFee", r.delivery_minutes as "deliveryMinutes",
+        d.id as "dishId", d.slug as "dishSlug", d.name as "dishName", d.price as "dishPrice",
+        cd.quantity as "dishQuantity" 
         FROM cart c LEFT JOIN cart_dish cd
             ON c.id = cd.cart_id
         LEFT JOIN dishes d ON
@@ -23,7 +23,7 @@ const getCartbyUser = async (userId) => {
 
   const result = await db.query(query, [userId]);
   const cartResult = result.rows;
-
+  // return cartResult;
   let cart = {};
   cartResult.forEach((r) => {
 
