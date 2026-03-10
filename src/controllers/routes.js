@@ -8,16 +8,17 @@ import { requireLogin } from '../middleware/auth.js';
 
 import { reviewValidation } from '../middleware/validation/form.js';
 import { processReviewForm } from './forms/review.js';
+import cartRouter  from './order&cart/cart.js';
 const router = Router();
 
 router.get('/', homePage);
 router.get('/restaurant/:resSlug', restaurantDetailPage);
-router.post('/restaurant/:resSlug/review', reviewValidation, processReviewForm);
+router.post('/restaurant/:resSlug/review', requireLogin, reviewValidation, processReviewForm);
 
 router.use('/contact', contactRouter);
 router.use('/register', registerRouter);
 router.use('/login', loginRouter);
 router.use('/logout', processLogout);
-
+router.use('/cart', cartRouter);
 // search
 export default router;

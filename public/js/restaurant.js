@@ -10,7 +10,7 @@ export const dishCardHandler = () => {
             dishModal.querySelector("h2").textContent = card.dataset.name;
             dishModal.querySelector("p").textContent = card.dataset.description;
             dishModal.querySelector("img").src = card.dataset.imgUrl;
-            dishModal.querySelector("#add-to-cart-form").action = `/cart/add/${card.dataset.slug}`;
+            dishModal.querySelector("#add-to-cart-form").action = `/cart/add/${card.dataset.restSlug}/${card.dataset.slug}`;
             dishModal.classList.add("clicked");
         })
     })

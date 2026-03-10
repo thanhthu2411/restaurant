@@ -1,10 +1,12 @@
+import { query } from "express-validator";
 import db from "../db.js";
 
+// for every new registered user, create a new cart
 const createCartforUser = async (userId) => {
-    const query = `INSERT INTO cart (user_id) VALUES ($1) RETURNING *`;
-    const result = await db.query(query, [userId]);
-    
-    return result.rows[0];
+  const query = `INSERT INTO cart (user_id) VALUES ($1) RETURNING *`;
+  const result = await db.query(query, [userId]);
+
+  return result.rows[0];
 };
 
 const getCartbyUser = async (userId) => {
@@ -26,8 +28,7 @@ const getCartbyUser = async (userId) => {
   // return cartResult;
   let cart = {};
   cartResult.forEach((r) => {
-
-    if(!r.restaurantId) return;
+    if (!r.restaurantId) return;
 
     if (!cart[r.restaurantId]) {
       cart[r.restaurantId] = {
@@ -38,15 +39,15 @@ const getCartbyUser = async (userId) => {
         deliveryMinutes: r.deliveryMinutes,
         dishes: [],
       };
-    };
-    
-    if(r.dishId) {
+    }
+
+    if (r.dishId) {
       cart[r.restaurantId].dishes.push({
         dishId: r.dishId,
         dishSlug: r.dishSlug,
         dishName: r.dishName,
         price: r.dishPrice,
-        quantity: r.dishQuantity
+        quantity: r.dishQuantity,
       });
     }
   });
@@ -54,30 +55,79 @@ const getCartbyUser = async (userId) => {
   return cart;
 };
 
+const getOrCreateCartId = async (userId) => {
+  //get cartId from userId
+  const cartIdQuery = `SELECT id FROM cart 
+                      WHERE user_id = $1`;
+  const cartQueryResult = await db.query(cartIdQuery, [userId]);
+  let cartId = cartQueryResult.rows[0]?.id;
+  //if user doesn't have a cart
+  if (!cartId) {
+    const result = await db.query(
+      `INSERT INTO cart (user_id) VALUES ($1) RETURNING *`,
+      [userId],
+    );
+    cartId = result.rows[0]?.id;
+  }
 
-export {getCartbyUser, createCartforUser};
+  return cartId;
+};
 
+const getDishIdFromSlug = async (dishSlug) => {
+  // get dishId from dishSlug
+  const dishIdResult = await db.query(`SELECT id FROM dishes WHERE slug = $1`, [
+    dishSlug,
+  ]);
+  const dishId = dishIdResult.rows[0]?.id;
+  return dishId;
+};
 
-// {
-//   3: {
-//     restaurantId: 3,
-//     restaurantName: "Pho King",
-//     restaurantSlug: "pho-king",
-//     deliveryFee: 3.99,
-//     deliveryMinutes: 30,
-//     dishes: [
-//       {
-//         dishId: 12,
-//         dishName: "Pho Beef",
-//         price: 14.99,
-//         quantity: 2
-//       },
-//       {
-//         dishId: 15,
-//         dishName: "Spring Rolls",
-//         price: 6.99,
-//         quantity: 1
-//       }
-//     ]
-//   },
-// }
+const addDishtoCart = async (dishSlug, userId) => {
+  const cartId = await getOrCreateCartId(userId);
+  const dishId = await getDishIdFromSlug(dishSlug);
+
+  //insert dish into cart or increase quantity
+  const dishExistQuery = `SELECT EXISTS (SELECT 1 FROM cart_dish WHERE dish_id = $1 AND cart_id = $2) as has_dish;`;
+  const dishExistResult = await db.query(dishExistQuery, [dishId, cartId]);
+  const dishExist = dishExistResult.rows[0]?.has_dish;
+  if (dishExist) {
+    const updateQuery = `UPDATE cart_dish SET quantity = quantity + 1
+                      WHERE cart_id = $1 AND dish_id = $2`;
+    await db.query(updateQuery, [cartId, dishId]);
+    return true;
+  }
+
+  const insertQuery = `INSERT INTO cart_dish (cart_id, dish_id, quantity) VALUES ($1, $2, 1) RETURNING *`;
+  const result = await db.query(insertQuery, [cartId, dishId]);
+  return result.rows[0];
+};
+
+const increaseDishQuantity = async (dishSlug, userId) => {
+  const cartId = await getOrCreateCartId(userId);
+  const dishId = await getDishIdFromSlug(dishSlug);
+
+  const increaseQuery = `UPDATE cart_dish SET quantity = quantity + 1
+                      WHERE cart_id = $1 AND dish_id = $2 RETURNING *`;
+  const result = await db.query(increaseQuery, [cartId, dishId]);
+  return result.rows[0];
+};
+
+const decreaseDishQuantity = async (dishSlug, userId) => {
+  const cartId = await getOrCreateCartId(userId);
+  const dishId = await getDishIdFromSlug(dishSlug);
+
+  const decreaseQuery = `UPDATE cart_dish SET quantity = quantity - 1
+                      WHERE cart_id = $1 AND dish_id = $2 AND quantity > 0 RETURNING *`;
+  const result = await db.query(decreaseQuery, [cartId, dishId]);
+  if(result.rowCount === 0) {
+    return false;
+  }
+
+  const quantity = result.rows[0].quantity;
+  if (quantity === 0) {
+    await db.query(`DELETE FROM cart_dish WHERE cart_id=$1 AND dish_id = $2`, [cartId, dishId]);
+  }
+  return true;
+};
+
+export { getCartbyUser, createCartforUser, addDishtoCart, increaseDishQuantity, decreaseDishQuantity };
