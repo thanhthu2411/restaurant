@@ -97,4 +97,14 @@ body {
         }
     }
 }
+
+/* restaurant open close  */
+.res-closed {
+  background-color: gray;
+}
+
+.res-open {
+  
+}
+
 }

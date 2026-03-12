@@ -82,6 +82,12 @@ const getDishIdFromSlug = async (dishSlug) => {
   return dishId;
 };
 
+// const getRestaurantIdFromSlug = async (resSlug) => {
+//   const restaurantRestaurant = await db.query( `SELECT id FROM restaurants WHERE slug = $1`, [resSlug]);
+//   const restaurantId = restaurantRestaurant.rows[0]?.id;
+//   return restaurantId;
+// }
+
 const addDishtoCart = async (dishSlug, userId) => {
   const cartId = await getOrCreateCartId(userId);
   const dishId = await getDishIdFromSlug(dishSlug);
@@ -130,4 +136,67 @@ const decreaseDishQuantity = async (dishSlug, userId) => {
   return true;
 };
 
-export { getCartbyUser, createCartforUser, addDishtoCart, increaseDishQuantity, decreaseDishQuantity };
+
+const getCartDishbyUserAndRestaurant = async (resSlug, userId) => {
+  const cartId = await getOrCreateCartId(userId);
+  const query = `SELECT d.id, d.category_id as "categoryId", d.name as "dishName", d.slug as "dishSlug", d.description, d.price,
+                        r.id as "restaurantId", r.deal_id as "dealId", r.name as "restaurantName", r.slug as "restaurantSlug", 
+                        r.address, r.delivery_fee as "deliveryFee", r.delivery_minutes as "deliveryMinutes",
+                        cd.quantity, cd.cart_id as "cartId",
+                        u.role_id as "roleId", u.name as "userName", u.email as "userEmail", u.address as "userAddress",
+                        deals.name as "dealName", deals.code as "dealCode", deals.description as "dealDescription", deals.expiration_date as "expirationDate", deals.amount as "dealAmount"
+                  FROM cart_dish cd INNER JOIN dishes d
+                    ON cd.dish_id = d.id
+                    INNER JOIN restaurants r
+                    ON r.id = d.restaurant_id
+                    LEFT JOIN deals
+                    ON deals.id = r.deal_id
+                    LEFT JOIN cart c 
+                    ON c.id = cd.cart_id
+                    LEFT JOIN users u
+                    ON c.user_id = u.id
+                    WHERE r.slug = $1 AND cd.cart_id = $2`;
+  const result = await db.query(query, [resSlug, cartId]);
+  if (result.rows.length === 0) return false;
+
+  const resResult = result.rows[0];
+  const dishResult = result.rows;
+  let order = {
+    cartId: resResult.cartId,
+    restaurantId: resResult.restaurantId,
+    dealId: resResult.dealId,
+    restaurantName: resResult.restaurantName,
+    restaurantSlug: resResult.restaurantSlug,
+    address: resResult.address,
+    deliveryFee: resResult.deliveryFee,
+    deliveryMinutes: resResult.deliveryMinutes,
+    dealName: resResult.dealName,
+    dealCode: resResult.dealCode,
+    dealDescription: resResult.dealDescription,
+    expirationDate: resResult.expirationDate,
+    dealAmount: resResult.dealAmount,
+    roleId: resResult.roleId,
+    userName: resResult.userName,
+    userEmail: resResult.userEmail,
+    userAddress: resResult.userAddress,
+    dishes: []
+  };
+
+  dishResult.forEach(dish => {
+    order.dishes.push ({
+      dishId: dish.id,
+      categoryId: dish.categoryId,
+      dishName: dish.dishName,
+      dishSlug: dish.dishSlug,
+      description: dish.description,
+      price: dish.price,
+      quantity: dish.quantity
+    })
+  });
+
+  return order;
+}
+
+export { getCartbyUser, createCartforUser, addDishtoCart, increaseDishQuantity, decreaseDishQuantity,
+          getCartDishbyUserAndRestaurant
+ };

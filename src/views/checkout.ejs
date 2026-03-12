@@ -1,0 +1,53 @@
+<%- include('./partials/header')%>
+    <main class="checkout-container">
+        <section class="restaurant-checkout-info-container">
+            <a href="/restaurant/<%=order.restaurantSlug%>"><%= order.restaurantName %></a>
+            <p>Address: <%= order.address %></p>
+            <p>Delivery Time: <%= order.deliveryMinutes %> minutes</p>
+        </section>
+        <section class="user-checkout-info-container">
+            <details>
+                <summary>Customer Information</summary>
+                <div>
+                    <p>Name: <%= order.userName %></p>
+                    <p>Email: <%= order.userEmail %></p>
+                    <% if(order.userAddress) { %>
+                        <p>Address<%= order.userAddress %></p>
+                    <% } else { %>
+                        <p>Address: Not listed</p>
+                    <% } %>
+                </div>
+            </details>
+            <!-- <img class="arrow-icon" src="/images/arrow.svg" alt="arrow icon"> -->
+        </section>
+        <section class="order-summary-container">
+            <h1>Order Summary (<%= order.dishes.length %> items)</h1>
+            <div class="dishes-container">
+                <% order.dishes.forEach(dish => { %>
+                    <div class="dish-card">
+                        <img class="dish-img" src="/images/dishes/<%=order.restaurantSlug %>-<%=dish.dishSlug%>.jpg">
+                        <div class="dish-info">
+                            <p><%= dish.dishName %></p>
+                            <p class="dish-price">$<%= dish.price * dish.quantity %></p>
+                            <p>Quantity: <%= dish.quantity %></p>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+            <!-- <form class="deal-form" action="/order/<%= order.restaurantSlug %>" method="post">
+                <input name="dealCode" type="text" placeholder="Enter Promo Code">
+                <button type="submit">Apply</button>
+            </form> -->
+        </section>
+        <section class="order-amount-container">
+            <div><span class="text">Subtotal</span><span>$<%= price.subtotal %></span></div>
+            <div><span class="text">Delivery Fee</span><span>$<%= price.deliveryFee %></span></div>
+            <div><span class="text">Estimated Tax</span><span>$<%= price.tax %></span></div>
+            <div class="total-amount"><span>Total</span><span class="total">$<%= price.total %></span></div>
+        </section>
+        <form class="place-order-form" method="post" action="/order/<%= order.restaurantSlug %>">
+            <button type="submit">Place an Order</button>
+        </form>
+    </main>
+
+<%- include('./partials/footer')%>

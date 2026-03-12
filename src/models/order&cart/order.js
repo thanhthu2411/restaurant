@@ -18,5 +18,22 @@ const getUserDishHistorybyRest = async (userId, restaurantSlug) => {
   return result.rows;
 };
 
+const isResOpen = async (resSlug) => {
+  const hourQuery = `SELECT open_hour, close_hour FROM restaurants WHERE slug = $1`;
+  const result = await db.query(hourQuery, [resSlug]);
+  if (result.rows.length === 0) return false;
 
-export {getUserDishHistorybyRest};
+  const openHour = result.rows[0].open_hour;
+  const closeHour = result.rows[0].close_hour;
+  const currentTime = new Date().toLocaleTimeString('en-US', {
+                        hour12: false});  
+  let isOpen = false;
+  if (closeHour >= currentTime && currentTime >= openHour) {
+    isOpen = true;
+  }
+
+  return isOpen;
+}
+
+
+export {getUserDishHistorybyRest, isResOpen};

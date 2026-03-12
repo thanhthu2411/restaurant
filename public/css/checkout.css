@@ -1,0 +1,129 @@
+.checkout-container {
+  padding: 2rem 2rem;
+
+  .restaurant-checkout-info-container {
+    a {
+      font-size: 1.7rem;
+      font-weight: bold;
+      color: rgb(33, 116, 33);
+
+    &:hover {
+        text-decoration: none;
+      }
+    }
+  }
+
+  .user-checkout-info-container {
+    margin-top: 2rem;
+    padding: 0.5rem 0;
+    position: relative;
+
+    details {
+      summary {
+        font-size: 1.4rem;
+        font-weight: bold;
+        list-style: none;
+
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+
+        &::after {
+          content: "";
+          display: inline-block;
+          width: 18px;
+          height: 18px;
+          background-image: url(/images/arrow.svg);
+          background-size: contain;
+          background-repeat: no-repeat;
+          rotate: calc(-90deg);
+
+        }
+      }
+
+      div {
+        padding-left: 1rem;
+      }
+    }
+
+    details[open] {
+        summary::after {
+            rotate: calc(0deg);
+        }
+    }
+
+    /* .arrow-icon {
+            width: 20px;
+            height: 30px;
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            rotate: calc(-90deg);
+        } */
+  }
+
+  .order-summary-container {
+    margin-top: 1.5rem;
+
+    h1 {
+        font-size: 1.4rem;
+
+    }
+
+    .dishes-container {
+        display: flex;
+        flex-direction: column;
+        gap: 1.8rem;
+        padding-left: 1rem;
+
+        .dish-card {
+            display: flex;
+            flex-direction: row;
+            gap: 1.5rem;
+            align-items: center;
+
+            .dish-img {
+                width: 140px;
+                height: 120px;
+                object-fit: cover;
+                border-radius: 5px;
+            }
+
+            .dish-info {
+                p {
+                    font-weight: bold;
+                    margin: 0.5rem;
+                }
+                .dish-price {
+                    color: red;
+                }
+            }
+        }
+    }
+  }
+
+  .order-amount-container {
+    margin-top: 1.5rem;
+    div {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 0.8rem;
+
+        .text {
+            font-weight: bold;
+        }
+    }
+
+    .total-amount {
+        margin-top: 1.2rem;
+        font-size: 1.6rem;
+        font-weight: bold;
+
+        .total {
+            color: red;
+        }
+    }
+  }
+}
