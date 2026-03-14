@@ -1,0 +1,128 @@
+.order-container {
+  padding: 2rem 2rem;
+
+  h1 {
+    margin-bottom: 0;
+  }
+
+  p {
+    margin: 0.5rem 0 2.5rem 0;
+
+    .minutes {
+      color: red;
+    }
+  }
+
+  .order-status-container {
+    border-bottom: 1px solid rgb(227, 224, 224);
+    box-shadow: 0 2px 3px -2px rgba(0,0,0,0.2);
+    .order-bar {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      span {
+        border-radius: 10px;
+        color: rgb(7, 84, 7);
+        font-weight: bold;
+        padding: 0.5rem 0.5rem;
+      }
+
+      .status-active {
+        background-color: green;
+        color: white;
+      }
+
+      .line {
+        width: 100%;
+        flex: 1;
+        height: 5px;
+        background-color: rgb(184, 208, 184);
+      }
+
+      .line-active {
+        background-color: green;
+      }
+    }
+
+    .submessage {
+        margin-top: 1.2rem;
+        color: rgb(86, 84, 84);
+        font-style: italic;
+    }
+  }
+
+  .order-detail-container {
+    .item-card {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+         padding: 0 2rem;
+         margin-bottom: 1.5rem;
+
+         p {
+            margin: 0;
+         }
+
+         .item-price {
+            color: darkgreen;
+            font-weight: bold;
+         }
+
+    }
+  }
+
+  .payment-container {
+    margin-top: 1.5rem;
+    padding: 1rem 2rem;
+    border-top: 1px solid rgb(225, 222, 222);
+    border-radius: 5px;
+    div {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        margin-bottom: 0.8rem;
+        font-size: 1.3rem;
+
+        .text {
+            font-weight: bold;
+        }
+    }
+
+    .total-amount {
+        margin-top: 1.5rem;
+        font-size: 1.6rem;
+        font-weight: bold;
+
+        .total {
+            color: red;
+        }
+  }
+  }
+
+  .homepage-btn {
+    width: 250px;
+    display: block;
+    margin: 2rem auto 0 auto;
+    padding: 1rem;
+    background-color: rgb(94, 155, 94);
+    text-align: center;
+    border-radius: 10px;
+    color: white;
+    font-weight: bold;
+
+    &:hover {
+        text-decoration: none;
+        background-color: green;
+    }
+  }
+}
+
+@media (min-width: 770px) {
+  .order-container {
+    width: 80%;
+    display: block;
+    margin: 0 auto;
+    max-width: 900px;
+  }
+}

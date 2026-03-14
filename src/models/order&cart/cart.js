@@ -82,11 +82,11 @@ const getDishIdFromSlug = async (dishSlug) => {
   return dishId;
 };
 
-// const getRestaurantIdFromSlug = async (resSlug) => {
-//   const restaurantRestaurant = await db.query( `SELECT id FROM restaurants WHERE slug = $1`, [resSlug]);
-//   const restaurantId = restaurantRestaurant.rows[0]?.id;
-//   return restaurantId;
-// }
+const getRestaurantIdFromSlug = async (resSlug) => {
+  const restaurantRestaurant = await db.query( `SELECT id FROM restaurants WHERE slug = $1`, [resSlug]);
+  const restaurantId = restaurantRestaurant.rows[0]?.id;
+  return restaurantId;
+}
 
 const addDishtoCart = async (dishSlug, userId) => {
   const cartId = await getOrCreateCartId(userId);
@@ -198,5 +198,5 @@ const getCartDishbyUserAndRestaurant = async (resSlug, userId) => {
 }
 
 export { getCartbyUser, createCartforUser, addDishtoCart, increaseDishQuantity, decreaseDishQuantity,
-          getCartDishbyUserAndRestaurant
+          getCartDishbyUserAndRestaurant, getRestaurantIdFromSlug
  };

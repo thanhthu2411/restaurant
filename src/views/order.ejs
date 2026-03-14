@@ -1,0 +1,37 @@
+<%- include('./partials/header')%>
+    <main class="order-container">
+        <h1><%= message %></h1>
+        <p>Arrives in about <span class="minutes"><%= arrivalTime %></span> min</p>
+        <div class="order-status-container">
+            <div class="order-bar">
+                <% const statusArray = ["confirmed", "preparing", "shipped", "delivered"]; 
+                    const currentStatusId = statusArray.indexOf(order.orderStatus);
+                %>
+                <span class = "<%= currentStatusId >= 0 ? 'status-active' : '' %>">Confirmed</span>
+                <div class="line <%= currentStatusId >= 1 ? 'line-active' : '' %>"></div>
+                <span class = "<%= currentStatusId >= 1 ? 'status-active' : '' %>">Preparing</span>
+                <div class="line <%= currentStatusId >= 2 ? 'line-active' : '' %>"></div>
+                <span class = "<%= currentStatusId >= 2 ? 'status-active' : '' %>">Shipped</span>
+                <div class="line <%= currentStatusId >= 3 ? 'line-active' : '' %>"></div>   
+                <span class = "<%= currentStatusId >= 3 ? 'status-active' : '' %>">Delivered</span>
+            </div>
+            <p class="submessage"><%= submessage%></p>
+        </div>
+        <div class="order-detail-container">
+            <h2>Order Details</h2>
+            <% order.dishes.forEach(dish => { %>
+                <div class="item-card">
+                    <p><%= dish.dishQuantity %>x <%= dish.dishName %></p>
+                    <p class="item-price">$<%= dish.dishQuantity * dish.dishPrice %></p>
+                </div>
+            <% }) %>
+        </div>
+        <div class="payment-container">
+            <div><span class="text">Subtotal</span><span>$<%= order.subtotal %></span></div>
+            <div><span class="text">Delivery Fee</span><span>$<%= order.deliveryFee %></span></div>
+            <div><span class="text">Estimated Tax</span><span>$<%= order.tax %></span></div>
+            <div class="total-amount"><span>Total</span><span class="total">$<%= order.total %></span></div>
+        </div>
+        <a class="homepage-btn" href="/">Return to Homepage</a>
+    </main>
+<%- include('./partials/footer')%>
