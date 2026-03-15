@@ -1,7 +1,12 @@
 import { validationResult } from "express-validator";
 import { getCartDishbyUserAndRestaurant } from "../../models/order&cart/cart.js";
 import { calculatePrice } from "../../utils/calculatePrice.js";
-import { saveNewOrder, getOrderById, updateOrderStatus } from "../../models/order&cart/order.js";
+import { getMessage } from "../../utils/getMessage.js";
+import {
+  saveNewOrder,
+  getOrderById,
+  updateOrderStatus,
+} from "../../models/order&cart/order.js";
 import { Router } from "express";
 
 const router = Router();
@@ -37,26 +42,15 @@ const showOrderPage = async (req, res, next) => {
       return res.redirect("/");
     }
     const status = order.orderStatus;
-    const message = status === "confirmed" ? "Confirming your order"
-        : status === "preparing" ? "Preparing your order"
-        : status === "shipped" ? "Picking up your order"
-        : status === "delivered" ? "Order Complete"
-        : "Checking your order status...";
-    
+    const { message, submessage } = getMessage(order);
     const arrivalTime = order.deliveryMinutes + 15;
-
-    const submessage = status === "confirmed" ? `We sent your order to ${order.restaurantName} for final confirmation.`
-        : status === "preparing" ? `${order.restaurantName} is preparing your order.`
-        : status === "shipped" ? "Your shipper is heading to your location."
-        : status === "delivered" ? "Your order has arrived!"
-        : "";
 
     res.render("order", {
       title: `Order ${status}`,
       order: order,
       message: message,
       arrivalTime: arrivalTime,
-      submessage: submessage
+      submessage: submessage,
     });
   } catch (error) {
     console.error("Error getting order page", error);
@@ -91,13 +85,58 @@ const processNewOrder = async (req, res, next) => {
 
 //update order status
 const processOrderStatusUpdate = async (req, res, next) => {
-  
-}
+  const orderId = req.params.orderId;
+  const userId = req.session.user.id;
 
+  try {
+    const order = await getOrderById(userId, orderId);
+    if (!order) {
+      req.flash("error", "Fail to get this order");
+      return res.redirect("/");
+    }
 
+    const orderCreatedTime = order.orderCreatedTime;
+    const status = order.orderStatus;
+    const deliveryMinutes = order.deliveryMinutes;
+    const currentTime = new Date();
+    const timeDifference = currentTime - orderCreatedTime;
+    const minuteDiff = timeDifference / 60000;
 
+    if (
+      minuteDiff >= deliveryMinutes + 15 + 1 &&
+      status !== "delivered"
+    ) {
+      await updateOrderStatus(orderId, "delivered");
+    }
+    else if (minuteDiff >= 15 + 1 && status !== "shipped") {
+      await updateOrderStatus(orderId, "shipped");
+    }
+    else if (minuteDiff >= 1 && status !== "preparing") {
+      await updateOrderStatus(orderId, "preparing");
+    }
+
+    const { message, submessage } = getMessage(order);
+    const arrivalTime = order.deliveryMinutes + 15;
+
+    return res.json({
+      orderId: orderId,
+      orderStatus: status,
+      arrivalTime: arrivalTime,
+      message: message,
+      submessage: submessage
+    });
+  } catch (error) {
+    console.error("Error updating order status", error);
+    req.flash(
+      "error",
+      "Unable to update the order status. Please try again later!",
+    );
+    res.redirect(`/`);
+  }
+};
 
 router.get("/:orderId", showOrderPage);
+router.get("/:orderId/status", processOrderStatusUpdate);
 router.post("/:resSlug", processNewOrder);
 
 export { showCheckoutPage };
