@@ -1,0 +1,83 @@
+<%- include('../partials/header') %>
+<main class="user-dashboard-container">
+    <h1>Hello, <%= user.name %></h1>
+    <section class="widget-container">
+        <div class="user-info-container">
+            <h2>Your Account Information</h2>
+            <div class="user-detail-container">
+                <div class="user-detail">
+                    <span class="label">Name:</span>
+                    <span class="value"><%= user.name %></span>
+                </div>
+                <div class="user-detail">
+                    <span class="label">Email:</span>
+                    <span class="value"><%= user.email %></span>
+                </div>
+                <div class="user-detail">
+                    <span class="label">Address:</span>
+                    <%if(user.address) { %>
+                        <span class="value"><%= user.address %></span>
+                        <% } else { %>
+                            <span class="value">Not listed</span>
+                        <% } %>
+                </div>
+                <div class="user-detail">
+                    <span class="label">Role:</span>
+                    <span class="value"><%= user.roleName %></span>
+                </div>
+                <div class="user-detail">
+                    <span class="label">Created at:</span>
+                    <span class="value"><%= new Date(user.created_at).toLocaleDateString() %></span>
+                </div>
+            </div>
+
+            <a class="user-edit-btn" href="/register/edit">Edit Account Information</a>
+        </div>
+        <div class="user-order-container">
+            <h2>Your Order History</h2>
+            <div class="orders-container">
+                <% userOrders.forEach(order => { %>
+                    <div class="order-card">
+                        <a href="/restaurant/<%= order.restaurantSlug %>"><%= order.restaurantName %></a>
+                        <div class="dish-info-container">
+                            <%order.dishes.forEach(dish => { %>
+                                <div class="dish-card">
+                                        <p><%= dish.dishQuantity %>x <%= dish.dishName %></p>
+                                        <p class="dish-price">$<%= dish.dishPrice * dish.dishQuantity %></p>
+                                </div>
+                            <% }) %>
+                        </div>
+                        <div class="order-info-container">
+                            <details>
+                                <summary>Order Details</summary>
+                                <div>
+                                    <p>Subtotal: <span><%=order.subtotal %></span></p>
+                                    <p>Total: <span><%=order.total %></span></p>
+                                    <p>Status: <span><%=order.orderStatus %></span></p>
+                                    <p>Created at: <span><%=order.orderCreatedTime %></span></p>
+                                </div>
+                            </details>
+                        </div>
+                    </div>
+                <% }) %>
+            </div>
+        </div>
+        <div class="user-review-container">
+            <h2>Your Review</h2>
+            <div class="reviews-container">
+                <% if(userReviews.length === 0 ) { %>
+                    <p>You haven't had any comments yet.</p>
+                <% } else { %>
+                    <% userReviews.forEach(review => { %>
+                        <div class="review-card">
+                            <p><%= review.rating %>🌟 - <%= review.content %></p>
+                            <p>Created at: <%= new Date(review.createdAt).toLocaleDateString() %></p>
+                        </div>
+                    <% }) %>
+                <% } %>
+            </div>
+        </div>
+    </section>
+    <a class="homepage-link" href="/">Return to Homepage</a>
+</main>
+<%- include('../partials/footer') %>

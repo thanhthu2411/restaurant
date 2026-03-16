@@ -1,6 +1,7 @@
 //define homePage(), restaurantPage(), 
 
-import { getDealRestaurant, getNearRestaurant, getRestaurantBySlug, getTopRestaurant, getOpenRestaurant, getReviewByRestaurant } from "../models/restaurant/restaurant.js";
+import { getDealRestaurant, getNearRestaurant, getRestaurantBySlug, getTopRestaurant, getOpenRestaurant } from "../models/restaurant/restaurant.js";
+import { getReviewByRestaurant } from "../models/review/review.js";
 import { getDishByRestaurantSlug } from "../models/dish/dish.js";
 import { getUserDishHistorybyRest } from "../models/order&cart/order.js";
 

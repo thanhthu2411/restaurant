@@ -1,0 +1,41 @@
+<%- include('../partials/header') %>
+<main class="admin-dashboard-container">
+    <h1>Hello, <%= user.name %></h1>
+    <section class="admin-widget-container">
+        <div class="user-info-container">
+            <h2>Your Account Information</h2>
+            <div class="user-detail-container">
+                <div class="user-detail">
+                    <span class="label">Name:</span>
+                    <span class="value"><%= user.name %></span>
+                </div>
+                <div class="user-detail">
+                    <span class="label">Email:</span>
+                    <span class="value"><%= user.email %></span>
+                </div>
+                <div class="user-detail">
+                    <span class="label">Address:</span>
+                    <%if(user.address) { %>
+                        <span class="value"><%= user.address %></span>
+                        <% } else { %>
+                            <span class="value">Not listed</span>
+                        <% } %>
+                </div>
+                <div class="user-detail">
+                    <span class="label">Role:</span>
+                    <span class="value"><%= user.roleName %></span>
+                </div>
+                <div class="user-detail">
+                    <span class="label">Created at:</span>
+                    <span class="value"><%= new Date(user.created_at).toLocaleDateString() %></span>
+                </div>
+            </div>
+
+            <a class="user-edit-btn" href="/register/edit">Edit Account Information</a>
+        </div>
+        <!-- list all users with edit and delete options -->
+         <!-- see all restaurants  -->
+    </section>
+    <a class="homepage-link" href="/">Return to Homepage</a>
+</main>
+<%- include('../partials/footer') %>

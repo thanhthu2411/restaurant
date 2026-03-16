@@ -8,11 +8,11 @@
                     const currentStatusId = statusArray.indexOf(order.orderStatus);
                 %>
                 <span id="status-confirmed" class = "<%= currentStatusId >= 0 ? 'status-active' : '' %>">Confirmed</span>
-                <div id="line-preparing" class="line <%= currentStatusId >= 1 ? 'line-active' : '' %>"></div>
+                <div id="line-confirmed" class="line <%= currentStatusId >= 1 ? 'line-active' : '' %>"></div>
                 <span id="status-preparing" class = "<%= currentStatusId >= 1 ? 'status-active' : '' %>">Preparing</span>
-                <div id="line-shipped" class="line <%= currentStatusId >= 2 ? 'line-active' : '' %>"></div>
+                <div id="line-preparing" class="line <%= currentStatusId >= 2 ? 'line-active' : '' %>"></div>
                 <span id="status-shipped" class = "<%= currentStatusId >= 2 ? 'status-active' : '' %>">Shipped</span>
-                <div id="line-delivered" class="line <%= currentStatusId >= 3 ? 'line-active' : '' %>"></div>   
+                <div id="line-shipped" class="line <%= currentStatusId >= 3 ? 'line-active' : '' %>"></div>   
                 <span id="status-delivered" class = "<%= currentStatusId >= 3 ? 'status-active' : '' %>">Delivered</span>
             </div>
             <p class="submessage"><%= submessage%></p>

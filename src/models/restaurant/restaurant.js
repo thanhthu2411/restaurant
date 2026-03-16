@@ -135,24 +135,12 @@ const getOpenRestaurant = async () => {
   }));
 };
 
-// get rating and review for a restaurant
-const getReviewByRestaurant = async (resSlug) => {
-  const query = `SELECT r.id, r.restaurant_id, r.user_id, r.rating,
-                    r.content, r.created_at
-                FROM restaurants re LEFT JOIN review r
-                    ON r.restaurant_id = re.id
-                WHERE re.slug = $1;`;
-  const result = await db.query(query, [resSlug]);
-    // console.log(result.rows);
-  return result.rows.map(review => ({
-    id: review.id,
-    restaurantId: review.restaurant_id,
-    userId: review.user_id,
-    rating: review.rating,
-    content: review.content,
-    createdAt: new Date(review.created_at).toISOString().slice(0,10)
-  })) 
-};
+
+const getRestaurantIdFromSlug = async (resSlug) => {
+  const restaurantRestaurant = await db.query( `SELECT id FROM restaurants WHERE slug = $1`, [resSlug]);
+  const restaurantId = restaurantRestaurant.rows[0]?.id;
+  return restaurantId;
+}
 
 export {
   getNearRestaurant,
@@ -160,5 +148,5 @@ export {
   getRestaurantBySlug,
   getTopRestaurant,
   getOpenRestaurant,
-  getReviewByRestaurant
+  getRestaurantIdFromSlug
 };

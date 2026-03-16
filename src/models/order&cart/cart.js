@@ -1,5 +1,6 @@
 import { query } from "express-validator";
 import db from "../db.js";
+import { getDishIdFromSlug } from "../dish/dish.js";
 
 // for every new registered user, create a new cart
 const createCartforUser = async (userId) => {
@@ -73,20 +74,6 @@ const getOrCreateCartId = async (userId) => {
   return cartId;
 };
 
-const getDishIdFromSlug = async (dishSlug) => {
-  // get dishId from dishSlug
-  const dishIdResult = await db.query(`SELECT id FROM dishes WHERE slug = $1`, [
-    dishSlug,
-  ]);
-  const dishId = dishIdResult.rows[0]?.id;
-  return dishId;
-};
-
-const getRestaurantIdFromSlug = async (resSlug) => {
-  const restaurantRestaurant = await db.query( `SELECT id FROM restaurants WHERE slug = $1`, [resSlug]);
-  const restaurantId = restaurantRestaurant.rows[0]?.id;
-  return restaurantId;
-}
 
 const addDishtoCart = async (dishSlug, userId) => {
   const cartId = await getOrCreateCartId(userId);
@@ -198,5 +185,5 @@ const getCartDishbyUserAndRestaurant = async (resSlug, userId) => {
 }
 
 export { getCartbyUser, createCartforUser, addDishtoCart, increaseDishQuantity, decreaseDishQuantity,
-          getCartDishbyUserAndRestaurant, getRestaurantIdFromSlug
+          getCartDishbyUserAndRestaurant
  };

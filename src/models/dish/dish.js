@@ -20,4 +20,13 @@ const getDishByRestaurantSlug = async (resSlug) => {
     }));
 };
 
-export {getDishByRestaurantSlug};
+const getDishIdFromSlug = async (dishSlug) => {
+  // get dishId from dishSlug
+  const dishIdResult = await db.query(`SELECT id FROM dishes WHERE slug = $1`, [
+    dishSlug,
+  ]);
+  const dishId = dishIdResult.rows[0]?.id;
+  return dishId;
+};
+
+export {getDishByRestaurantSlug, getDishIdFromSlug};

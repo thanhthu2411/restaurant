@@ -11,6 +11,7 @@ const findUserbyEmail = async (email) => {
             users.id, 
             users.name, 
             users.email, 
+            users.address,
             users.password, 
             users.created_at,
             roles.role_name AS "roleName"

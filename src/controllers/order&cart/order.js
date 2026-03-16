@@ -104,14 +104,14 @@ const processOrderStatusUpdate = async (req, res, next) => {
 
     if (
       minuteDiff >= deliveryMinutes + 15 + 1 &&
-      status !== "delivered"
+      status === "shipped"
     ) {
       await updateOrderStatus(orderId, "delivered");
     }
-    else if (minuteDiff >= 15 + 1 && status !== "shipped") {
+    else if (minuteDiff >= 15 + 1 && status === "preparing") {
       await updateOrderStatus(orderId, "shipped");
     }
-    else if (minuteDiff >= 1 && status !== "preparing") {
+    else if (minuteDiff >= 1 && status === "confirmed") {
       await updateOrderStatus(orderId, "preparing");
     }
 
