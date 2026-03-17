@@ -34,12 +34,12 @@
                 const currentUser = typeof isLoggedIn !== 'undefined' && isLoggedIn ? user : null;
             %>
             <% if(currentUser) {%>
-                <a class="user-edit-btn" href="/register/edit">Edit Account Information</a>
+                <a class="user-edit-btn" href="/dashboard/profile/edit">Edit Account Information</a>
             <% } %>
         </div>
         <!-- all orders  -->
         <div class="restaurant-order-container">
-            <h2>Current Orders</h2>
+            <h2>Ongoing Orders</h2>
             <% if (currentUser && currentUser.roleName.toLowerCase() === 'owner') { %>
                 <div class="order-container">
                     <%orders.forEach(o => { %>

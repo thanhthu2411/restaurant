@@ -84,9 +84,59 @@ const getOrderById = async (userId, orderId) => {
               LEFT JOIN order_status os ON o.status_id = os.id
               LEFT JOIN dishes d ON od.dish_id = d.id
               LEFT JOIN users u ON o.user_id = u.id
-              WHERE o.id = $1 AND o.user_id = $2
+              WHERE o.user_id = $1 AND o.id = $2
               ORDER BY od.order_id`;
-  const result = await db.query(orderQuery, [orderId, userId]);
+  const result = await db.query(orderQuery, [userId, orderId]);
+  if (result.rows.length === 0) return false;
+  const orderInfo = result.rows[0];
+  const tax = (orderInfo.subtotal * 0.1).toFixed(2);
+
+  let order = {
+    orderId: orderInfo.orderId,
+    subtotal: orderInfo.subtotal,
+    total: orderInfo.total,
+    tax: tax,
+    deliveryFee: orderInfo.deliveryFee,
+    deliveryMinutes: orderInfo.deliveryMinutes,
+    orderCreatedTime: new Date(orderInfo.orderCreateTime),
+    restaurantName: orderInfo.restaurantName,
+    restaurantSlug: orderInfo.restaurantSlug,
+    userName: orderInfo.userName,
+    userEmail: orderInfo.userEmail,
+    userAddress: orderInfo.userAddress,
+    orderStatusId: orderInfo.orderStatusId,
+    orderStatus: orderInfo.orderStatus,
+    dishes: [],
+  };
+
+  result.rows.forEach((o) => {
+    order.dishes.push({
+      dishName: o.dishName,
+      dishSlug: o.dishSlug,
+      dishPrice: o.dishPrice,
+      dishQuantity: o.quantity,
+    });
+  });
+
+  return order;
+};
+
+const getOrderByOrderId = async (orderId) => {
+  const orderQuery = `SELECT o.id as "orderId", o.subtotal, o.total, o.delivery_fee as "deliveryFee", o.delivery_minutes as "deliveryMinutes", o.created_at as "orderCreateTime",
+              r.name as "restaurantName", r.slug as "restaurantSlug", 
+              u.name as "userName", u.email as "userEmail", u.address as "userAddress",
+              d.name as "dishName", d.slug as "dishSlug", 
+              od.quantity, od.order_price as "dishPrice",
+              os.id as "orderStatusId", os.status as "orderStatus"
+              FROM orders o LEFT JOIN order_dish od
+                ON od.order_id = o.id
+              LEFT JOIN restaurants r ON o.restaurant_id = r.id
+              LEFT JOIN order_status os ON o.status_id = os.id
+              LEFT JOIN dishes d ON od.dish_id = d.id
+              LEFT JOIN users u ON o.user_id = u.id
+              WHERE o.id = $1
+              ORDER BY od.order_id`;
+  const result = await db.query(orderQuery, [orderId]);
   if (result.rows.length === 0) return false;
   const orderInfo = result.rows[0];
   const tax = (orderInfo.subtotal * 0.1).toFixed(2);
@@ -246,5 +296,6 @@ export {
   getOrderById,
   updateOrderStatus,
   getOrderByUserId,
-  getOrderByRestaurantOwner
+  getOrderByRestaurantOwner,
+  getOrderByOrderId
 };

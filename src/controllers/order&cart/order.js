@@ -6,7 +6,11 @@ import {
   saveNewOrder,
   getOrderById,
   updateOrderStatus,
+  getOrderByOrderId
 } from "../../models/order&cart/order.js";
+import { requireRole } from "../../middleware/auth.js";
+import { statusUpdateValidation } from "../../middleware/validation/form.js";
+import { canOrder } from "../../middleware/order.js";
 import { Router } from "express";
 
 const router = Router();
@@ -28,7 +32,7 @@ const showCheckoutPage = async (req, res, next) => {
 const showOrderPage = async (req, res, next) => {
   const orderId = req.params.orderId;
   if (!orderId) return false;
-
+  console.log(orderId);
   const userId = req.session.user.id;
   if (!userId) {
     req.flash("error", "Please sign in first.");
@@ -37,6 +41,7 @@ const showOrderPage = async (req, res, next) => {
 
   try {
     const order = await getOrderById(userId, orderId);
+    console.log(order);
     if (!order) {
       req.flash("error", "Fail to get this order");
       return res.redirect("/");
@@ -85,59 +90,60 @@ const processNewOrder = async (req, res, next) => {
 
 //update order status
 const processOrderStatusUpdate = async (req, res, next) => {
-  const orderId = req.params.orderId;
-  const userId = req.session.user.id;
+  const errors = validationResult(req);
+  if (!errors.isEmpty()) {
+    errors.array().forEach((error) => {
+      req.flash("error", error.msg);
+    });
+    return res.redirect("/");
+  }
 
   try {
-    const order = await getOrderById(userId, orderId);
+    const orderId = req.params.orderId;
+    const order = await getOrderByOrderId(orderId);
     if (!order) {
       req.flash("error", "Fail to get this order");
-      return res.redirect("/");
+      return res.redirect("/dashboard/owner");
+    }
+    const currentStatus = order.orderStatus;
+    const updatedStatus = req.body.status;
+    if (!updatedStatus) {
+      req.flash("info", "Please choose a status");
+      return res.redirect("/dashboard/owner");
     }
 
-    const orderCreatedTime = order.orderCreatedTime;
-    const status = order.orderStatus;
-    const deliveryMinutes = order.deliveryMinutes;
-    const currentTime = new Date();
-    const timeDifference = currentTime - orderCreatedTime;
-    const minuteDiff = timeDifference / 60000;
-
+    // allowed status
     if (
-      minuteDiff >= deliveryMinutes + 15 + 1 &&
-      status === "shipped"
+      (currentStatus === "confirmed" && updatedStatus !== "preparing") ||
+      (currentStatus === "preparing" && updatedStatus !== "shipped") ||
+      (currentStatus === "shipped" && updatedStatus !== "delivered") ||
+      currentStatus === "delivered"
     ) {
-      await updateOrderStatus(orderId, "delivered");
-    }
-    else if (minuteDiff >= 15 + 1 && status === "preparing") {
-      await updateOrderStatus(orderId, "shipped");
-    }
-    else if (minuteDiff >= 1 && status === "confirmed") {
-      await updateOrderStatus(orderId, "preparing");
+      req.flash("error", "Invalid status update");
+      return res.redirect("/dashboard/owner");
     }
 
-    const { message, submessage } = getMessage(order);
-    const arrivalTime = order.deliveryMinutes + 15;
-
-    return res.json({
-      orderId: orderId,
-      orderStatus: status,
-      arrivalTime: arrivalTime,
-      message: message,
-      submessage: submessage
-    });
+    await updateOrderStatus(orderId, updatedStatus);
+    console.log("HIT CONTROLLER");
+    return res.redirect("/dashboard/owner");
   } catch (error) {
     console.error("Error updating order status", error);
     req.flash(
       "error",
       "Unable to update the order status. Please try again later!",
     );
-    res.redirect(`/`);
+    res.redirect(`/dashboard/owner`);
   }
 };
 
 router.get("/:orderId", showOrderPage);
-router.post("/:orderId/status", processOrderStatusUpdate);
-router.post("/:resSlug", processNewOrder);
+router.post(
+  "/:orderId/status",
+  requireRole("owner"),
+  statusUpdateValidation,
+  processOrderStatusUpdate,
+);
+router.post("/:resSlug", canOrder, processNewOrder);
 
 export { showCheckoutPage };
 export default router;

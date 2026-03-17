@@ -94,4 +94,14 @@ const reviewValidation = [
     })
 ];
 
-export {contactValidation, registrationValidation, loginValidation, reviewValidation};
+const statusUpdateValidation = [
+  body('status')
+    .custom((value) => {
+      if (!["confirmed", "preparing", "shipped", "delivered"].includes(value)) {
+        throw new Error("Status is not valid.")
+      }
+      return true;
+    })
+]
+
+export {contactValidation, registrationValidation, loginValidation, reviewValidation, statusUpdateValidation};

@@ -34,7 +34,7 @@
                 const currentUser = typeof isLoggedIn !== 'undefined' && isLoggedIn ? user : null;
             %>
             <% if(currentUser) {%>
-                <a class="user-edit-btn" href="/register/edit">Edit Account Information</a>
+                <a class="user-edit-btn" href="/dashboard/profile/edit">Edit Account Information</a>
             <% } %>
         </div>
         <!-- list all users with edit options -->
@@ -53,7 +53,7 @@
                             <p><%= listUser.address %></p>
 
                             <% if (canEdit) { %>
-                                    <a class="user-edit-btn" href="/">Edit</a>
+                                    <a class="user-edit-btn" href="/dashboard/admin/userId/edit">Edit</a>
                             <% } %>
                         </div>
                     <% }); %>

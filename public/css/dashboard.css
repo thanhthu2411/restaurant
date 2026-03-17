@@ -109,13 +109,25 @@
         }
 
         .order-info-container {
+          margin-top: 1rem;
+          padding: 0.5rem 0.5rem;
+
           summary {
             &:hover {
               cursor: pointer;
             }
           }
-          margin-top: 1rem;
-          padding: 0.5rem 0.5rem;
+
+          div {
+            padding-top: 1rem;
+
+            .order-page-link {
+              text-decoration: none;
+              font-family: 0.6rem;
+              color: rgb(111, 60, 60);
+              font-size: 1.2rem;
+            }
+          }
         }
       }
     }
@@ -264,6 +276,66 @@
     }
   }
 }
+
+/* EDIT FORM  */
+.edit-profile-container {
+  width: 90%;
+  max-width: 750px;
+  display: block;
+  margin: 1.8rem auto;
+
+  h1 {
+    text-align: center;
+    font-size: 2rem;
+  }
+
+  .edit-form {
+    display: block;
+    width: 80%;
+    margin: 0 auto;
+    max-width: 450px;
+    background-color: rgb(213, 230, 213);
+    padding: 1rem 2rem;
+    border-radius: 10px;
+
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      margin-top: 1.5rem;
+
+      label {
+        color: rgb(111, 40, 40);
+        font-weight: bold;
+      }
+
+      input {
+        height: 25px;
+        border-radius: 5px;
+        border: none;
+        width: 90%;
+        padding: 0.5rem;
+        font-size: 1.2rem;
+      }
+    }
+
+    button, a {
+      font-size: 1.2rem;
+      margin: 2rem;
+      padding: 0.8rem;
+      background-color: rgb(125, 183, 125);
+      color: white;
+      font-weight: bold;
+      border-radius: 10px;
+
+      &:hover {
+        text-decoration: none;
+        background-color: green;
+      }
+    }
+  }
+}
+
 
 @media (min-width: 770px) {
   .user-dashboard-container,

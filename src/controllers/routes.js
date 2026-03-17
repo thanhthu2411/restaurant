@@ -24,8 +24,7 @@ router.use('/register', registerRouter);
 router.use('/login', loginRouter);
 router.use('/logout', processLogout);
 router.use('/cart', requireLogin, cartRouter);
-//add canOrder mddle
-router.use('/order', requireLogin,canOrder, orderRouter);
+router.use('/order', requireLogin, orderRouter);
 //add canOrder middleware
 router.get('/checkout/:resSlug', requireLogin, canOrder, showCheckoutPage);
 //dashboard

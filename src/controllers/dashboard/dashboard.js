@@ -5,7 +5,7 @@ import {
 } from "../../models/order&cart/order.js";
 import { getReviewByUserId } from "../../models/review/review.js";
 import { requireRole } from "../../middleware/auth.js";
-import { getAllUsers } from "../../models/users/user.js";
+import { getAllUsers, getUserById } from "../../models/forms/registration.js";
 import { getAllRestaurantsAndDishes } from "../../models/restaurant/restaurant.js";
 import { getAllContactForms } from "../../models/forms/contact.js";
 
@@ -42,7 +42,6 @@ const showDashboard = async (req, res, next) => {
       res.render("dashboard/owner", {
         title: "Owner Dashboard",
         orders: restaurantOrders,
-
       });
     } else {
       res.redirect("/");
@@ -54,8 +53,53 @@ const showDashboard = async (req, res, next) => {
   }
 };
 
+const showProfileEditForm = async (req, res, next) => {
+  const userId = req.session.user.id;
+  const userRole = req.session.user.roleName.toLowerCase();
+  const targetUser = await getUserById(userId);
+
+  if (!targetUser) {
+    req.flash("error", "User not found.");
+    return res.redirect(`/dashboard/${userRole}`);
+  }
+
+  return res.render("dashboard/edit", {
+    title: "Profile Update",
+    user: targetUser,
+    isSelf: true
+  })
+};
+
+
+const showAdminEditForm = async (req, res, next) => {
+  const targetUserId = parseInt(req.params.id);
+  const currentUserRole = req.session.user.roleName.toLowerCase();
+
+  const targetUser = await getUserById(targetUserId);
+
+  if (!targetUser) {
+    req.flash("error", "User not found.");
+    return res.redirect(`/dashboard/${currentUserRole}`);
+  }
+
+  const canEdit = currentUserRole === "admin";
+
+  if (!canEdit) {
+    req.flash("error", "You do not have permission to edit this account.");
+    return res.redirect(`/dashboard/${currentUserRole}`);
+  }
+
+  res.render("dashboard/edit", {
+    title: "Edit Account",
+    user: targetUser,
+    isSelf: false
+  });
+};
+
 router.get("/user", requireRole("user"), showDashboard);
 router.get("/admin", requireRole("admin"), showDashboard);
 router.get("/owner", requireRole("owner"), showDashboard);
+router.get("/profile/edit", showProfileEditForm);
+router.get("/admin/:userId/edit", requireRole("admin"), showAdminEditForm);
 
 export default router;

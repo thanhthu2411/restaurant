@@ -34,7 +34,7 @@
                 const currentUser = typeof isLoggedIn !== 'undefined' && isLoggedIn ? user : null;
             %>
             <% if(currentUser) {%>
-                <a class="user-edit-btn" href="/register/edit">Edit Account Information</a>
+                <a class="user-edit-btn" href="/dashboard/profile/edit">Edit Account Information</a>
             <% } %>
 
         </div>
@@ -56,6 +56,7 @@
                             <details>
                                 <summary>Order Details</summary>
                                 <div>
+                                    <a class="order-page-link" href="/order/<%= order.orderId %>">Order Detail Page</a>
                                     <p>Subtotal: <span><%=order.subtotal %></span></p>
                                     <p>Total: <span><%=order.total %></span></p>
                                     <p>Status: <span><%=order.orderStatus %></span></p>
