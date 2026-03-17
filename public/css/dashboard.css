@@ -1,6 +1,8 @@
 /* USER DASHBOARD  */
 
-.user-dashboard-container {
+.user-dashboard-container,
+.admin-dashboard-container,
+.owner-dashboard-container {
   padding: 2rem 2rem;
 
   h1 {
@@ -10,6 +12,10 @@
 
   h2 {
     font-size: 1.5rem;
+  }
+
+  h3 {
+    font-size: 1.2rem;
   }
 
   .homepage-link {
@@ -26,42 +32,44 @@
   }
 }
 
-.widget-container {
-  .user-info-container {
-    padding: 1rem 2rem;
-    width: 80%;
-    height: 350px;
-    max-width: 450px;
-    border: 1px solid rgb(236, 234, 234);
-    border-radius: 10px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+/* user info container  */
+.dashboard-user-info-container {
+  padding: 1rem 2rem;
+  width: 80%;
+  height: 350px;
+  max-width: 450px;
+  border: 1px solid rgb(236, 234, 234);
+  border-radius: 10px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
 
-    .user-detail {
-      padding-left: 2rem;
-      margin-bottom: 1rem;
+  .user-detail {
+    padding-left: 2rem;
+    margin-bottom: 1rem;
 
-      .label {
-        font-weight: bold;
-      }
-    }
-
-    .user-edit-btn {
-      padding: 1rem;
-      width: 300px;
-      display: block;
-      margin: 2rem auto;
-      border-radius: 10px;
-      background-color: rgb(98, 155, 98);
-      text-align: center;
-      color: white;
-
-      &:hover {
-        background-color: green;
-        text-decoration: none;
-      }
+    .label {
+      font-weight: bold;
     }
   }
 
+  .user-edit-btn {
+    padding: 1rem;
+    width: 300px;
+    display: block;
+    margin: 2rem auto;
+    border-radius: 10px;
+    background-color: rgb(98, 155, 98);
+    text-align: center;
+    color: white;
+
+    &:hover {
+      background-color: green;
+      text-decoration: none;
+    }
+  }
+}
+
+/* USER DASHBOARD  */
+.widget-container {
   .user-order-container {
     margin-top: 4rem;
 
@@ -129,9 +137,138 @@
 }
 
 /* ADMIN DASHBOARD  */
+.admin-widget-container {
+  .all-user-container {
+    margin-top: 4rem;
+
+    .user-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1.2rem;
+
+      .user-card {
+        border: 1px solid rgb(236, 234, 234);
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        padding: 0.8rem 2rem;
+        width: 300px;
+
+        .user-edit-btn {
+          padding: 0.8rem;
+          width: 100px;
+          display: block;
+          margin: 2rem auto 0.5rem auto;
+          border-radius: 10px;
+          background-color: rgb(98, 155, 98);
+          text-align: center;
+          color: white;
+
+          &:hover {
+            background-color: green;
+            text-decoration: none;
+          }
+        }
+      }
+    }
+  }
+
+  .contact-forms-container {
+    margin-top: 4rem;
+
+    .form-container {
+      display: flex;
+      flex-direction: column;
+
+      .form-card {
+        border: 1px solid rgb(236, 234, 234);
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        padding: 0.8rem 2rem;
+        width: 300px;
+      }
+    }
+  }
+}
+
+/* OWNER DASHBOARD  */
+.owner-widget-container {
+  .restaurant-order-container {
+    margin-top: 4rem;
+
+    .order-container {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+
+      .order-card {
+        border: 1px solid rgb(236, 234, 234);
+        border-radius: 10px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+        padding: 0.8rem 2rem;
+
+        .order-status {
+          font-style: italic;
+          font-weight: bold;
+          color: green;
+        }
+
+        .order-dish-container {
+          display: flex;
+          flex-direction: column;
+          gap: 1rem;
+
+          .order-dish-card {
+            display: flex;
+            flex-direction: row;
+            gap: 1.2rem;
+            align-items: top;
+
+            .dish-img {
+              width: 150px;
+              height: 100px;
+              object-fit: cover;
+              border-radius: 5px;
+            }
+          }
+        }
+
+        .order-status-form {
+          width: 70%;
+          display: block;
+          margin: 2rem auto;
+          display: flex;
+          gap: 1rem;
+          background-color: rgb(238, 243, 239);
+          border-radius: 10px;
+          justify-content: space-around;
+          padding: 1rem;
+
+          #status {
+            padding: 0.8rem 0.8rem;
+            border-radius: 8px;
+            border: 1px solid #ccc;
+            font-size: 1.2rem;
+          }
+
+          button {
+            font-size: 1rem;
+            font-weight: bold;
+            color: white;
+            padding: 0.8rem 0.8rem;
+            border-radius: 10px;
+            background-color: rgb(126, 178, 126);
+            border: none;
+          }
+        }
+      }
+    }
+  }
+}
 
 @media (min-width: 770px) {
-  .user-dashboard-container {
+  .user-dashboard-container,
+  .admin-dashboard-container,
+  .owner-dashboard-container {
     width: 80%;
     display: block;
     margin: 0 auto;
@@ -144,5 +281,17 @@
 
   .widget-container {
     margin-top: 3rem;
+  }
+
+  .admin-widget-container {
+    .contact-forms-container,
+    .all-user-container {
+      .user-container,
+      .form-container {
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-around;
+      }
+    }
   }
 }

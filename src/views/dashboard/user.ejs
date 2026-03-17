@@ -2,7 +2,7 @@
 <main class="user-dashboard-container">
     <h1>Hello, <%= user.name %></h1>
     <section class="widget-container">
-        <div class="user-info-container">
+        <div class="dashboard-user-info-container">
             <h2>Your Account Information</h2>
             <div class="user-detail-container">
                 <div class="user-detail">
@@ -30,8 +30,13 @@
                     <span class="value"><%= new Date(user.created_at).toLocaleDateString() %></span>
                 </div>
             </div>
+            <% 
+                const currentUser = typeof isLoggedIn !== 'undefined' && isLoggedIn ? user : null;
+            %>
+            <% if(currentUser) {%>
+                <a class="user-edit-btn" href="/register/edit">Edit Account Information</a>
+            <% } %>
 
-            <a class="user-edit-btn" href="/register/edit">Edit Account Information</a>
         </div>
         <div class="user-order-container">
             <h2>Your Order History</h2>

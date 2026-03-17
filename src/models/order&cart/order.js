@@ -189,11 +189,62 @@ const getOrderByUserId = async (userId) => {
   return Object.values(orders);
 };
 
+const getOrderByRestaurantOwner = async (ownerId) => {
+  const query = `SELECT o.id as "orderId", o.subtotal, o.total, o.delivery_fee as "deliveryFee", o.delivery_minutes as "deliveryMinutes", o.created_at as "orderCreateTime",
+              r.name as "restaurantName", r.slug as "restaurantSlug", 
+              d.id as "dishId", d.name as "dishName", d.slug as "dishSlug", 
+              od.quantity, od.order_price as "dishPrice",
+              os.id as "orderStatusId", os.status as "orderStatus"
+              FROM orders o LEFT JOIN order_dish od
+                ON od.order_id = o.id
+              LEFT JOIN restaurants r ON o.restaurant_id = r.id
+              LEFT JOIN order_status os ON o.status_id = os.id
+              LEFT JOIN dishes d ON od.dish_id = d.id
+              WHERE r.owner_id = $1 AND os.status != 'delivered'
+              ORDER BY o.created_at DESC`;
+  const result = await db.query(query, [ownerId]);
+  if (result.rows.length === 0) return [];
+
+  let orders = {};
+  result.rows.forEach((row) => {
+    if (!row.orderId) return;
+
+    if (!orders[row.orderId]) {
+      orders[row.orderId] = {
+        orderId: row.orderId,
+        subtotal: row.subtotal,
+        total: row.total,
+        deliveryFee: row.deliveryFee,
+        deliveryMinutes: row.deliveryMinutes,
+        orderCreatedTime: new Date(row.orderCreateTime).toLocaleString(),
+        restaurantName: row.restaurantName,
+        restaurantSlug: row.restaurantSlug,
+        orderStatusId: row.orderStatusId,
+        orderStatus: row.orderStatus,
+        dishes: [],
+      };
+    }
+
+    if (row.dishId) {
+      orders[row.orderId].dishes.push({
+        dishId: row.dishId,
+        dishName: row.dishName,
+        dishSlug: row.dishSlug,
+        dishPrice: row.dishPrice,
+        dishQuantity: row.quantity,
+      });
+    }
+  });
+
+  return Object.values(orders);
+};
+
 export {
   getUserDishHistorybyRest,
   isResOpen,
   saveNewOrder,
   getOrderById,
   updateOrderStatus,
-  getOrderByUserId
+  getOrderByUserId,
+  getOrderByRestaurantOwner
 };

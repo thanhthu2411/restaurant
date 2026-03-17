@@ -136,7 +136,7 @@ const processOrderStatusUpdate = async (req, res, next) => {
 };
 
 router.get("/:orderId", showOrderPage);
-router.get("/:orderId/status", processOrderStatusUpdate);
+router.post("/:orderId/status", processOrderStatusUpdate);
 router.post("/:resSlug", processNewOrder);
 
 export { showCheckoutPage };

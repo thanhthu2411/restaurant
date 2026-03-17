@@ -2,7 +2,7 @@
 <main class="admin-dashboard-container">
     <h1>Hello, <%= user.name %></h1>
     <section class="admin-widget-container">
-        <div class="user-info-container">
+        <div class="dashboard-user-info-container">
             <h2>Your Account Information</h2>
             <div class="user-detail-container">
                 <div class="user-detail">
@@ -30,11 +30,56 @@
                     <span class="value"><%= new Date(user.created_at).toLocaleDateString() %></span>
                 </div>
             </div>
-
-            <a class="user-edit-btn" href="/register/edit">Edit Account Information</a>
+            <% 
+                const currentUser = typeof isLoggedIn !== 'undefined' && isLoggedIn ? user : null;
+            %>
+            <% if(currentUser) {%>
+                <a class="user-edit-btn" href="/register/edit">Edit Account Information</a>
+            <% } %>
         </div>
-        <!-- list all users with edit and delete options -->
+        <!-- list all users with edit options -->
+        <% if (users && users.length > 0) { %>
+            <div class="all-user-container">
+                <h2>All Users</h2>
+                <div class="user-container">
+                    <% users.forEach(listUser => { %>
+                        <% 
+                            const currentUser = typeof isLoggedIn !== 'undefined' && isLoggedIn ? user : null;
+                            const canEdit = currentUser && (currentUser.roleName.toLowerCase() === 'admin');
+                        %>
+                        <div class="user-card">
+                            <h3><%= listUser.name %></h3>
+                            <p><%= listUser.email %></p>
+                            <p><%= listUser.address %></p>
+
+                            <% if (canEdit) { %>
+                                    <a class="user-edit-btn" href="/">Edit</a>
+                            <% } %>
+                        </div>
+                    <% }); %>
+                </div>
+            </div>
+        <% } else { %>
+            <p class="no-users">No users registered yet.</p>
+        <% } %>
          <!-- see all restaurants  -->
+          <!-- see all contact form  -->
+        <div class="contact-forms-container">
+            <h2>Contact Messages</h2>
+            <% if(contactForms && contactForms.length > 0) { %>
+                <div class="form-container">
+                    <% contactForms.forEach(form => { %>
+                        <div class="form-card">
+                            <h3>Subject: <%= form.subject %></h3>
+                            <p>Message: <%= form.message %></p>
+                        </div>
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <p>No messages yet.</p>
+            <% } %>
+        </div>
+
     </section>
     <a class="homepage-link" href="/">Return to Homepage</a>
 </main>

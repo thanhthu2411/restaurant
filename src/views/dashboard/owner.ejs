@@ -1,5 +1,82 @@
 <%- include('../partials/header') %>
-<main>
-    
+<main class="owner-dashboard-container">
+    <h1>Hello, <%= user.name %></h1>
+    <section class="owner-widget-container">
+        <div class="dashboard-user-info-container">
+            <h2>Your Account Information</h2>
+            <div class="user-detail-container">
+                <div class="user-detail">
+                    <span class="label">Name:</span>
+                    <span class="value"><%= user.name %></span>
+                </div>
+                <div class="user-detail">
+                    <span class="label">Email:</span>
+                    <span class="value"><%= user.email %></span>
+                </div>
+                <div class="user-detail">
+                    <span class="label">Address:</span>
+                    <%if(user.address) { %>
+                        <span class="value"><%= user.address %></span>
+                        <% } else { %>
+                            <span class="value">Not listed</span>
+                        <% } %>
+                </div>
+                <div class="user-detail">
+                    <span class="label">Role:</span>
+                    <span class="value"><%= user.roleName %></span>
+                </div>
+                <div class="user-detail">
+                    <span class="label">Created at:</span>
+                    <span class="value"><%= new Date(user.created_at).toLocaleDateString() %></span>
+                </div>
+            </div>
+            <% 
+                const currentUser = typeof isLoggedIn !== 'undefined' && isLoggedIn ? user : null;
+            %>
+            <% if(currentUser) {%>
+                <a class="user-edit-btn" href="/register/edit">Edit Account Information</a>
+            <% } %>
+        </div>
+        <!-- all orders  -->
+        <div class="restaurant-order-container">
+            <h2>Current Orders</h2>
+            <% if (currentUser && currentUser.roleName.toLowerCase() === 'owner') { %>
+                <div class="order-container">
+                    <%orders.forEach(o => { %>
+                        <div class="order-card">
+                            <p>Status: <span class="order-status"><%= o.orderStatus %></span></p>
+                            <div class="order-dish-container">
+                                <% o.dishes.forEach(dish => { %>
+                                    <div class="order-dish-card">
+                                        <img class="dish-img" src="/images/dishes/<%= o.restaurantSlug %>-<%= dish.dishSlug%>.jpg">
+                                        <div>
+                                            <span><%= dish.dishName %> (Qty: <%= dish.dishQuantity%>)</span>
+                                            <p>$<%= dish.dishPrice %></p>
+                                        </div>
+                                    </div>
+                                <% }) %>
+                            </div>
+                            <%if(o.orderStatus !== "delivered") { %>
+                            <form method="post" action="/order/<%= o.orderId %>/status" class="order-status-form">
+                                <select name="status" id="status">
+                                    <option value="preparing" <%= o.orderStatus === "shipped"|| o.orderStatus === "preparing" ||o.orderStatus === "delivered" ? "disabled": "" %>>Preparing</option>
+                                    <option value="shipped" <%= o.orderStatus === "delivered" || o.orderStatus === "shipped" ? "disabled": "" %>>Shipped</option>
+                                    <option value="delivered">Delivered</option>
+                                </select>
+                                <button type="submit">Update Status</button>
+                            </form>
+                            <% } %>
+                        </div>
+
+                    <% }) %>
+                </div>
+            <% } else { %>
+                <p>No orders yet.</p>
+            <% } %>
+        </div>
+        <!-- see restaurant infor/ edit restaurant info -->
+         <!-- see all dishes / edit dishes info -->
+    </section>
+    <a class="homepage-link" href="/">Return to Homepage</a>
 </main>
 <%- include('../partials/footer') %>

@@ -135,12 +135,53 @@ const getOpenRestaurant = async () => {
   }));
 };
 
-
 const getRestaurantIdFromSlug = async (resSlug) => {
-  const restaurantRestaurant = await db.query( `SELECT id FROM restaurants WHERE slug = $1`, [resSlug]);
+  const restaurantRestaurant = await db.query(
+    `SELECT id FROM restaurants WHERE slug = $1`,
+    [resSlug],
+  );
   const restaurantId = restaurantRestaurant.rows[0]?.id;
   return restaurantId;
-}
+};
+
+const getAllRestaurantsAndDishes = async () => {
+  const query = `SELECT r.id as "restaurantId", r.name as "restaurantName", r.slug as "restaurantSlug", 
+                    r.address as "restaurantAddress", r.open_hour as "openHour", r.close_hour as "closeHour", r.delivery_fee as "deliveryFee", r.delivery_minutes as "deliveryMinutes",
+                    d.name as "dishName", d.slug as "dishSlug", 
+                    d.description as "description", d.price as "dishPrice"
+                    FROM restaurants r
+                    LEFT JOIN dishes d ON d.restaurant_id = r.id`;
+  const result = await db.query(query);
+  if (result.rows.length === 0) return false;
+  let restaurants = {};
+
+  result.rows.forEach((row) => {
+    if (!restaurants[row.restaurantId]) {
+      restaurants[row.restaurantId] = {
+        restaurantId: row.restaurantId,
+        restaurantName: row.restaurantName,
+        restaurantSlug: row.restaurantSlug,
+        restaurantAddress: row.restaurantAddress,
+        openHour: row.openHour,
+        closeHour: row.closeHour,
+        deliveryFee: row.deliveryFee,
+        deliveryMinutes: row.deliveryMinutes,
+        dishes: [],
+      };
+    }
+
+    if (row.dishName) {
+      restaurants[row.restaurantId].dishes.push({
+        dishName: row.dishName,
+        dishSlug: row.dishSlug,
+        description: row.description,
+        dishPrice: row.dishPrice,
+      });
+    }
+  });
+
+  return Object.values(restaurants);
+};
 
 export {
   getNearRestaurant,
@@ -148,5 +189,6 @@ export {
   getRestaurantBySlug,
   getTopRestaurant,
   getOpenRestaurant,
-  getRestaurantIdFromSlug
+  getRestaurantIdFromSlug,
+  getAllRestaurantsAndDishes
 };
