@@ -92,7 +92,7 @@ const addDishtoCart = async (dishSlug, userId) => {
 
   const insertQuery = `INSERT INTO cart_dish (cart_id, dish_id, quantity) VALUES ($1, $2, 1) RETURNING *`;
   const result = await db.query(insertQuery, [cartId, dishId]);
-  return result.rows[0];
+  return result.rows[0] || null;
 };
 
 const increaseDishQuantity = async (dishSlug, userId) => {
@@ -102,7 +102,7 @@ const increaseDishQuantity = async (dishSlug, userId) => {
   const increaseQuery = `UPDATE cart_dish SET quantity = quantity + 1
                       WHERE cart_id = $1 AND dish_id = $2 RETURNING *`;
   const result = await db.query(increaseQuery, [cartId, dishId]);
-  return result.rows[0];
+  return result.rows[0] || null;
 };
 
 const decreaseDishQuantity = async (dishSlug, userId) => {
@@ -144,7 +144,7 @@ const getCartDishbyUserAndRestaurant = async (resSlug, userId) => {
                     ON c.user_id = u.id
                     WHERE r.slug = $1 AND cd.cart_id = $2`;
   const result = await db.query(query, [resSlug, cartId]);
-  if (result.rows.length === 0) return false;
+  if (result.rows.length === 0) return {};
 
   const resResult = result.rows[0];
   const dishResult = result.rows;

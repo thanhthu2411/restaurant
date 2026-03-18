@@ -4,7 +4,7 @@ import db from "../db.js";
 const emailExist = async (email) => {
     const query = `SELECT EXISTS(SELECT 1 FROM users WHERE email = $1) as exists`;
     const result = await db.query(query, [email]);
-    return result.rows[0].exists;
+    return result.rows[0]?.exists;
 }
 
 //save user
@@ -13,13 +13,14 @@ const saveUser = async (name, email, password, address='') => {
                         VALUES ($1, $2, $3, $4) RETURNING id, name, email, address, created_at`;
 
     const result = await db.query(query, [name, email, password, address]);
-    return result.rows[0];
+    return result.rows[0] || null;
 }
 
 // get all user (for admin)
 const getAllUsers = async () => {
     const query = `SELECT id, name, email, address, created_at FROM users`;
     const result = await db.query(query);
+    if (result.rows.length === 0) return [];
     return result.rows;
 }
 

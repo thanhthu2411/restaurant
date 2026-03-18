@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator";
-import { insertNewReview } from "../../models/forms/review.js";
+import { insertNewReview } from "../../models/review/review.js";
 
 const processReviewForm = async (req, res, next) => {
   const resSlug = req.params.resSlug;

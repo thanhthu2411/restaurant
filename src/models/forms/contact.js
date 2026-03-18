@@ -4,7 +4,7 @@ const insertContactForm = async (subject, message) => {
     const query =   `INSERT INTO contact_form (subject, message) 
                         VALUES ($1, $2) RETURNING *`;
     const result = await db.query(query, [subject, message]);
-    return result.rows[0];
+    return result.rows[0] || null;
 };
 
 // for admin 

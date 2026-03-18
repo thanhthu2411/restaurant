@@ -5,6 +5,7 @@ const getNearRestaurant = async () => {
             WHERE delivery_minutes <= 15
             ORDER BY delivery_minutes`;
   const result = await db.query(query);
+  if (result.rows.length === 0) return [];
 
   return result.rows.map((r) => ({
     id: r.id,
@@ -28,6 +29,8 @@ const getDealRestaurant = async () => {
         WHERE r.deal_id IS NOT NULL`;
 
   const result = await db.query(query);
+  if (result.rows.length === 0) return [];
+
   return result.rows.map((r) => ({
     id: r.id,
     ownerId: r.owner_id,
@@ -61,6 +64,7 @@ const getTopRestaurant = async () => {
     `;
 
   const result = await db.query(query);
+  if(result.rows.length === 0) return [];
 
   return result.rows.map((r) => ({
     id: r.id,
@@ -119,6 +123,7 @@ const getOpenRestaurant = async () => {
         WHERE CURRENT_TIME BETWEEN open_hour AND close_hour`;
 
   const result = await db.query(query);
+  if(result.rows.length === 0) return [];
 
   return result.rows.map((r) => ({
     id: r.id,
@@ -152,7 +157,7 @@ const getAllRestaurantsAndDishes = async () => {
                     FROM restaurants r
                     LEFT JOIN dishes d ON d.restaurant_id = r.id`;
   const result = await db.query(query);
-  if (result.rows.length === 0) return false;
+  if (result.rows.length === 0) return [];
   let restaurants = {};
 
   result.rows.forEach((row) => {
@@ -190,5 +195,5 @@ export {
   getTopRestaurant,
   getOpenRestaurant,
   getRestaurantIdFromSlug,
-  getAllRestaurantsAndDishes
+  getAllRestaurantsAndDishes,
 };

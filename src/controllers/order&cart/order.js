@@ -20,13 +20,20 @@ const showCheckoutPage = async (req, res, next) => {
   const userId = req.session.user.id;
   const resSlug = req.params.resSlug;
 
-  const order = await getCartDishbyUserAndRestaurant(resSlug, userId);
-  const price = calculatePrice(order);
-  res.render("checkout", {
-    title: "Checkout Page",
-    order: order,
-    price: price,
-  });
+  try {
+    const order = await getCartDishbyUserAndRestaurant(resSlug, userId);
+    const price = calculatePrice(order);
+    res.render("checkout", {
+      title: "Checkout Page",
+      order: order,
+      price: price,
+    });
+  } catch(error) {
+    console.error("Error loading edit form:", error);
+    req.flash("error", "Something went wrong. Please try again.");
+    return res.redirect(`/restaurant/${resSlug}`);
+
+  }
 };
 
 const showOrderPage = async (req, res, next) => {

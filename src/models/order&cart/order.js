@@ -87,7 +87,7 @@ const getOrderById = async (userId, orderId) => {
               WHERE o.user_id = $1 AND o.id = $2
               ORDER BY od.order_id`;
   const result = await db.query(orderQuery, [userId, orderId]);
-  if (result.rows.length === 0) return false;
+  if (result.rows.length === 0) return {};
   const orderInfo = result.rows[0];
   const tax = (orderInfo.subtotal * 0.1).toFixed(2);
 
@@ -137,7 +137,7 @@ const getOrderByOrderId = async (orderId) => {
               WHERE o.id = $1
               ORDER BY od.order_id`;
   const result = await db.query(orderQuery, [orderId]);
-  if (result.rows.length === 0) return false;
+  if (result.rows.length === 0) return {};
   const orderInfo = result.rows[0];
   const tax = (orderInfo.subtotal * 0.1).toFixed(2);
 
@@ -203,7 +203,7 @@ const getOrderByUserId = async (userId) => {
               WHERE o.user_id = $1
               `;
   const result = await db.query(query, [userId]);
-  if (result.rows.length === 0) return false;
+  if (result.rows.length === 0) return [];
 
   let orders = {};
   result.rows.forEach((row) => {
