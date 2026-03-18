@@ -103,8 +103,13 @@ body {
   background-color: gray;
 }
 
-.res-open {
-  
+form {
+  label {
+    .form-required-star {
+      color: red;
+      margin-left: 0.3rem;
+    }
+  }
 }
 
 }

@@ -31,6 +31,7 @@ const getUserById = async (id) => {
                 users.name,
                 users.email,
                 users.created_at,
+                users.address,
                 roles.role_name AS "roleName"
             FROM users
             INNER JOIN roles ON users.role_id = roles.id
@@ -42,6 +43,18 @@ const getUserById = async (id) => {
 
 
 // update user (user or admin)
+const updateUser = async (id, name, email, address) => {
+    const query = `
+        UPDATE users 
+        SET name = $1, email = $2, address = $3, updated_at = CURRENT_TIMESTAMP
+        WHERE id = $4
+        RETURNING id, name, email, address, updated_at
+    `;
+    const result = await db.query(query, [name, email, address, id]);
+    return result.rows[0] || null;
+};
+
+
 
 // delete user (user or admin)
 const deleteUsser = async (id) => {
@@ -50,4 +63,4 @@ const deleteUsser = async (id) => {
     return result.rowCount > 0;
 }
 
-export {emailExist, saveUser, getAllUsers, getUserById, deleteUsser};
+export {emailExist, saveUser, getAllUsers, getUserById, deleteUsser, updateUser};

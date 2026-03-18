@@ -7,12 +7,12 @@
   </p>
   <form class="contact-form" method="post" action="/contact" novalidate>
     <div class="form-group">
-        <label for="subject">Subject</label>
+        <label for="subject">Subject<span class="form-required-star">*</span></label>
         <input type="text" id="subject" name="subject"
             placeholder="What is this message about?" minlength="2" required>
     </div>
     <div class="form-group">
-        <label for="message">Message</label>
+        <label for="message">Message<span class="form-required-star">*</span></label>
         <textarea id="message" name="message" rows="6" minlength="10" required
             placeholder="Please provide details about your questions or feedback ..."></textarea>
     </div>

@@ -53,7 +53,7 @@
                             <p><%= listUser.address %></p>
 
                             <% if (canEdit) { %>
-                                    <a class="user-edit-btn" href="/dashboard/admin/userId/edit">Edit</a>
+                                    <a class="user-edit-btn" href="/dashboard/admin/<%= listUser.id %>/edit">Edit</a>
                             <% } %>
                         </div>
                     <% }); %>

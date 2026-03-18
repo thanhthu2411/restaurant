@@ -151,9 +151,9 @@ CREATE TABLE IF NOT EXISTS contact_form (
 
 -- insert data into tables
 INSERT INTO roles (role_name, role_description) VALUES
-    ('Admin', 'Administrator with full system access'),
-    ('Owner', 'Restaurant owner with control over their restaurnt'),
-    ('User', 'Standard user with basic access');
+    ('admin', 'Administrator with full system access'),
+    ('owner', 'Restaurant owner with control over their restaurnt'),
+    ('user', 'Standard user with basic access');
 
 INSERT INTO categories (category_name, slug) VALUES
     ('burgers', 'burgers'),

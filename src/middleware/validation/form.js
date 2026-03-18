@@ -25,7 +25,7 @@ const registrationValidation = [
     .trim()
     .isLength({min:2, max:100})
     .withMessage('Name must be at least 2 characters')
-    .matches(/^[a-zA-Z\s'-]+$/)
+    .matches(/^[a-zA-Z0-9\s'-]+$/)    
     .withMessage('Name can only contain letters, spaces, hyphens, and apostrophes'),
   
   body('email')
@@ -104,4 +104,22 @@ const statusUpdateValidation = [
     })
 ]
 
-export {contactValidation, registrationValidation, loginValidation, reviewValidation, statusUpdateValidation};
+const editProfileValidation = [
+  body("name")
+    .trim()
+    .isLength({ min: 2, max: 100 })
+    .withMessage("Name must be between 2 and 100 characters")
+    .matches(/^[a-zA-Z\s'-]+$/)
+    .withMessage(
+      "Name can only contain letters, spaces, hyphens, and apostrophes",
+    ),
+  body("email")
+    .trim()
+    .isEmail()
+    .normalizeEmail()
+    .withMessage("Must be a valid email address")
+    .isLength({ max: 255 })
+    .withMessage("Email address is too long"),
+];
+
+export {contactValidation, registrationValidation, loginValidation, reviewValidation, statusUpdateValidation, editProfileValidation};
