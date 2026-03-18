@@ -20,6 +20,8 @@ import flash from './src/middleware/flash.js';
  * Setup Express Server
  */
 const app = express();
+app.set('trust proxy', 1);
+
 /**
  * Declare Important VARIABLEs
  */
