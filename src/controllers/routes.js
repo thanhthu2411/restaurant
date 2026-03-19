@@ -15,6 +15,44 @@ import dashboardRouter from './dashboard/dashboard.js';
 
 const router = Router();
 
+// Add catalog-specific styles to all catalog routes
+router.use('/', (req, res, next) => {
+    res.addStyle('<link rel="stylesheet" href="/css/main.css">');
+    next();
+});
+router.use('/restaurant', (req, res, next) => {
+    res.addStyle('<link rel="stylesheet" href="/css/restaurant.css">');
+    next();
+});
+router.use('/contact', (req, res, next) => {
+    res.addStyle('<link rel="stylesheet" href="/css/contact.css">');
+    next();
+});
+router.use('/register', (req, res, next) => {
+    res.addStyle('<link rel="stylesheet" href="/css/registration.css">');
+    next();
+});
+router.use('/login', (req, res, next) => {
+    res.addStyle('<link rel="stylesheet" href="/css/login.css">');
+    next();
+});
+router.use('/cart', (req, res, next) => {
+    res.addStyle('<link rel="stylesheet" href="/css/cart.css">');
+    next();
+});
+router.use('/order', (req, res, next) => {
+    res.addStyle('<link rel="stylesheet" href="/css/order.css">');
+    next();
+});
+router.use('/checkout', (req, res, next) => {
+    res.addStyle('<link rel="stylesheet" href="/css/checkout.css">');
+    next();
+});
+router.use('/dashboard', (req, res, next) => {
+    res.addStyle('<link rel="stylesheet" href="/css/dashboard.css">');
+    next();
+});
+
 router.get('/', homePage);
 router.get('/restaurant/:resSlug', restaurantDetailPage);
 router.post('/restaurant/:resSlug/review', requireLogin, reviewValidation, processReviewForm);

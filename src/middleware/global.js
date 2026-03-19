@@ -2,6 +2,41 @@ import { getCartbyUser } from "../models/order&cart/cart.js";
 import { isResOpen } from "../models/order&cart/order.js";
 
 //handle loading css file and js file
+const setHeadAssetsFunctionality = (res) => {
+    res.locals.styles = [
+        { content: '<link rel="stylesheet" href="/css/global.css">', priority: 0 },
+        { content: '<link rel="stylesheet" href="/css/header.css">', priority: 0 },
+        { content: '<link rel="stylesheet" href="/css/sidebar.css">', priority: 0 },
+        { content: '<link rel="stylesheet" href="/css/cart.css">', priority: 0 }
+    ];
+
+    res.locals.scripts = [
+        { content: '<script src="/js/base.js" type="module"></script>', priority: 0 }
+    ];
+
+    res.addStyle = (css, priority = 0) => {
+        res.locals.styles.push({ content: css, priority });
+    };
+
+    res.addScript = (js, priority = 0) => {
+        res.locals.scripts.push({ content: js, priority });
+    };
+
+    res.locals.renderStyles = () => {
+        return res.locals.styles
+            .sort((a, b) => b.priority - a.priority)
+            .map(item => item.content)
+            .join('\n');
+    };
+
+    res.locals.renderScripts = () => {
+        return res.locals.scripts
+            .sort((a, b) => b.priority - a.priority)
+            .map(item => item.content)
+            .join('\n');
+    };
+};
+
 
 const addLocalVariables = async (req, res, next) => {
   try {
@@ -30,6 +65,8 @@ const addLocalVariables = async (req, res, next) => {
     //   res.locals.isResOpen = await isResOpen(resSlug);
     // }
     // res.locals.resContainerClass = res.locals.isResOpen ? 'res-open' : 'res-closed';
+
+    setHeadAssetsFunctionality(res);
 
     next();
   } catch (err) {

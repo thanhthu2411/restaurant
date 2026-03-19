@@ -95,6 +95,7 @@ const getRestaurantBySlug = async (restaurantSlug) => {
             d.name, d.code, d.description, d.expiration_date, d.amount`;
 
   const result = await db.query(query, [restaurantSlug]);
+  if(result.rows.length === 0) return {};
   const r = result.rows[0];
 
   return {

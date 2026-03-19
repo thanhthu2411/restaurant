@@ -33,11 +33,16 @@ const homePage = async (req, res) => {
   }
 };
 
-const restaurantDetailPage = async (req, res) => {
+const restaurantDetailPage = async (req, res, next) => {
   const resSlug = req.params.resSlug;
 
   try {
     const restaurant = await getRestaurantBySlug(resSlug);
+    if (Object.keys(restaurant).length === 0) {
+      const err = new Error(`Restaurant ${resSlug} not found`);
+      err.status = 404;
+      return next(err);
+    }
     const dishes = await getDishByRestaurantSlug(resSlug);
     const reviews = await getReviewByRestaurant(resSlug);
 
