@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator";
-import { getCartDishbyUserAndRestaurant } from "../../models/order&cart/cart.js";
+import { getCartDishbyUserAndRestaurant, removeDishFromCart } from "../../models/order&cart/cart.js";
 import { calculatePrice } from "../../utils/calculatePrice.js";
 import { getMessage } from "../../utils/getMessage.js";
 import {
@@ -86,6 +86,8 @@ const processNewOrder = async (req, res, next) => {
 
   try {
     const orderId = await saveNewOrder(userId, resSlug);
+    //remove items from cart 
+    await removeDishFromCart(resSlug, userId);
     req.flash("success", "Your order has been confirmed.");
     return res.redirect(`/order/${orderId}`);
   } catch (error) {
@@ -131,7 +133,6 @@ const processOrderStatusUpdate = async (req, res, next) => {
     }
 
     await updateOrderStatus(orderId, updatedStatus);
-    console.log("HIT CONTROLLER");
     return res.redirect("/dashboard/owner");
   } catch (error) {
     console.error("Error updating order status", error);
@@ -143,6 +144,8 @@ const processOrderStatusUpdate = async (req, res, next) => {
   }
 };
 
+
+//router handler
 router.get("/:orderId", showOrderPage);
 router.post(
   "/:orderId/status",

@@ -7,7 +7,8 @@ const setHeadAssetsFunctionality = (res) => {
         { content: '<link rel="stylesheet" href="/css/global.css">', priority: 0 },
         { content: '<link rel="stylesheet" href="/css/header.css">', priority: 0 },
         { content: '<link rel="stylesheet" href="/css/sidebar.css">', priority: 0 },
-        { content: '<link rel="stylesheet" href="/css/cart.css">', priority: 0 }
+        { content: '<link rel="stylesheet" href="/css/cart.css">', priority: 0 },
+        { content: '<link rel="stylesheet" href="/css/error.css">', priority: 0 },
     ];
 
     res.locals.scripts = [

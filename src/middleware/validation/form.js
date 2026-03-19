@@ -26,7 +26,7 @@ const registrationValidation = [
     .isLength({min:2, max:100})
     .withMessage('Name must be at least 2 characters')
     .matches(/^[a-zA-Z0-9\s'-]+$/)    
-    .withMessage('Name can only contain letters, spaces, hyphens, and apostrophes'),
+    .withMessage('Name can only contain numbers, letters, spaces, hyphens, and apostrophes'),
   
   body('email')
     .trim()
@@ -109,10 +109,8 @@ const editProfileValidation = [
     .trim()
     .isLength({ min: 2, max: 100 })
     .withMessage("Name must be between 2 and 100 characters")
-    .matches(/^[a-zA-Z\s'-]+$/)
-    .withMessage(
-      "Name can only contain letters, spaces, hyphens, and apostrophes",
-    ),
+    .matches(/^[a-zA-Z0-9\s'-]+$/)    
+    .withMessage('Name can only contain numbers, letters, spaces, hyphens, and apostrophes'),
   body("email")
     .trim()
     .isEmail()

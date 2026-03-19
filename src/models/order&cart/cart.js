@@ -25,8 +25,9 @@ const getCartbyUser = async (userId) => {
         WHERE c.user_id = $1`;
 
   const result = await db.query(query, [userId]);
+  if(result.rows.length === 0) return null;
   const cartResult = result.rows;
-  // return cartResult;
+
   let cart = {};
   cartResult.forEach((r) => {
     if (!r.restaurantId) return;
@@ -144,11 +145,11 @@ const getCartDishbyUserAndRestaurant = async (resSlug, userId) => {
                     ON c.user_id = u.id
                     WHERE r.slug = $1 AND cd.cart_id = $2`;
   const result = await db.query(query, [resSlug, cartId]);
-  if (result.rows.length === 0) return {};
+  if (result.rows.length === 0) return null;
 
   const resResult = result.rows[0];
   const dishResult = result.rows;
-  let order = {
+  let cart = {
     cartId: resResult.cartId,
     restaurantId: resResult.restaurantId,
     dealId: resResult.dealId,
@@ -170,7 +171,7 @@ const getCartDishbyUserAndRestaurant = async (resSlug, userId) => {
   };
 
   dishResult.forEach(dish => {
-    order.dishes.push ({
+    cart.dishes.push ({
       dishId: dish.id,
       categoryId: dish.categoryId,
       dishName: dish.dishName,
@@ -181,9 +182,24 @@ const getCartDishbyUserAndRestaurant = async (resSlug, userId) => {
     })
   });
 
-  return order;
+  return cart;
+}
+
+const removeDishFromCart = async (resSlug, userId) => {
+    const cart = await getCartDishbyUserAndRestaurant(resSlug, userId);
+    if (!cart) return false;
+    const cartId = cart.cartId;
+    const query = `DELETE FROM cart_dish cd
+                    USING dishes d, restaurants r
+                    WHERE cd.dish_id = d.id
+                      AND d.restaurant_id = r.id
+                      AND cd.cart_id = $1
+                      AND r.slug = $2`;
+    const result = await db.query(query, [cartId, resSlug]);
+
+    return result.rowCount > 0;
 }
 
 export { getCartbyUser, createCartforUser, addDishtoCart, increaseDishQuantity, decreaseDishQuantity,
-          getCartDishbyUserAndRestaurant
+          getCartDishbyUserAndRestaurant, removeDishFromCart
  };

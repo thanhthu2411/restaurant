@@ -24,6 +24,10 @@ router.use('/restaurant', (req, res, next) => {
     res.addStyle('<link rel="stylesheet" href="/css/restaurant.css">');
     next();
 });
+router.use('/restaurant', (req, res, next) => {
+    res.addScript('<script src="/js/restaurant.js" type="module"></script>');
+    next();
+});
 router.use('/contact', (req, res, next) => {
     res.addStyle('<link rel="stylesheet" href="/css/contact.css">');
     next();

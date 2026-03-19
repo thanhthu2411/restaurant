@@ -1,5 +1,5 @@
 // when a dish being clicked
-export const dishCardHandler = () => {
+const dishCardHandler = () => {
     const dishCards = document.querySelectorAll(".dish-card");
     const dishModal = document.querySelector(".menu-container-expand");
     const modalCloseBtn = dishModal.querySelector(".modal-close-btn");
@@ -21,7 +21,7 @@ export const dishCardHandler = () => {
 }
 
 //handle add review button
-export const reviewFormHandler = () => {
+const reviewFormHandler = () => {
     const closeFormBtn = document.querySelector(".form-close-btn");
     const addReviewBtn = document.querySelector(".add-review-btn");
     const reviewForm = document.querySelector(".review-form-container");
@@ -35,3 +35,9 @@ export const reviewFormHandler = () => {
     })
 }
 
+function init() {
+    dishCardHandler();
+    reviewFormHandler();
+}
+
+init();

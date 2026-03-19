@@ -15,6 +15,7 @@ const processAddtoCart = async (req, res, next) => {
 
   try {
     await addDishtoCart(dishSlug, userId);
+    req.flash("success", "Item added to cart successfully.");
     return res.redirect(`/restaurant/${resSlug}`);
   } catch (error) {
     console.error("Error loading edit form:", error);
@@ -30,6 +31,7 @@ const processIncreaseCart = async (req, res, next) => {
 
   try {
     await increaseDishQuantity(dishSlug, userId);
+    req.flash("success", "Quantity updated!");
     return res.redirect(req.get("referer") || "/");
   } catch (error) {
     console.error("Error loading edit form:", error);
@@ -45,6 +47,7 @@ const processDecreaseCart = async (req, res, next) => {
 
   try {
     await decreaseDishQuantity(dishSlug, userId);
+    req.flash("success", "Quantity updated!");
     return res.redirect(req.get("referer") || "/");
   } catch (error) {
     console.error("Error loading edit form:", error);

@@ -41,31 +41,35 @@
         <div class="user-order-container">
             <h2>Your Order History</h2>
             <div class="orders-container">
-                <% userOrders.forEach(order => { %>
-                    <div class="order-card">
-                        <a href="/restaurant/<%= order.restaurantSlug %>"><%= order.restaurantName %></a>
-                        <div class="dish-info-container">
-                            <%order.dishes.forEach(dish => { %>
-                                <div class="dish-card">
-                                        <p><%= dish.dishQuantity %>x <%= dish.dishName %></p>
-                                        <p class="dish-price">$<%= dish.dishPrice * dish.dishQuantity %></p>
+                <% if (userOrders.length === 0) { %>
+                    <p>You haven't had any orders yet.</p>
+                    <% } else { %>
+                        <% userOrders.forEach(order => { %>
+                            <div class="order-card">
+                                <a href="/restaurant/<%= order.restaurantSlug %>"><%= order.restaurantName %></a>
+                                <div class="dish-info-container">
+                                    <%order.dishes.forEach(dish => { %>
+                                        <div class="dish-card">
+                                                <p><%= dish.dishQuantity %>x <%= dish.dishName %></p>
+                                                <p class="dish-price">$<%= dish.dishPrice * dish.dishQuantity %></p>
+                                        </div>
+                                    <% }) %>
                                 </div>
-                            <% }) %>
-                        </div>
-                        <div class="order-info-container">
-                            <details>
-                                <summary>Order Details</summary>
-                                <div>
-                                    <a class="order-page-link" href="/order/<%= order.orderId %>">Order Detail Page</a>
-                                    <p>Subtotal: <span><%=order.subtotal %></span></p>
-                                    <p>Total: <span><%=order.total %></span></p>
-                                    <p>Status: <span><%=order.orderStatus %></span></p>
-                                    <p>Created at: <span><%=order.orderCreatedTime %></span></p>
+                                <div class="order-info-container">
+                                    <details>
+                                        <summary>Order Details</summary>
+                                        <div>
+                                            <a class="order-page-link" href="/order/<%= order.orderId %>">Order Detail Page</a>
+                                            <p>Subtotal: <span><%=order.subtotal %></span></p>
+                                            <p>Total: <span><%=order.total %></span></p>
+                                            <p>Status: <span><%=order.orderStatus %></span></p>
+                                            <p>Created at: <span><%=order.orderCreatedTime %></span></p>
+                                        </div>
+                                    </details>
                                 </div>
-                            </details>
-                        </div>
-                    </div>
-                <% }) %>
+                            </div>
+                        <% }) %>
+                    <% } %>
             </div>
         </div>
         <div class="user-review-container">
