@@ -354,7 +354,7 @@
     margin: 2rem auto;
     width: 85%;
     max-width: 550px;
-    height: 80dvh;
+    height: 83dvh;
     background-color: white;
     padding: 1rem 1rem;
 
@@ -422,11 +422,11 @@
         display: flex;
         flex-direction: row;
         justify-content: space-around;
-        margin-top: 3.5rem;
+        margin-top: 3rem;
 
         .save-review-btn,
         .cancel-review-btn {
-          padding: 1rem 1.5rem;
+          padding: 0.8rem 1.5rem;
           text-decoration: none;
           color: white;
           font-weight: bold;
