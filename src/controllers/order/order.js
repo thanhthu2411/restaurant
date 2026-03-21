@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator";
-import { getCartDishbyUserAndRestaurant, removeDishFromCart } from "../../models/order&cart/cart.js";
+import { getCartDishbyUserAndRestaurant, removeDishFromCart } from "../../models/cart/cart.js";
 import { calculatePrice } from "../../utils/calculatePrice.js";
 import { getMessage } from "../../utils/getMessage.js";
 import {
@@ -7,7 +7,7 @@ import {
   getOrderById,
   updateOrderStatus,
   getOrderByOrderId
-} from "../../models/order&cart/order.js";
+} from "../../models/order/order.js";
 import { requireRole } from "../../middleware/auth.js";
 import { statusUpdateValidation } from "../../middleware/validation/form.js";
 import { canOrder } from "../../middleware/order.js";

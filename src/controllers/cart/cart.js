@@ -2,7 +2,7 @@ import {
   addDishtoCart,
   increaseDishQuantity,
   decreaseDishQuantity,
-} from "../../models/order&cart/cart.js";
+} from "../../models/cart/cart.js";
 import { Router } from "express";
 import { requireLogin } from "../../middleware/auth.js";
 

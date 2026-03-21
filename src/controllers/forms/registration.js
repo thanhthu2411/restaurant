@@ -5,7 +5,7 @@ import {
   saveUser,
   emailExist,
 } from "../../models/forms/registration.js";
-import { createCartforUser } from "../../models/order&cart/cart.js";
+import { createCartforUser } from "../../models/cart/cart.js";
 
 import bcrypt from "bcrypt";
 import { validationResult } from "express-validator";

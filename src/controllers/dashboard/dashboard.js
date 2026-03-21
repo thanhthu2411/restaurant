@@ -2,7 +2,7 @@ import { Router } from "express";
 import {
   getOrderByUserId,
   getOrderByRestaurantOwner,
-} from "../../models/order&cart/order.js";
+} from "../../models/order/order.js";
 import { getReviewByUserId } from "../../models/review/review.js";
 import { requireRole } from "../../middleware/auth.js";
 import {

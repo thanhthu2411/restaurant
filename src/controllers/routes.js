@@ -7,9 +7,9 @@ import {processLogout} from './forms/login.js';
 import { requireLogin } from '../middleware/auth.js';
 import { reviewValidation } from '../middleware/validation/form.js';
 import { processReviewForm } from './forms/review.js';
-import cartRouter  from './order&cart/cart.js';
-import orderRouter from './order&cart/order.js';
-import { showCheckoutPage } from './order&cart/order.js';
+import cartRouter  from './cart/cart.js';
+import orderRouter from './order/order.js';
+import { showCheckoutPage } from './order/order.js';
 import { canOrder } from '../middleware/order.js';
 import dashboardRouter from './dashboard/dashboard.js';
 

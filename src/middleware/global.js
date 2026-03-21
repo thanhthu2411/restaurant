@@ -1,5 +1,5 @@
-import { getCartbyUser } from "../models/order&cart/cart.js";
-import { isResOpen } from "../models/order&cart/order.js";
+import { getCartbyUser } from "../models/cart/cart.js";
+import { isResOpen } from "../models/order/order.js";
 
 //handle loading css file and js file
 const setHeadAssetsFunctionality = (res) => {

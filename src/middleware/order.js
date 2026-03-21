@@ -1,4 +1,4 @@
-import { isResOpen } from "../models/order&cart/order.js";
+import { isResOpen } from "../models/order/order.js";
 
 const canOrder = async (req, res, next) => {
   const resSlug = req.params.resSlug;

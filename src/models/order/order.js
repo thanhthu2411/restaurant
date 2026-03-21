@@ -1,5 +1,5 @@
 import db from "../db.js";
-import { getCartDishbyUserAndRestaurant } from "./cart.js";
+import { getCartDishbyUserAndRestaurant } from "../cart/cart.js";
 import { calculatePrice } from "../../utils/calculatePrice.js";
 import { getRestaurantIdFromSlug } from "../restaurant/restaurant.js";
 
