@@ -30,7 +30,7 @@ const processLogin = async (req, res) => {
             return res.redirect('/login');
         }
 
-        const isMatched = verifyPassword(password, user.password);
+        const isMatched = await verifyPassword(password, user.password);
         if (!isMatched) {
             req.flash('error', 'Invalid email or password')            
             return res.redirect('/login');
