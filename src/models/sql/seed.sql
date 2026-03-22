@@ -34,7 +34,7 @@ CREATE TABLE categories (
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    role_id INTEGER REFERENCES roles(id) DEFAULT 3,
+    role_id INTEGER REFERENCES roles(id) DEFAULT 3 ON DELETE SET DEFAULT,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
@@ -56,14 +56,14 @@ CREATE TABLE deals (
 
 CREATE TABLE restaurants (
     id SERIAL PRIMARY KEY,
-    owner_id INTEGER REFERENCES users(id),
-    deal_id INTEGER REFERENCES deals(id),
+    owner_id INTEGER NULL REFERENCES users(id) ON DELETE SET NULL,
+    deal_id INTEGER NULL REFERENCES deals(id) ON DELETE SET NULL,
     name VARCHAR(255) NOT NULL,
     slug VARCHAR(255) UNIQUE NOT NULL,
     address TEXT NOT NULL,
     open_hour TIME DEFAULT '08:00:00',
     close_hour TIME DEFAULT '22:00:00',
-    delivery_fee DECIMAL DEFAULT 3.99,
+    delivery_fee DECIMAL(10,2) DEFAULT 3.99,
     delivery_minutes INTEGER DEFAULT 15,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
@@ -77,12 +77,12 @@ CREATE TABLE restaurant_category (
 
 CREATE TABLE dishes (
     id SERIAL PRIMARY KEY,
-    restaurant_id INTEGER REFERENCES restaurants(id),
-    category_id INTEGER REFERENCES categories(id),
+    restaurant_id INTEGER REFERENCES restaurants(id) ON DELETE CASCADE,
+    category_id INTEGER NULL REFERENCES categories(id) ON DELETE SET NULL,
     name VARCHAR(200) NOT NULL,
     slug VARCHAR(255) UNIQUE NOT NULL,
     description TEXT,
-    price DECIMAL NOT NULL,
+    price DECIMAL(10,2) NOT NULL CHECK (price >= 0),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 
 );
@@ -97,28 +97,28 @@ CREATE TABLE order_status (
 
 CREATE TABLE orders (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id),
-    restaurant_id INTEGER REFERENCES restaurants(id),
-    status_id INTEGER REFERENCES order_status(id),
-    subtotal DECIMAL,
-    total DECIMAL,
-    delivery_fee DECIMAL DEFAULT 3.99,
+    user_id INTEGER NULL REFERENCES users(id) ON DELETE SET NULL,
+    restaurant_id INTEGER NULL REFERENCES restaurants(id) ON DELETE SET NULL,
+    status_id INTEGER NOT NULL REFERENCES order_status(id),
+    subtotal DECIMAL(10,2),
+    total DECIMAL(10,2),
+    delivery_fee DECIMAL(10,2) DEFAULT 3.99,
     delivery_minutes INTEGER DEFAULT 15,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE order_dish (
-    order_id INTEGER REFERENCES orders(id),
-    dish_id INTEGER REFERENCES dishes(id),
-    quantity INTEGER,
-    order_price DECIMAL,
+    order_id INTEGER REFERENCES orders(id) ON DELETE CASCADE,
+    dish_id INTEGER REFERENCES dishes(id) ON DELETE CASCADE,
+    quantity INTEGER NOT NULL CHECK(quantity > 0),
+    order_price DECIMAL(10,2) NOT NULL,
     PRIMARY KEY (order_id, dish_id));
 
 
 CREATE TABLE cart (
     id SERIAL PRIMARY KEY,
-    user_id INTEGER REFERENCES users(id),
+    user_id INTEGER REFERENCES users(id) ON DELETE CASCADE,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -126,15 +126,15 @@ ALTER TABLE cart
 ADD CONSTRAINT unique_user_cart UNIQUE (user_id);
 
 CREATE TABLE cart_dish (
-    cart_id INTEGER REFERENCES cart(id),
-    dish_id INTEGER REFERENCES dishes(id),
+    cart_id INTEGER REFERENCES cart(id) ON DELETE CASCADE,
+    dish_id INTEGER REFERENCES dishes(id) ON DELETE CASCADE,
     quantity INTEGER DEFAULT 1 CHECK(quantity>=0),
     PRIMARY KEY (cart_id, dish_id));
 
 CREATE TABLE review (
     id SERIAL PRIMARY KEY,
-    restaurant_id INTEGER REFERENCES restaurants(id),
-    user_id INTEGER REFERENCES users(id),
+    restaurant_id INTEGER REFERENCES restaurants(id) ON DELETE CASCADE,
+    user_id INTEGER NULL REFERENCES users(id) ON DELETE SET NULL,
     rating INTEGER CHECK (rating < 6 AND rating > 0),
     content TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP

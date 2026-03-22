@@ -4,6 +4,7 @@ const contactValidation = [
   body("subject")
     .trim()
     .isLength({ min: 2, max: 255 })
+    .withMessage("Subject must be between 2 and 255 character")
     .matches(/^[a-zA-Z0-9\s\-.,!?]+$/)
     .withMessage("Subject contains invalid characters"),
   body("message")

@@ -29,7 +29,7 @@ const showCheckoutPage = async (req, res, next) => {
       price: price,
     });
   } catch(error) {
-    console.error("Error loading edit form:", error);
+    console.error("Error getting checkout page:", error);
     req.flash("error", "Something went wrong. Please try again.");
     return res.redirect(`/restaurant/${resSlug}`);
 
@@ -39,7 +39,7 @@ const showCheckoutPage = async (req, res, next) => {
 const showOrderPage = async (req, res, next) => {
   const orderId = req.params.orderId;
   if (!orderId) return false;
-  console.log(orderId);
+  // console.log(orderId);
   const userId = req.session.user.id;
   if (!userId) {
     req.flash("error", "Please sign in first.");
@@ -48,7 +48,6 @@ const showOrderPage = async (req, res, next) => {
 
   try {
     const order = await getOrderById(userId, orderId);
-    console.log(order);
     if (!order) {
       req.flash("error", "Fail to get this order");
       return res.redirect("/");
