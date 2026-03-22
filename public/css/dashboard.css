@@ -143,6 +143,28 @@
         border-radius: 10px;
         box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
         padding: 0.8rem 2rem;
+
+        .review-card-action {
+          display: block;
+          margin: 0 auto;
+          width: 70%;
+
+          .delete-review-form {
+            button {
+              display: block;
+              width: 90%;
+              margin: 0 auto;
+
+              .icon {
+                padding: 0.5rem;
+                &:hover {
+                  background-color: rgb(238, 236, 236);
+                  border-radius: 50%;
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
@@ -319,7 +341,8 @@
       }
     }
 
-    button, a {
+    button,
+    a {
       font-size: 1.2rem;
       margin: 2rem;
       padding: 0.8rem;
@@ -335,7 +358,6 @@
     }
   }
 }
-
 
 @media (min-width: 770px) {
   .user-dashboard-container,

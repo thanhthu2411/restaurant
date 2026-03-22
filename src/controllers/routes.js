@@ -12,6 +12,7 @@ import orderRouter from './order/order.js';
 import { showCheckoutPage } from './order/order.js';
 import { canOrder } from '../middleware/order.js';
 import dashboardRouter from './dashboard/dashboard.js';
+import reviewRouter from './review/review.js';
 
 const router = Router();
 
@@ -71,5 +72,7 @@ router.use('/order', requireLogin, orderRouter);
 router.get('/checkout/:resSlug', requireLogin, canOrder, showCheckoutPage);
 //dashboard
 router.use('/dashboard', requireLogin, dashboardRouter);
+//review
+router.use('/review', requireLogin, reviewRouter);
 // search
 export default router;

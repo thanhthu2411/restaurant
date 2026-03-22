@@ -6,7 +6,9 @@ const getReviewByRestaurant = async (resSlug) => {
                     r.content, r.created_at
                 FROM restaurants re LEFT JOIN review r
                     ON r.restaurant_id = re.id
-                WHERE re.slug = $1;`;
+                WHERE re.slug = $1
+                ORDER BY r.created_at DESC
+                ;`;
   const result = await db.query(query, [resSlug]);
   if(result.rows.length === 0) return [];
 
@@ -24,7 +26,8 @@ const getReviewByRestaurant = async (resSlug) => {
 const getReviewByUserId = async (userId) => {
     const query = `SELECT r.id as "reviewId", r.rating, r.content, r.created_at as "createdAt"
             FROM review r 
-            WHERE r.user_id = $1`;
+            WHERE r.user_id = $1
+            ORDER BY r.created_at DESC`;
     const result = await db.query(query, [userId]);
 
    return result.rows;
@@ -53,4 +56,11 @@ const insertNewReview = async (resSlug, userId, rating, content) => {
     }
 };
 
-export {getReviewByUserId, getReviewByRestaurant, insertNewReview};
+const deleteReviewById = async(reviewId, userId) => {
+    const query = `DELETE FROM review r
+                    WHERE id = $1 AND user_id = $2`;
+    const result = await db.query(query, [reviewId, userId]);
+    return result.rowCount > 0;
+}
+
+export {getReviewByUserId, getReviewByRestaurant, insertNewReview, deleteReviewById};
