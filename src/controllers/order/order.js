@@ -54,8 +54,7 @@ const showOrderPage = async (req, res, next) => {
       return res.redirect("/");
     }
     const status = order.orderStatus;
-    const { message, submessage } = getMessage(order);
-    const arrivalTime = order.deliveryMinutes + 15;
+    const { message, submessage, arrivalTime } = getMessage(order);
 
     res.render("order", {
       title: `Order ${status}`,
