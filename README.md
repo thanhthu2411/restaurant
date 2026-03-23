@@ -7,7 +7,7 @@
 
 3. User Roles
 + Admin: edit their own info, edit other user's info, view all contact forms
-+ Restaurant Owner: edit their own info, change ongoing orders' status
++ Restaurant Owner: edit their own info, update ongoing orders' status, view their restaurant's info
 + Standard User: add items to cart, place orders online, leave review on restaurants, edit their own info, view order history, view their reviews
 
 4. Test Account Credentials:

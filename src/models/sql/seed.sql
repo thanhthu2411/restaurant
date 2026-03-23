@@ -34,13 +34,17 @@ CREATE TABLE categories (
 
 CREATE TABLE users (
     id SERIAL PRIMARY KEY,
-    role_id INTEGER REFERENCES roles(id) DEFAULT 3 ON DELETE SET DEFAULT,
+    role_id INTEGER DEFAULT 3,
     name VARCHAR(255) NOT NULL,
     email VARCHAR(255) UNIQUE NOT NULL,
     password VARCHAR(255) NOT NULL,
     address TEXT,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT fk_user_role
+        FOREIGN KEY (role_id)
+        REFERENCES roles(id)
+        ON DELETE SET DEFAULT
 
 );
 
@@ -145,7 +149,21 @@ CREATE TABLE IF NOT EXISTS contact_form (
     id SERIAL PRIMARY KEY,
     subject VARCHAR(255) NOT NULL,
     message TEXT NOT NULL,
-    submitted TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+
+    user_id INTEGER,
+
+    status VARCHAR(20) 
+        CHECK (status IN ('unread', 'read', 'replied')) 
+        DEFAULT 'unread',
+
+    reply TEXT,
+    replied_at TIMESTAMP,
+    submitted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+
+    CONSTRAINT fk_contact_user
+        FOREIGN KEY (user_id)
+        REFERENCES users(id)
+        ON DELETE SET NULL
 );
 
 

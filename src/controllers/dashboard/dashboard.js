@@ -11,7 +11,7 @@ import {
   emailExist,
   updateUser,
 } from "../../models/forms/registration.js";
-import { getAllRestaurantsAndDishes } from "../../models/restaurant/restaurant.js";
+import { getAllRestaurantsAndDishes, getRestaurantByOwner } from "../../models/restaurant/restaurant.js";
 import { getAllContactForms } from "../../models/forms/contact.js";
 import { editProfileValidation } from "../../middleware/validation/form.js";
 import { validationResult } from "express-validator";
@@ -45,10 +45,11 @@ const showDashboard = async (req, res) => {
       });
     } else if (userRole === "owner") {
       const restaurantOrders = await getOrderByRestaurantOwner(userId);
-
+      const restaurant = await getRestaurantByOwner(userId);
       res.render("dashboard/owner", {
         title: "Owner Dashboard",
         orders: restaurantOrders,
+        restaurant: restaurant
       });
     } else {
       res.redirect("/");

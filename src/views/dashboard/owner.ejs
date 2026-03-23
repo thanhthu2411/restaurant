@@ -37,45 +37,113 @@
                 <a class="user-edit-btn" href="/dashboard/profile/edit">Edit Account Information</a>
             <% } %>
         </div>
+        <!-- see restaurant infor/ edit restaurant info -->
+        <div class="owner-restaurant-container">
+            <h2>Restaurant Infomation</h2>
+            <div class="restaurant-info-container">
+                <div class="restaurant-detail">
+                    <span class="label">Name:</span>
+                    <span class="value"><%= restaurant.restaurantName %></span>
+                </div>
+                <div class="restaurant-detail">
+                    <span class="label">Address:</span>
+                    <span class="value"><%= restaurant.restaurantAddress %></span>
+                </div>
+                <div class="restaurant-detail">
+                    <span class="label">Open Hour:</span>
+                    <span class="value"><%= restaurant.openHour %> - <%= restaurant.closeHour %></span>
+                </div>
+                <div class="restaurant-detail">
+                    <span class="label">Delivery Fee:</span>
+                    <span class="value">$<%= restaurant.deliveryFee %></span>
+                </div>
+                <div class="restaurant-detail">
+                    <span class="label">Delivery Time:</span>
+                    <span class="value"><%= restaurant.deliveryMinutes %> mins</span>
+                </div>
+                <div class="restaurant-detail">
+                    <h3>Deals Available:</h3>
+                    <div class="deal-info-container">
+                        <div class="deal-detail">
+                            <span class="label">Deal Name:</span>
+                            <span class="value"><%= restaurant.dealName %></span>
+                        </div>
+                        <div class="deal-detail">
+                            <span class="label">Deal Code:</span>
+                            <span class="value"><%= restaurant.dealCode %></span>
+                        </div>
+                        <div class="deal-detail">
+                            <span class="label">Expiration Date:</span>
+                            <span class="value"><%= new Date(restaurant.dealExpirationDate).toLocaleDateString() %></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- <a class="restaurant-edit-btn" href="/dashboard/owner">Edit Restaurant Information</a> -->
+        </div>
+        <!-- all dishes  -->
+        <div class="owner-dish-container">
+            <h2>Dishes Information</h2>
+            <div class="dish-info-container">
+                <%if(restaurant.dishes.length === 0 ) { %>
+                    <p>No dish listed</p>
+                <% } else { %>
+                    <%restaurant.dishes.forEach(dish => { %>
+                        <div class="dish-card">
+                            <img src="/images/dishes/<%=restaurant.restaurantSlug%>-<%= dish.dishSlug %>.jpg">
+
+                            <div class="dish-detail">
+                                <span><strong>Name:</strong> <%= dish.dishName %></span>
+                                <span><strong>Price:</strong> $<%= dish.dishPrice%></span>
+                                <span><strong>Description:</strong> <%= dish.dishDescription %></span>
+                            </div>
+                            <!-- <a class="dish-edit-btn" href="/dashboard/owner">Edit</a> -->
+                        </div>
+                    <% }) %>
+                <% } %>
+            </div>
+        </div>
         <!-- all orders  -->
         <div class="restaurant-order-container">
             <h2>Ongoing Orders</h2>
             <% if (currentUser && currentUser.roleName.toLowerCase() === 'owner') { %>
                 <div class="order-container">
-                    <%orders.forEach(o => { %>
-                        <div class="order-card">
-                            <p>Status: <span class="order-status"><%= o.orderStatus %></span></p>
-                            <div class="order-dish-container">
-                                <% o.dishes.forEach(dish => { %>
-                                    <div class="order-dish-card">
-                                        <img class="dish-img" src="/images/dishes/<%= o.restaurantSlug %>-<%= dish.dishSlug%>.jpg">
-                                        <div>
-                                            <span><%= dish.dishName %> (Qty: <%= dish.dishQuantity%>)</span>
-                                            <p>$<%= dish.dishPrice %></p>
+                    <%if(orders.length > 0) { %>
+                        <%orders.forEach(o => { %>
+                            <div class="order-card">
+                                <p>Status: <span class="order-status"><%= o.orderStatus %></span></p>
+                                <div class="order-dish-container">
+                                    <% o.dishes.forEach(dish => { %>
+                                        <div class="order-dish-card">
+                                            <img class="dish-img" src="/images/dishes/<%= o.restaurantSlug %>-<%= dish.dishSlug%>.jpg">
+                                            <div>
+                                                <span><%= dish.dishName %> (Qty: <%= dish.dishQuantity%>)</span>
+                                                <p>$<%= dish.dishPrice %></p>
+                                            </div>
                                         </div>
-                                    </div>
-                                <% }) %>
+                                    <% }) %>
+                                </div>
+                                <%if(o.orderStatus !== "delivered") { %>
+                                <form method="post" action="/order/<%= o.orderId %>/status" class="order-status-form">
+                                    <select name="status" id="status">
+                                        <option value="preparing" <%= o.orderStatus === "shipped"|| o.orderStatus === "preparing" ||o.orderStatus === "delivered" ? "disabled": "" %>>Preparing</option>
+                                        <option value="shipped" <%= o.orderStatus === "delivered" || o.orderStatus === "shipped" ? "disabled": "" %>>Shipped</option>
+                                        <option value="delivered">Delivered</option>
+                                    </select>
+                                    <button type="submit">Update Status</button>
+                                </form>
+                                <% } %>
                             </div>
-                            <%if(o.orderStatus !== "delivered") { %>
-                            <form method="post" action="/order/<%= o.orderId %>/status" class="order-status-form">
-                                <select name="status" id="status">
-                                    <option value="preparing" <%= o.orderStatus === "shipped"|| o.orderStatus === "preparing" ||o.orderStatus === "delivered" ? "disabled": "" %>>Preparing</option>
-                                    <option value="shipped" <%= o.orderStatus === "delivered" || o.orderStatus === "shipped" ? "disabled": "" %>>Shipped</option>
-                                    <option value="delivered">Delivered</option>
-                                </select>
-                                <button type="submit">Update Status</button>
-                            </form>
-                            <% } %>
-                        </div>
-
-                    <% }) %>
+                        <% }) %>
+                    <% } else { %>
+                        <p>No orders yet.</p>
+                    <% } %>
                 </div>
             <% } else { %>
                 <p>No orders yet.</p>
             <% } %>
         </div>
-        <!-- see restaurant infor/ edit restaurant info -->
-         <!-- see all dishes / edit dishes info -->
+          
     </section>
     <a class="homepage-link" href="/">Return to Homepage</a>
 </main>
