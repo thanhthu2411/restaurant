@@ -22,9 +22,10 @@ const processContactSubmission = async (req, res) => {
     }
 
     const {subject, message} = req.body;
+    const userId = req.session.user ? req.session.user.id  : null;
 
     try {
-        await insertContactForm (subject, message);
+        await insertContactForm (subject, message, userId, "unread");
         req.flash('success', 'Thank you for contacting us! We will respond soon.');        
         res.redirect('/contact');
     } catch(error) {

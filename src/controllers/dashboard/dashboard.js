@@ -36,7 +36,7 @@ const showDashboard = async (req, res) => {
       const allUsers = await getAllUsers();
       const allRestaurants = await getAllRestaurantsAndDishes();
       const allContactForms = await getAllContactForms();
-
+      // console.log(allContactForms[0].);
       res.render("dashboard/admin", {
         title: "Admin Dashboard",
         users: allUsers,

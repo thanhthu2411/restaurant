@@ -72,6 +72,14 @@
                         <div class="form-card">
                             <h3>Subject: <%= form.subject %></h3>
                             <p>Message: <%= form.message %></p>
+                            <details class="sender-info">
+                                <summary>Sender Info</summary>
+                                <div>
+                                    <p>Sender: <%= form.userName ? form.userName : 'not listed' %></p>
+                                    <p>Sender's Email: <%= form.userEmail ? form.userEmail : 'not listed' %></p>
+                                </div>
+                            </details>
+                            <p><%= form.status %></p>
                         </div>
                     <% }) %>
                 </div>

@@ -4,6 +4,7 @@ BEGIN;
 
 -- Drop existing tables (in reverse dependency order)
 DROP TABLE IF EXISTS review CASCADE;
+DROP TABLE IF EXISTS contact_form CASCADE;
 DROP TABLE IF EXISTS cart_dish CASCADE;
 DROP TABLE IF EXISTS order_dish CASCADE;
 DROP TABLE IF EXISTS cart CASCADE;
@@ -145,25 +146,17 @@ CREATE TABLE review (
 
 );
 
-CREATE TABLE IF NOT EXISTS contact_form (
+CREATE TABLE contact_form (
     id SERIAL PRIMARY KEY,
     subject VARCHAR(255) NOT NULL,
     message TEXT NOT NULL,
-
-    user_id INTEGER,
-
+    user_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
     status VARCHAR(20) 
         CHECK (status IN ('unread', 'read', 'replied')) 
         DEFAULT 'unread',
-
-    reply TEXT,
+    reply_message TEXT,
     replied_at TIMESTAMP,
-    submitted TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-
-    CONSTRAINT fk_contact_user
-        FOREIGN KEY (user_id)
-        REFERENCES users(id)
-        ON DELETE SET NULL
+    submitted TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 
