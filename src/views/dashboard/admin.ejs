@@ -69,18 +69,18 @@
             <% if(contactForms && contactForms.length > 0) { %>
                 <div class="form-container">
                     <% contactForms.forEach(form => { %>
-                        <div class="form-card">
+                        <a href="/contact/<%= form.contactId %>" class="form-card <%= form.status === 'unread' ? 'unread' : 'read' %>">
                             <h3>Subject: <%= form.subject %></h3>
-                            <p>Message: <%= form.message %></p>
-                            <details class="sender-info">
+                            <p>Message: <%= form.message.slice(0,10) %>...</p>
+                            <!-- <details class="sender-info">
                                 <summary>Sender Info</summary>
                                 <div>
-                                    <p>Sender: <%= form.userName ? form.userName : 'not listed' %></p>
-                                    <p>Sender's Email: <%= form.userEmail ? form.userEmail : 'not listed' %></p>
+                                    <span>Sender: <%= form.userName ? form.userName : 'not listed' %></span>
+                                    <span>Sender's Email: <%= form.userEmail ? form.userEmail : 'not listed' %></span>
                                 </div>
-                            </details>
-                            <p><%= form.status %></p>
-                        </div>
+                            </details> -->
+                            <!-- <p class="contact-form-status"><%= form.status %></p> -->
+                        </a>
                     <% }) %>
                 </div>
             <% } else { %>

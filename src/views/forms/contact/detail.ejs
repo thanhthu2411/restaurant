@@ -1,0 +1,67 @@
+<%- include('../../partials/header') %>
+<main class="contact-detail-page">
+  <h1>Contact Form Detail</h1>
+  
+  <section class="contact-detail-container">
+    <div class="contact-container">
+        <h2>Contact Form</h2>
+      <div class="contact-detail">
+        <span class="label">Subject: </span>
+        <span class="value"><%= form.subject %></span>
+      </div>
+      <div class="contact-detail">
+        <span class="label">Message: </span>
+        <span class="value"><%= form.message %></span>
+      </div>
+      <div class="contact-detail">
+        <span class="label">Submitted at: </span>
+        <span class="value"
+          ><%= new Date(form.submitted).toLocaleDateString() %></span
+        >
+      </div>
+    </div>
+    <div class="user-container">
+        <h2>Sender Info</h2>
+      <div class="user-detail">
+        <span class="label">User Name: </span>
+        <span class="value"><%= form.userName ? form.userName : "not listed" %></span>
+      </div>
+      <div class="user-detail">
+        <span class="label">User Email: </span>
+        <span class="value"><%= form.userEmail ? form.userName : "not listed" %></span>
+      </div>
+    </div>
+    <% if(form.status === 'replied') { %>
+    <div class="reply-container">
+        <h2>Reply Detail</h2>
+      <div class="reply-detail">
+        <span class="label">Reply Message: </span>
+        <span class="value"><%= form.replyMessage %></span>
+      </div>
+      <div class="reply-detail">
+        <span class="label">Reply At: </span>
+        <span class="value"><%= new Date(form.repliedAt).toLocaleDateString() %></span>
+      </div>
+    </div>
+    <% } %>
+
+    <!-- check as read and reply button  -->
+     <div class="contact-form-action">
+        <div class="read-action">
+            <%if (form.status === 'unread') { %>
+                <form class="read-form" method="post" action="/contact/<%= form.contactId %>/read">
+                    <button type="submit">✓ Mark as read</button>
+                </form>
+
+            <% } else { %>
+                <div class="read-checkmark">
+                    <img class="icon" src="/images/checkmark.png">
+                    <span>Read</span>
+                </div>
+            <% } %>
+        </div>
+        <!-- <div class="reply-action"></div> -->
+     </div>
+  </section>
+</main>
+<%- include('../../partials/footer') %>

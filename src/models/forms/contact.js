@@ -1,3 +1,4 @@
+import { contactValidation } from '../../middleware/validation/form.js';
 import db from '../db.js';
 
 const insertContactForm = async (subject, message, userId=null, status) => {
@@ -20,4 +21,24 @@ const getAllContactForms = async () => {
     return result.rows;
 }
 
-export {insertContactForm, getAllContactForms};
+const getContactFormById = async (contactId) => {
+    const query = `SELECT cf.id as "contactId", subject, message, submitted, cf.user_id as "userId",
+                        status, reply_message as "replyMessage", replied_at as "repliedAt",
+                        u.name as "userName", u.email as "userEmail"
+                    FROM contact_form cf
+                    LEFT JOIN users u ON u.id = cf.user_id
+                    WHERE cf.id = $1
+                    ORDER BY submitted DESC`
+    const result = await db.query(query, [contactId]);
+    return result.rows[0] || null;
+};
+
+const updateReadStatus = async (contactId) => {
+    const query = `UPDATE contact_form 
+                    SET status = 'read'
+                    WHERE id = $1 RETURNING *`;
+    const result = await db.query(query, [contactId]);
+    return result.rows > 0;
+}
+
+export {insertContactForm, getAllContactForms, getContactFormById, updateReadStatus};

@@ -6,14 +6,14 @@
 ![ERD](public/images/ERD.png)
 
 3. User Roles
-+ Admin: edit their own info, edit other user's info, view all contact forms
++ Admin: edit their own info, edit other user's info, view all contact forms, mark contact forms as read
 + Restaurant Owner: edit their own info, update ongoing orders' status, view their restaurant's info
 + Standard User: add items to cart, place orders online, leave review on restaurants, edit their own info, view order history, view their reviews
 
 4. Test Account Credentials:
 Admin email: admin@example.com
 Restaurant Owner email: bubblehome.owner@example.com
-User email: user4@example.com
+User email: user1@example.com
 
 5. Known Limitations: 
 The search bar functionality hasn't been implemented yet.

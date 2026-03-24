@@ -65,3 +65,67 @@
     }
   }
 }
+
+/* contact form DETAIL  */
+.contact-detail-page {
+  padding: 2rem;
+  min-height: 50vh;
+  h1 {
+    text-align: center;
+  }
+
+  .contact-detail-container {
+    width: 90%;
+    max-width: 550px;
+    display: block;
+    margin: 1rem auto;
+
+    .contact-container,
+    .user-container,
+    .reply-container {
+      margin-top: 2rem;
+
+      h2 {
+        font-size: 1.5rem;
+      }
+
+      .contact-detail,
+      .user-detail,
+      .reply-detail {
+        margin-bottom: 1.2rem;
+
+        .label {
+          font-weight: bold;
+        }
+      }
+    }
+  }
+
+  .contact-form-action {
+    .read-action {
+      .read-form {
+        button {
+          padding: 1rem;
+          font-size: 1rem;
+          font-weight: bold;
+          background-color: rgb(128, 186, 131);
+          color: white;
+          border-radius: 5px;
+
+          &:hover {
+            background-color: rgb(67, 129, 66);
+          }
+        }
+      }
+
+      .read-checkmark {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        span {
+          font-style: italic;
+        }
+      }
+    }
+  }
+}
