@@ -28,7 +28,7 @@
       </div>
       <div class="user-detail">
         <span class="label">User Email: </span>
-        <span class="value"><%= form.userEmail ? form.userName : "not listed" %></span>
+        <span class="value"><%= form.userEmail ? form.userEmail : "not listed" %></span>
       </div>
     </div>
     <% if(form.status === 'replied') { %>
@@ -63,5 +63,6 @@
         <!-- <div class="reply-action"></div> -->
      </div>
   </section>
+  <a class="dashboard-link" href="/dashboard/admin">&larr; Back to Dashboard</a>
 </main>
 <%- include('../../partials/footer') %>

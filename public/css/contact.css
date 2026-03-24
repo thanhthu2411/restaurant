@@ -128,4 +128,16 @@
       }
     }
   }
+
+  .dashboard-link {
+    display: block;
+    width: 200px;
+    color: darkblue;
+    margin: 1.5rem auto;
+
+    &:hover {
+      font-weight: bold;
+      text-decoration: none;
+    }
+  }
 }
