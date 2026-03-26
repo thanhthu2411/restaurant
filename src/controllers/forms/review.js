@@ -1,5 +1,8 @@
 import { validationResult } from "express-validator";
-import { insertNewReview } from "../../models/review/review.js";
+import { insertNewReview, deleteReviewById } from "../../models/review/review.js";
+import { Router } from "express";
+
+const router = Router();
 
 const processReviewForm = async (req, res, next) => {
   const resSlug = req.params.resSlug;
@@ -32,4 +35,22 @@ const processReviewForm = async (req, res, next) => {
   }
 };
 
+const processDeleteReview = async (req, res, next) => {
+  const reviewId = req.params.reviewId;
+  const userId = req.session.user.id;
+
+  try {
+    await deleteReviewById(reviewId, userId);
+    req.flash("success", "Review deleted successfully");
+    return res.redirect("/dashboard/user");
+  } catch (error) {
+    console.error("Error deleting review:", error);
+    req.flash("error", "Something went wrong. Please try again.");
+    return res.redirect("/dashboard/user");
+  }
+};
+
+router.post("/:reviewId", processDeleteReview);
+
 export {processReviewForm};
+export default router;

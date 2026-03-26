@@ -274,11 +274,12 @@
     right: 20px;
     padding: 0.6rem 1rem;
     font-weight: bold;
-    background-color: rgb(191, 230, 196);
+    color: white;
+    background-color: rgb(97, 163, 106);
     border-radius: 20px;
 
     &:hover {
-      background-color: rgb(121, 190, 121);
+      background-color: green;
     }
   }
 
@@ -407,6 +408,7 @@
           border: 2px solid rgb(64, 100, 72);
           cursor: pointer;
         }
+
 
         textarea {
           padding: 1rem;

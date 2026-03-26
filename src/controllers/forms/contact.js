@@ -71,8 +71,9 @@ const processReadStatus = async (req, res) => {
 };
 
 router.get("/", showContactForm);
-router.get("/:contactId", requireRole("admin"), showContactFormDetail);
 router.post("/", contactValidation, processContactSubmission);
+//for admin
+router.get("/:contactId", requireRole("admin"), showContactFormDetail);
 router.post("/:contactId/read", requireRole("admin"), processReadStatus);
 
 export default router;

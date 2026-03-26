@@ -64,6 +64,7 @@
                 <div class="restaurant-detail">
                     <h3>Deals Available:</h3>
                     <div class="deal-info-container">
+                        <%if(restaurant.dealId) { %>
                         <div class="deal-detail">
                             <span class="label">Deal Name:</span>
                             <span class="value"><%= restaurant.dealName %></span>
@@ -76,6 +77,9 @@
                             <span class="label">Expiration Date:</span>
                             <span class="value"><%= new Date(restaurant.dealExpirationDate).toLocaleDateString() %></span>
                         </div>
+                        <% } else { %>
+                            <div>No deals available</div>
+                        <% } %>
                     </div>
                 </div>
             </div>

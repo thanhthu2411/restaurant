@@ -12,7 +12,7 @@ import orderRouter from './order/order.js';
 import { showCheckoutPage } from './order/order.js';
 import { canOrder } from '../middleware/order.js';
 import dashboardRouter from './dashboard/dashboard.js';
-import reviewRouter from './review/review.js';
+import reviewRouter from './forms/review.js';
 
 const router = Router();
 

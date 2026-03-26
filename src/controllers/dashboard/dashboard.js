@@ -46,6 +46,7 @@ const showDashboard = async (req, res) => {
     } else if (userRole === "owner") {
       const restaurantOrders = await getOrderByRestaurantOwner(userId);
       const restaurant = await getRestaurantByOwner(userId);
+      // console.log(restaurant.dealId);
       res.render("dashboard/owner", {
         title: "Owner Dashboard",
         orders: restaurantOrders,

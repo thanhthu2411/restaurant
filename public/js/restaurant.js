@@ -35,9 +35,19 @@ const reviewFormHandler = () => {
     })
 }
 
+const ratingDataLabel = () => {
+    const input = document.querySelector(".rating-input");
+    const value = document.querySelector(".rating-value");
+
+    input.addEventListener("input", () => {
+        value.textContent = input.value;
+    })
+};
+
 function init() {
     dishCardHandler();
     reviewFormHandler();
+    ratingDataLabel();
 }
 
 init();
