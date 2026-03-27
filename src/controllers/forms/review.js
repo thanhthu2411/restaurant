@@ -1,5 +1,5 @@
 import { validationResult } from "express-validator";
-import { insertNewReview, deleteReviewById } from "../../models/review/review.js";
+import { insertNewReview, deleteReviewById } from "../../models/forms/review.js";
 import { Router } from "express";
 
 const router = Router();

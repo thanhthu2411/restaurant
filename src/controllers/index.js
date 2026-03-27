@@ -7,7 +7,7 @@ import {
   getTopRestaurant,
   getOpenRestaurant,
 } from "../models/restaurant/restaurant.js";
-import { getReviewByRestaurant } from "../models/review/review.js";
+import { getReviewByRestaurant } from "../models/forms/review.js";
 import { getDishByRestaurantSlug } from "../models/dish/dish.js";
 import { getUserDishHistorybyRest } from "../models/order/order.js";
 
