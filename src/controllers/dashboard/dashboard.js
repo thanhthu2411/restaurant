@@ -191,14 +191,12 @@ const processAdminEditForm = async (req, res) => {
       req.flash("error", "User not found.");
       return res.redirect(`/dashboard/admin`);
     }
-    console.log(targetUserId);
-    console.log(currentUser.id);
 
     // if (targetUserId === currentUser.id) {
     //   req.flash("info", "Please edit your profile from profile page.");
     //   return res.redirect("/dashboard/profile/edit");
     // }
-    
+
     // Check permissions
     const canEdit = currentUser.roleName === "admin";
 

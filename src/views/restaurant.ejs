@@ -75,32 +75,34 @@
       <div class="restaurant-menu-container">
         <h1>Our Menu</h1>
         <div class="menu-container">
-          <!-- for each dish in restaurant  -->
-           <% dishes.forEach((dish) => { %>
-            <div
-            class="dish-card"
-            role="button"
-            data-rest-slug="<%=restaurant.slug%>"
-            data-name="<%= dish.name%>"
-            data-slug="<%= dish.slug %>"
-            data-description="<%=dish.description%>"
-            data-img-url="/images/dishes/<%=restaurant.slug%>-<%=dish.slug%>.jpg"
-          >
-            <div class="dish-img-container">
-              <img class="dish-img" src="/images/dishes/<%=restaurant.slug%>-<%=dish.slug%>.jpg" />
-            </div>
-            <div class="dish-info-container">
-              <span class="dish-name"><%= dish.name%></span>
-              <span class="dish-description"
-                ><%= dish.description.slice(0, 18)%>...</span
+           <% if (dishes && dishes.length > 0) { %>
+              <% dishes.forEach((dish) => { %>
+                <div
+                class="dish-card"
+                role="button"
+                data-rest-slug="<%=restaurant.slug%>"
+                data-name="<%= dish.name%>"
+                data-slug="<%= dish.slug %>"
+                data-description="<%=dish.description%>"
+                data-img-url="/images/dishes/<%=restaurant.slug%>-<%=dish.slug%>.jpg"
               >
-              <span class="price">$<%= dish.price %></span>
-            </div>
-            <div class="add-icon">&#43;</div>
-          </div>
+                <div class="dish-img-container">
+                  <img class="dish-img" src="/images/dishes/<%=restaurant.slug%>-<%=dish.slug%>.jpg" />
+                </div>
+                <div class="dish-info-container">
+                  <span class="dish-name"><%= dish.name%></span>
+                  <span class="dish-description"
+                    ><%= dish.description.slice(0, 18)%>...</span
+                  >
+                  <span class="price">$<%= dish.price %></span>
+                </div>
+                <div class="add-icon">&#43;</div>
+              </div>
 
-           <% }) %>
-        
+              <% }) %>
+            <% } else { %>
+              <div>No dish available</div>
+            <% } %>
         </div>
       </div>
       <!-- expand dish info when being clicked  -->
@@ -127,7 +129,7 @@
       </div>
 
       <!-- dish history  -->
-      <% if(dishHistory.length != 0 && isLoggedIn) { %>
+      <% if(dishHistory && dishHistory.length > 0 && isLoggedIn) { %>
       <div class="restaurant-history-container">
         <h1>Order Again</h1>
         <div class="menu-container">
@@ -165,7 +167,7 @@
           <a href="/login" class="add-review-btn2">Add Review</a>
         <% } %>
 
-        <% if (reviews[0].id ) { %>
+        <% if (reviews && reviews.length > 0) { %>
           <div class="rating-review-container">
             <div class="rating-container">
               <h2><%= Number(restaurant.averageRating).toFixed(1) %></h2>

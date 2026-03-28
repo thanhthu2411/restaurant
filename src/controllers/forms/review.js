@@ -7,9 +7,10 @@ const router = Router();
 const processReviewForm = async (req, res, next) => {
   const resSlug = req.params.resSlug;
 
-  if (!req.session || !req.session.user) {
-    req.flash("error", "You must log in to review");
-    return res.redirect("/login");
+  if (!resSlug) {
+    const err = new Error("Missing route parameter");
+    err.status = 400;
+    return next(err);
   }
 
   const errors = validationResult(req);
@@ -35,9 +36,16 @@ const processReviewForm = async (req, res, next) => {
   }
 };
 
+//for user
 const processDeleteReview = async (req, res, next) => {
   const reviewId = req.params.reviewId;
   const userId = req.session.user.id;
+
+  if(!reviewId) {
+    const err = new Error("Missing route parameter");
+    err.status = 400;
+    return next(err);
+  }
 
   try {
     await deleteReviewById(reviewId, userId);

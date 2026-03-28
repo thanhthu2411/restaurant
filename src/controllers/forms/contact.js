@@ -45,28 +45,46 @@ const processContactSubmission = async (req, res) => {
 //for admin
 const showContactFormDetail = async (req, res, next) => {
   const contactId = req.params.contactId;
-  const form = await getContactFormById(contactId);
-  if (!form) {
-    const err = new Error(`Form not found`);
-    err.status = 404;
+  
+  if (!contactId) {
+    const err = new Error("Missing route parameters");
+    err.status = 400;
     return next(err);
   }
 
-  res.render("forms/contact/detail", {
-    title: "Contact Form",
-    form: form,
-  });
+  try {
+    const form = await getContactFormById(contactId);
+    if(!form) {
+      const err = new Error("Form not found");
+      err.status = 404;
+      return next(err);
+    }
+    res.render("forms/contact/detail", {
+      title: "Contact Form",
+      form: form,
+    });
+  } catch (error) {
+    console.error("Error getting contact form", error);
+    return next(error);
+  }
 };
 
-const processReadStatus = async (req, res) => {
+const processReadStatus = async (req, res, next) => {
   const contactId = req.params.contactId;
+
+  if (!contactId) {
+    const err = new Error("Missing route parameters");
+    err.status = 400;
+    return next(err);
+  }
+
   try {
     await updateReadStatus(contactId);
     res.redirect(`/contact/${contactId}`);
   } catch (error) {
-    console("Eror updating read status", error);
+    console.error("Error updating read status", error);
     req.flash("error", "Something went wrong. Please try again later.");
-    res.redirect(`/contact/${contactId}`);
+    return res.redirect(`/contact/${contactId}`);
   }
 };
 

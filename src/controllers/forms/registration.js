@@ -28,7 +28,6 @@ const processRegistrationForm = async (req, res) => {
     errors.array().forEach((error) => {
       req.flash("error", error.msg);
     });
-    // console.error("Registration errors:", errors.array());
     return res.redirect("/register");
   }
 

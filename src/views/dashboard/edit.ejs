@@ -10,6 +10,8 @@
             id="name"
             name="name"
             value="<%= targetUser.name %>"
+            minlength="2"
+            maxlength="100"
             required
         />
         </div>
@@ -20,6 +22,7 @@
             type="email"
             id="email"
             name="email"
+            maxlength="255"
             value="<%= targetUser.email %>"
             required
         />

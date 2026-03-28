@@ -36,6 +36,12 @@ const homePage = async (req, res) => {
 const restaurantDetailPage = async (req, res, next) => {
   const resSlug = req.params.resSlug;
 
+  if(!resSlug) {
+    const err = new Error("Missing route parameter");
+    err.status = 400;
+    return next(err);
+  }
+
   try {
     const restaurant = await getRestaurantBySlug(resSlug);
     if (Object.keys(restaurant).length === 0) {
@@ -59,7 +65,7 @@ const restaurantDetailPage = async (req, res, next) => {
       dishHistory: dishHistory,
     });
   } catch (error) {
-    console.error("Error loading edit form:", error);
+    console.error("Error loading restaurant page:", error);
 
     req.flash("error", "Something went wrong. Please try again.");
     return res.redirect(`/`);

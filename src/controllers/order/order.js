@@ -1,12 +1,15 @@
 import { validationResult } from "express-validator";
-import { getCartDishbyUserAndRestaurant, removeDishFromCart } from "../../models/cart/cart.js";
+import {
+  getCartDishbyUserAndRestaurant,
+  removeDishFromCart,
+} from "../../models/cart/cart.js";
 import { calculatePrice } from "../../utils/calculatePrice.js";
 import { getMessage } from "../../utils/getMessage.js";
 import {
   saveNewOrder,
   getOrderById,
   updateOrderStatus,
-  getOrderByOrderId
+  getOrderByOrderId,
 } from "../../models/order/order.js";
 import { requireRole } from "../../middleware/auth.js";
 import { statusUpdateValidation } from "../../middleware/validation/form.js";
@@ -20,30 +23,41 @@ const showCheckoutPage = async (req, res, next) => {
   const userId = req.session.user.id;
   const resSlug = req.params.resSlug;
 
+  if (!resSlug) {
+    const err = new Error("Missing route parameter");
+    err.status = 400;
+    return next(err);
+  }
+
   try {
     const order = await getCartDishbyUserAndRestaurant(resSlug, userId);
+    if (!order) {
+      const err = new Error("Order not found");
+      err.status = 404;
+      return next(err);
+    }
+
     const price = calculatePrice(order);
     res.render("checkout", {
       title: "Checkout Page",
       order: order,
       price: price,
     });
-  } catch(error) {
+  } catch (error) {
     console.error("Error getting checkout page:", error);
     req.flash("error", "Something went wrong. Please try again.");
     return res.redirect(`/restaurant/${resSlug}`);
-
   }
 };
 
 const showOrderPage = async (req, res, next) => {
   const orderId = req.params.orderId;
-  if (!orderId) return false;
-  // console.log(orderId);
   const userId = req.session.user.id;
-  if (!userId) {
-    req.flash("error", "Please sign in first.");
-    return res.redirect("/login");
+
+  if (!orderId) {
+    const err = new Error("Missing route parameter");
+    err.status = 400;
+    return next(err);
   }
 
   try {
@@ -74,17 +88,22 @@ const showOrderPage = async (req, res, next) => {
 
 const processNewOrder = async (req, res, next) => {
   const resSlug = req.params.resSlug;
-  if (!resSlug) return false;
-
   const userId = req.session.user.id;
-  if (!userId) {
-    req.flash("error", "Please sign in first.");
-    return res.redirect("/login");
+
+  if (!resSlug) {
+    const err = new Error("Missing route parameter");
+    err.status = 400;
+    return next(err);
   }
 
   try {
     const orderId = await saveNewOrder(userId, resSlug);
-    //remove items from cart 
+    if (!orderId) {
+      const error = new Error("Unable to process new order");
+      error.status = 500;
+      return next(err);
+    }
+    //remove items from cart
     await removeDishFromCart(resSlug, userId);
     req.flash("success", "Your order has been confirmed.");
     return res.redirect(`/order/${orderId}`);
@@ -95,7 +114,7 @@ const processNewOrder = async (req, res, next) => {
   }
 };
 
-//update order status
+//update order status (for owner)
 const processOrderStatusUpdate = async (req, res, next) => {
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
@@ -105,8 +124,14 @@ const processOrderStatusUpdate = async (req, res, next) => {
     return res.redirect("/");
   }
 
+  const orderId = req.params.orderId;
+  if(!orderId) {
+    const err = new Error("Missing route parameter");
+    err.status = 400;
+    return next(err);
+  }
+
   try {
-    const orderId = req.params.orderId;
     const order = await getOrderByOrderId(orderId);
     if (!order) {
       req.flash("error", "Fail to get this order");
@@ -141,7 +166,6 @@ const processOrderStatusUpdate = async (req, res, next) => {
     res.redirect(`/dashboard/owner`);
   }
 };
-
 
 //router handler
 router.get("/:orderId", showOrderPage);
