@@ -10,15 +10,22 @@ import {
   getUserById,
   emailExist,
   updateUser,
+  updateUserByAdmin,
 } from "../../models/forms/registration.js";
-import { getAllRestaurantsAndDishes, getRestaurantByOwner } from "../../models/restaurant/restaurant.js";
+import {
+  getAllRestaurantsAndDishes,
+  getRestaurantByOwner,
+} from "../../models/restaurant/restaurant.js";
 import { getAllContactForms } from "../../models/forms/contact.js";
-import { editProfileValidation } from "../../middleware/validation/form.js";
+import {
+  editProfileValidation,
+  editProfileByAdminValidation,
+} from "../../middleware/validation/form.js";
 import { validationResult } from "express-validator";
 
 const router = Router();
 
-const showDashboard = async (req, res) => {
+const showDashboard = async (req, res, next) => {
   const userId = req.session.user.id;
   const userRole = req.session.user.roleName.toLowerCase();
 
@@ -34,26 +41,27 @@ const showDashboard = async (req, res) => {
       });
     } else if (userRole === "admin") {
       const allUsers = await getAllUsers();
-      const allRestaurants = await getAllRestaurantsAndDishes();
+      // const allRestaurants = await getAllRestaurantsAndDishes();
       const allContactForms = await getAllContactForms();
-      // console.log(allContactForms[0].);
+
       res.render("dashboard/admin", {
         title: "Admin Dashboard",
         users: allUsers,
-        restaurants: allRestaurants,
+        // restaurants: allRestaurants,
         contactForms: allContactForms,
       });
     } else if (userRole === "owner") {
       const restaurantOrders = await getOrderByRestaurantOwner(userId);
       const restaurant = await getRestaurantByOwner(userId);
-      // console.log(restaurant.dealId);
       res.render("dashboard/owner", {
         title: "Owner Dashboard",
         orders: restaurantOrders,
-        restaurant: restaurant
+        restaurant: restaurant,
       });
     } else {
-      res.redirect("/");
+      const err = new Error(`Unknown role`);
+      err.status = 403;
+      return next(err);
     }
   } catch (error) {
     console.error("Error loading dashboard:", error);
@@ -88,7 +96,8 @@ const showProfileEditForm = async (req, res) => {
 
 const showAdminEditForm = async (req, res) => {
   const targetUserId = parseInt(req.params.userId);
-  const currentUserRole = req.session.user.roleName.toLowerCase();
+  const currentUser = req.session.user;
+  const currentUserRole = currentUser.roleName.toLowerCase();
 
   try {
     const targetUser = await getUserById(targetUserId);
@@ -103,6 +112,11 @@ const showAdminEditForm = async (req, res) => {
     if (!canEdit) {
       req.flash("error", "You do not have permission to edit this account.");
       return res.redirect(`/dashboard/${currentUserRole}`);
+    }
+
+    if (targetUserId === currentUser.id) {
+      req.flash("info", "Please edit your profile from profile page.");
+      return res.redirect("/dashboard/profile/edit");
     }
 
     res.render("dashboard/edit", {
@@ -130,7 +144,7 @@ const processProfileEditForm = async (req, res) => {
   const currentUser = req.session.user;
   const roleName = currentUser.roleName.toLowerCase();
   const { name, email, address } = req.body;
-  
+
   try {
     const emailTaken = await emailExist(email);
     if (emailTaken && currentUser.email !== email) {
@@ -168,7 +182,7 @@ const processAdminEditForm = async (req, res) => {
 
   const targetUserId = parseInt(req.params.userId);
   const currentUser = req.session.user;
-  const { name, email, address } = req.body;
+  const { name, email, address, role } = req.body;
 
   try {
     const targetUser = await getUserById(targetUserId);
@@ -177,11 +191,14 @@ const processAdminEditForm = async (req, res) => {
       req.flash("error", "User not found.");
       return res.redirect(`/dashboard/admin`);
     }
+    console.log(targetUserId);
+    console.log(currentUser.id);
 
-    if (targetUserId === currentUser.id) {
-      req.flash("info", "Please edit your profile from profile page.");
-      return res.redirect("/dashboard/profile/edit");
-    }
+    // if (targetUserId === currentUser.id) {
+    //   req.flash("info", "Please edit your profile from profile page.");
+    //   return res.redirect("/dashboard/profile/edit");
+    // }
+    
     // Check permissions
     const canEdit = currentUser.roleName === "admin";
 
@@ -197,7 +214,17 @@ const processAdminEditForm = async (req, res) => {
     }
 
     // Update the user
-    await updateUser(targetUserId, name, email, address);
+    const isUpdated = await updateUserByAdmin(
+      targetUserId,
+      name,
+      email,
+      address,
+      role,
+    );
+    if (!isUpdated) {
+      req.flash("error", "Failed to update the account");
+      return res.redirect(`/dashboard/admin`);
+    }
 
     req.flash("success", "Account updated successfully.");
     return res.redirect(`/dashboard/admin`);
@@ -217,7 +244,7 @@ router.get("/admin/:userId/edit", requireRole("admin"), showAdminEditForm);
 router.post(
   "/admin/:userId/edit",
   requireRole("admin"),
-  editProfileValidation,
+  editProfileByAdminValidation,
   processAdminEditForm,
 );
 

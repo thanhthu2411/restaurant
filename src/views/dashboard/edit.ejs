@@ -35,6 +35,17 @@
         />
         </div>
 
+        <% if(user.roleName === "admin" && targetUser.roleName !== "admin") { %>
+        <div>
+            <label for="role">Role:</label>
+            <select id="role" name="role" class="select-role">
+                <option value="admin" <%= targetUser.roleName === "admin" ? "selected" : "" %>>Admin</option>
+                <option value="owner" <%= targetUser.roleName === "owner" ? "selected" : "" %>>Owner</option>
+                <option value="user" <%= targetUser.roleName === "user" ? "selected" : "" %>>User</option>
+            </select>
+        </div>
+        <% } %>
+
         <button type="submit">Update Account</button>
         <a href="/dashboard/<%= user.roleName %>">Cancel</a>
   </form>

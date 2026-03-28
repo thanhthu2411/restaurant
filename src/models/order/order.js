@@ -171,7 +171,7 @@ const getOrderByOrderId = async (orderId) => {
   return order;
 };
 
-//update order status
+//update order status - for owner
 const updateOrderStatus = async (orderId, status) => {
   const statusIdResult = await db.query(
     `SELECT id FROM order_status WHERE LOWER(status) = LOWER($1)`,
@@ -244,12 +244,14 @@ const getOrderByRestaurantOwner = async (ownerId) => {
               r.name as "restaurantName", r.slug as "restaurantSlug", 
               d.id as "dishId", d.name as "dishName", d.slug as "dishSlug", 
               od.quantity, od.order_price as "dishPrice",
-              os.id as "orderStatusId", os.status as "orderStatus"
+              os.id as "orderStatusId", os.status as "orderStatus",
+              u.name as "userName", u.email as "userEmail", u.address as "userAddress"
               FROM orders o LEFT JOIN order_dish od
                 ON od.order_id = o.id
               LEFT JOIN restaurants r ON o.restaurant_id = r.id
               LEFT JOIN order_status os ON o.status_id = os.id
               LEFT JOIN dishes d ON od.dish_id = d.id
+              LEFT JOIN users u ON u.id = o.user_id
               WHERE r.owner_id = $1 AND os.status != 'delivered'
               ORDER BY o.created_at DESC`;
   const result = await db.query(query, [ownerId]);
@@ -271,6 +273,9 @@ const getOrderByRestaurantOwner = async (ownerId) => {
         restaurantSlug: row.restaurantSlug,
         orderStatusId: row.orderStatusId,
         orderStatus: row.orderStatus,
+        userName: row.userName,
+        userEmail: row.userEmail,
+        userAddress: row.userAddress,
         dishes: [],
       };
     }

@@ -13,6 +13,12 @@ const processAddtoCart = async (req, res, next) => {
   const resSlug = req.params.resSlug;
   const userId = req.session.user.id;
 
+  if (!dishSlug || !resSlug) {
+    const err = new Error("Missing route parameters");
+    err.status = 400;
+    return next(err);
+  }
+
   try {
     await addDishtoCart(dishSlug, userId);
     req.flash("success", "Item added to cart successfully.");
@@ -29,6 +35,12 @@ const processIncreaseCart = async (req, res, next) => {
   const dishSlug = req.params.dishSlug;
   const userId = req.session.user.id;
 
+  if (!dishSlug) {
+    const err = new Error("Missing route parameters");
+    err.status = 400;
+    return next(err);
+  }
+
   try {
     await increaseDishQuantity(dishSlug, userId);
     req.flash("success", "Quantity updated!");
@@ -44,6 +56,12 @@ const processIncreaseCart = async (req, res, next) => {
 const processDecreaseCart = async (req, res, next) => {
   const dishSlug = req.params.dishSlug;
   const userId = req.session.user.id;
+
+  if (!dishSlug) {
+    const err = new Error("Missing route parameters");
+    err.status = 400;
+    return next(err);
+  }
 
   try {
     await decreaseDishQuantity(dishSlug, userId);

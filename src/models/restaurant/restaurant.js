@@ -206,7 +206,7 @@ const getRestaurantByOwner = async (ownerId) => {
                     ON c.id = rc.category_id
                   WHERE r.owner_id = $1`;
   const result = await db.query(query, [ownerId]);
-  if (result.rows.length === 0) return null;
+  if (result.rows.length === 0) return {};
   const row = result.rows[0];
 
   let restaurant = {

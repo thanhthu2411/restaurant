@@ -18,7 +18,9 @@ const saveUser = async (name, email, password, address='') => {
 
 // get all user (for admin)
 const getAllUsers = async () => {
-    const query = `SELECT id, name, email, address, created_at FROM users`;
+    const query = `SELECT users.id, users.name, email, address, users.created_at, roles.role_name as "roleName" 
+        FROM users INNER JOIN roles 
+        ON users.role_id = roles.id`;
     const result = await db.query(query);
     if (result.rows.length === 0) return [];
     return result.rows;
@@ -55,6 +57,21 @@ const updateUser = async (id, name, email, address) => {
     return result.rows[0] || null;
 };
 
+const updateUserByAdmin = async (id, name, email, address, role) => {
+    const roleResult = await db.query(`SELECT id FROM roles WHERE role_name = LOWER($1)`, [role]);
+    const roleId = roleResult.rows[0]?.id;
+    if(!roleId) return null;
+
+    const query = `
+        UPDATE users 
+        SET name = $1, email = $2, address = $3, updated_at = CURRENT_TIMESTAMP, role_id = $5
+        WHERE id = $4
+        RETURNING id, name, email, address, updated_at, role_id
+    `;
+    const result = await db.query(query, [name, email, address, id, roleId]);
+    return result.rows[0] || null;
+};
+
 
 
 // delete user (user or admin)
@@ -64,4 +81,4 @@ const deleteUsser = async (id) => {
     return result.rowCount > 0;
 }
 
-export {emailExist, saveUser, getAllUsers, getUserById, deleteUsser, updateUser};
+export {emailExist, saveUser, getAllUsers, getUserById, deleteUsser, updateUser, updateUserByAdmin};

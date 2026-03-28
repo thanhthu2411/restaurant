@@ -119,6 +119,37 @@ const editProfileValidation = [
     .withMessage("Must be a valid email address")
     .isLength({ max: 255 })
     .withMessage("Email address is too long"),
+  body("address")
+    .trim()
+    .isLength({max:2000})
+    .withMessage("Address must be less than 2000 characters")
 ];
 
-export {contactValidation, registrationValidation, loginValidation, reviewValidation, statusUpdateValidation, editProfileValidation};
+const editProfileByAdminValidation = [
+  body("name")
+    .trim()
+    .isLength({ min: 2, max: 100 })
+    .withMessage("Name must be between 2 and 100 characters")
+    .matches(/^[a-zA-Z0-9\s'-]+$/)    
+    .withMessage('Name can only contain numbers, letters, spaces, hyphens, and apostrophes'),
+  body("email")
+    .trim()
+    .isEmail()
+    .normalizeEmail()
+    .withMessage("Must be a valid email address")
+    .isLength({ max: 255 })
+    .withMessage("Email address is too long"),
+  body("address")
+    .trim()
+    .isLength({max:2000})
+    .withMessage("Address must be less than 2000 characters"),
+  body("role")
+  .custom((value) => {
+    if(!["admin", "owner", "user"].includes(value)) {
+      throw new Error("Role is not valid.")
+    }
+    return true;
+  })
+];
+
+export {contactValidation, registrationValidation, loginValidation, reviewValidation, statusUpdateValidation, editProfileValidation, editProfileByAdminValidation};

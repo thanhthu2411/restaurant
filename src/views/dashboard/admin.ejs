@@ -37,6 +37,7 @@
                 <a class="user-edit-btn" href="/dashboard/profile/edit">Edit Account Information</a>
             <% } %>
         </div>
+
         <!-- list all users with edit options -->
         <% if (users && users.length > 0) { %>
             <div class="all-user-container">
@@ -49,8 +50,9 @@
                         %>
                         <div class="user-card">
                             <h3><%= listUser.name %></h3>
-                            <p><%= listUser.email %></p>
-                            <p><%= listUser.address %></p>
+                            <p>Email: <%= listUser.email %></p>
+                            <p>Address: <%= listUser.address ? listUser.address : "Not listed" %></p>
+                            <p>Role: <%= listUser.roleName %></p>
 
                             <% if (canEdit) { %>
                                     <a class="user-edit-btn" href="/dashboard/admin/<%= listUser.id %>/edit">Edit</a>
@@ -62,8 +64,8 @@
         <% } else { %>
             <p class="no-users">No users registered yet.</p>
         <% } %>
-         <!-- see all restaurants  -->
-          <!-- see all contact form  -->
+
+        <!-- see all contact form  -->
         <div class="contact-forms-container">
             <h2>Contact Messages</h2>
             <% if(contactForms && contactForms.length > 0) { %>
