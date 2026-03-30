@@ -8,12 +8,15 @@
 3. User Roles
 + Admin: edit their own info, edit other user's info, view all contact forms, mark contact forms as read
 + Restaurant Owner: edit their own info, update ongoing orders' status, view their restaurant's info
-+ Standard User: add items to cart, place orders online, leave review on restaurants, edit their own info, view order history, view their reviews
++ Standard User: add items to cart, place orders online, leave review on restaurants, edit their own info, view order history, view and delete their reviews
 
 4. Test Account Credentials:
-Admin email: admin@example.com
-Restaurant Owner email: bubblehome.owner@example.com
-User email: user1@example.com
++ Admin email: admin@example.com
++ Restaurant Owner email: bubblehome.owner@example.com
++ User email: user1@example.com
 
 5. Known Limitations: 
-The search bar functionality hasn't been implemented yet.
++ The search functionality has not yet been implemented.
++ Some user features haven't been completed, such as users editing their reviews, admins replying to contact form submissions, restaurant owners updating their restaurant information.
++ Updating item quantities in the cart triggers a full page reload.
++ Some functions in the models folder need further refactoring to reduce repeated code and simplify complex queries.
