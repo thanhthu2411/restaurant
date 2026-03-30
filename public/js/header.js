@@ -32,4 +32,15 @@ const cartBtnHandler = () => {
   }
 };
 
-export { SideBarHandler, cartBtnHandler };
+const closeFlashBtnHandler = () => {
+  document.addEventListener("click", (event) => {
+    const btn = event.target.closest(".flash-close-btn");
+    if (!btn) return;
+    const flashContainer = btn.closest(".flash");
+    if(flashContainer) {
+      flashContainer.remove();
+    }
+  });
+};
+
+export { SideBarHandler, cartBtnHandler, closeFlashBtnHandler };

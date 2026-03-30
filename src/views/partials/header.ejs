@@ -72,6 +72,11 @@
                     <% messages[type].forEach(message => { %>
                         <div class="flash <%= type %>">
                             <%= message %>
+                            <button class="flash-close-btn" aria-label="close button">
+                                <svg class="icon">
+                                    <use xlink:href="/images/sprite.symbol.svg#close"></use>
+                                </svg>
+                            </button>
                         </div>
                     <% }); %>
                 <% }); %>
