@@ -57,6 +57,10 @@ router.use('/dashboard', (req, res, next) => {
     res.addStyle('<link rel="stylesheet" href="/css/dashboard.css">');
     next();
 });
+router.use('/review', (req, res, next) => {
+    res.addStyle('<link rel="stylesheet" href="/css/review.css">');
+    next();
+});
 
 router.get('/', homePage);
 router.get('/restaurant/:resSlug', restaurantDetailPage);

@@ -82,8 +82,8 @@ const reviewValidation = [
     .withMessage('Rating must be an integer between 1 and 5'),
   body('review')
     .trim()
-    .isLength({min: 1, max:2000})
-    .withMessage('Review must be between 1 and 2000 characters.')
+    .isLength({max:2000})
+    .withMessage('Review must be less than 2000 characters.')
     .escape()
     .custom((value) => {
       const words = value.trim().split(/\s+/);

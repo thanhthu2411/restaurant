@@ -167,7 +167,7 @@
           <a href="/login" class="add-review-btn2">Add Review</a>
         <% } %>
 
-        <% if (reviews && reviews.length > 0) { %>
+        <% if (reviews.id && reviews.length > 0) { %>
           <div class="rating-review-container">
             <div class="rating-container">
               <h2><%= Number(restaurant.averageRating).toFixed(1) %></h2>
@@ -243,9 +243,7 @@
                 id="review"
                 name="review"
                 class="review-input"
-                minlength="2"
                 rows="10"
-                minlength="1"
                 maxlength="2000"
                 placeholder="Please enter your review here"
               ></textarea>

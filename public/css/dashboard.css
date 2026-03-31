@@ -145,7 +145,10 @@
         padding: 0.8rem 2rem;
 
         .review-card-action {
-          display: block;
+          display: flex;
+          flex-direction: row;
+          align-items: center;
+          justify-content: space-around;
           margin: 0 auto;
           width: 70%;
 
@@ -162,6 +165,19 @@
                   border-radius: 50%;
                 }
               }
+            }
+          }
+
+          .edit-review-link {
+            padding: 0.4rem;
+            border-radius: 5px;
+            background-color: rgb(99, 174, 99);
+            color: white;
+            font-weight: bold;
+
+            &:hover {
+              text-decoration: none;
+              background-color: green;
             }
           }
         }

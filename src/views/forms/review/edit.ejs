@@ -1,0 +1,44 @@
+<%-include('../../partials/header')%>
+<main class="edit-review-container">
+  <h1>Edit Your Review</h1>
+  <form
+    class="review-edit-form"
+    method="POST"
+    action="/review/<%= review.reviewId %>/edit"
+  >
+    <div class="form-group">
+      <label for="rating"
+        >Rating (1 to 5)<span class="form-required-star">*</span></label
+      >
+      <input
+        type="range"
+        id="rating"
+        class="rating-input"
+        name="rating"
+        min="1"
+        max="5"
+        step="1"
+        required
+        value="<%= review.rating%>"
+      />
+    </div>
+    <div class="form-group">
+      <label for="review">Review:</label>
+      <textarea
+        id="review"
+        name="review"
+        class="review-input"
+        rows="10"
+        maxlength="2000"
+        placeholder="Please enter your review here"
+        value="<%= review.content %>"
+      ><%= review.content %></textarea>
+    </div>
+    <div class="form-btn-container">
+        <a class="cancel-review-btn" href="/dashboard/<%= user.roleName %>">Cancel</a>
+
+        <button type="submit" class="save-review-btn">Save</button>
+    </div>
+  </form>
+</main>
+<%-include('../../partials/footer')%>

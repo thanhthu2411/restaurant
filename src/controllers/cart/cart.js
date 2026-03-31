@@ -24,7 +24,7 @@ const processAddtoCart = async (req, res, next) => {
     req.flash("success", "Item added to cart successfully.");
     return res.redirect(`/restaurant/${resSlug}`);
   } catch (error) {
-    console.error("Error loading edit form:", error);
+    console.error("Error adding item to cart:", error);
 
     req.flash("error", "Something went wrong. Please try again.");
     return res.redirect(`/restaurant/${resSlug}`);
@@ -46,7 +46,7 @@ const processIncreaseCart = async (req, res, next) => {
     req.flash("success", "Quantity updated!");
     return res.redirect(req.get("referer") || "/");
   } catch (error) {
-    console.error("Error loading edit form:", error);
+    console.error("Error updating cart quantity:", error);
 
     req.flash("error", "Something went wrong. Please try again.");
     return res.redirect(req.get("referer") || "/");
@@ -68,7 +68,7 @@ const processDecreaseCart = async (req, res, next) => {
     req.flash("success", "Quantity updated!");
     return res.redirect(req.get("referer") || "/");
   } catch (error) {
-    console.error("Error loading edit form:", error);
+    console.error("Error decreasing cart quantity:", error);
 
     req.flash("error", "Something went wrong. Please try again.");
     return res.redirect(req.get("referer") || "/");

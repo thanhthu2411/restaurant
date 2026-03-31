@@ -1,5 +1,8 @@
 import db from "../db.js";
 
+const reviewQuery = `SELECT r.id as "reviewId", r.rating, r.content, r.created_at as "createdAt",
+                    r.user_id as "userId", r.restaurant_id as "restaurantId"`;
+
 // get rating and review for a restaurant
 const getReviewByRestaurant = async (resSlug) => {
   const query = `SELECT r.id, r.restaurant_id, r.user_id, r.rating,
@@ -24,13 +27,21 @@ const getReviewByRestaurant = async (resSlug) => {
 };
 
 const getReviewByUserId = async (userId) => {
-    const query = `SELECT r.id as "reviewId", r.rating, r.content, r.created_at as "createdAt"
+    const query = `${reviewQuery}
             FROM review r 
             WHERE r.user_id = $1
             ORDER BY r.created_at DESC`;
     const result = await db.query(query, [userId]);
 
    return result.rows;
+}
+
+const getReviewById = async (reviewId) => {
+    const query = `${reviewQuery}
+            FROM review r
+            WHERE r.id = $1`;
+    const result = await db.query(query, [reviewId]);
+   return result.rows[0] || null;
 }
 
 const insertNewReview = async (resSlug, userId, rating, content) => {
@@ -63,4 +74,11 @@ const deleteReviewById = async(reviewId, userId) => {
     return result.rowCount > 0;
 }
 
-export {getReviewByUserId, getReviewByRestaurant, insertNewReview, deleteReviewById};
+const updateReview = async (reviewId, rating, content) => {
+    const query = `UPDATE review SET rating = $1, content = $2
+                    WHERE id = $3`;
+    const result = await db.query(query, [rating, content, reviewId]);
+    return result.rowCount > 0;
+}
+
+export {getReviewByUserId, getReviewByRestaurant, insertNewReview, deleteReviewById, getReviewById, updateReview};

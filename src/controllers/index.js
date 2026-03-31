@@ -26,7 +26,7 @@ const homePage = async (req, res) => {
       openRestaurants: openRestaurantList,
     });
   } catch (error) {
-    console.error("Error loading edit form:", error);
+    console.error("Error loading home page:", error);
 
     req.flash("error", "Something went wrong. Please try again.");
     return res.redirect(`/login`);
