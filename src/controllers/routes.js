@@ -41,10 +41,10 @@ router.use('/login', (req, res, next) => {
     res.addStyle('<link rel="stylesheet" href="/css/login.css">');
     next();
 });
-router.use('/cart', (req, res, next) => {
-    res.addStyle('<link rel="stylesheet" href="/css/cart.css">');
-    next();
-});
+// router.use('/cart', (req, res, next) => {
+//     res.addStyle('<link rel="stylesheet" href="/css/cart.css">');
+//     next();
+// });
 router.use('/order', (req, res, next) => {
     res.addStyle('<link rel="stylesheet" href="/css/order.css">');
     next();
