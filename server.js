@@ -11,7 +11,7 @@ import session from "express-session";
 import connectPgSimple from "connect-pg-simple";
 import { caCert } from "./src/models/db.js";
 import { startSessionCleanup } from "./src/utils/session-cleanup.js";
-
+import db from "./src/models/db.js";
 import flash from './src/middleware/flash.js';
 
 //import session, flash, databaseSetup, databaseConnection
@@ -45,6 +45,7 @@ app.use(session({
                 checkServerIdentity: () => { return undefined; }
             }
         },
+        pool: db,
         tableName: 'session',
         createTableIfMissing: true
     }),
@@ -80,7 +81,6 @@ app.use(addLocalVariables);
  * Declare ROUTES
  */
 app.use("/", router);
-
 /**
  * Error handling
  */
@@ -98,6 +98,7 @@ app.use((err, req, res, next) => {
 
     const status = err.status || 500;
     const template = status === 404 ? '404' : '500';
+
 
     const context = {
         title: status===404 ? 'Page Not Found' : 'Server Error',
@@ -141,5 +142,6 @@ app.listen(PORT, async () => {
     //SET UP DATABASE
     await setupDatabase();
     await testConnection();
-    console.log(`Server is running on http://127.0.0.1:${PORT}`)
+    console.log(`Server is running on http://127.0.0.1:${PORT}`);
+
 })

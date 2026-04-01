@@ -1,4 +1,78 @@
-//create pool for databse connection
+// //create pool for databse connection
+
+// import fs from 'fs';
+// import path from 'path';
+// import { Pool } from 'pg';
+// import { fileURLToPath } from 'url';
+
+// const __filename = fileURLToPath(import.meta.url);
+// const __dirname = path.dirname(__filename);
+
+// // Read the CA certificate content
+// const caCert = fs.readFileSync(path.join(__dirname, '../../bin', 'byuicse-psql-cert.pem'));
+
+// /**
+//  * Connection pool for PostgreSQL database.
+//  */
+// const pool = new Pool({
+//     connectionString: process.env.DB_URL,
+//     ssl: {
+//         ca: caCert,  // Use the certificate content, not the file path
+//         rejectUnauthorized: true,  // Keep this true for proper security
+//         checkServerIdentity: () => { return undefined; }  // Skip hostname verification but keep cert chain validation
+//     }
+// });
+
+// /**
+//  * Since we will modify the normal pool object in development mode, we need to create and
+//  * export a reference to the pool object. This allows us to use the same name for the
+//  * export regardless of whether we are in development or production mode.
+//  */
+// let db = null;
+
+// if (process.env.NODE_ENV.includes('dev') && process.env.ENABLE_SQL_LOGGING === 'true') {
+//     /**
+//      * In development mode, we wrap the pool to provide query logging.
+//      * This helps with debugging by showing all executed queries in the console.
+//      *
+//      * The wrapper also adds timing information to help identify slow queries
+//      * and tracks the number of rows affected by each query.
+//      */
+//     db = {
+//         async query(text, params) {
+//             try {
+//                 const start = Date.now();
+//                 const res = await pool.query(text, params);
+//                 const duration = Date.now() - start;
+//                 console.log('Executed query:', {
+//                     text: text.replace(/\s+/g, ' ').trim(),
+//                     duration: `${duration}ms`,
+//                     rows: res.rowCount
+//                 });
+//                 return res;
+//             } catch (error) {
+//                 console.error('Error in query:', {
+//                     text: text.replace(/\s+/g, ' ').trim(),
+//                     error: error.message
+//                 });
+//                 throw error;
+//             }
+//         },
+
+//         async close() {
+//             await pool.end();
+//         }
+//     };
+// } else {
+//     // In production, export the pool directly without logging overhead
+//     db = pool;
+// }
+
+// export default db;
+// export { caCert };
+
+
+//create pool for database connection
 
 import fs from 'fs';
 import path from 'path';
@@ -13,31 +87,29 @@ const caCert = fs.readFileSync(path.join(__dirname, '../../bin', 'byuicse-psql-c
 
 /**
  * Connection pool for PostgreSQL database.
+ * max: 3 keeps us under the free tier connection limit (usually 5-10)
+ * The session store uses 1-2 connections on its own, so we leave room for it.
  */
 const pool = new Pool({
     connectionString: process.env.DB_URL,
     ssl: {
-        ca: caCert,  // Use the certificate content, not the file path
-        rejectUnauthorized: true,  // Keep this true for proper security
-        checkServerIdentity: () => { return undefined; }  // Skip hostname verification but keep cert chain validation
-    }
+        ca: caCert,
+        rejectUnauthorized: true,
+        checkServerIdentity: () => { return undefined; }
+    },
+    max: 3,                        // ✅ max concurrent connections
+    idleTimeoutMillis: 30000,      // ✅ release idle connections after 30s
+    connectionTimeoutMillis: 5000, // ✅ fail fast instead of hanging forever
 });
 
-/**
- * Since we will modify the normal pool object in development mode, we need to create and
- * export a reference to the pool object. This allows us to use the same name for the
- * export regardless of whether we are in development or production mode.
- */
+// ✅ Log pool errors so they don't silently crash the app
+pool.on('error', (err) => {
+    console.error('Unexpected database pool error:', err.message);
+});
+
 let db = null;
 
 if (process.env.NODE_ENV.includes('dev') && process.env.ENABLE_SQL_LOGGING === 'true') {
-    /**
-     * In development mode, we wrap the pool to provide query logging.
-     * This helps with debugging by showing all executed queries in the console.
-     *
-     * The wrapper also adds timing information to help identify slow queries
-     * and tracks the number of rows affected by each query.
-     */
     db = {
         async query(text, params) {
             try {
@@ -64,7 +136,6 @@ if (process.env.NODE_ENV.includes('dev') && process.env.ENABLE_SQL_LOGGING === '
         }
     };
 } else {
-    // In production, export the pool directly without logging overhead
     db = pool;
 }
 
