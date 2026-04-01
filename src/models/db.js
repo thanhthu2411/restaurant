@@ -97,9 +97,9 @@ const pool = new Pool({
         rejectUnauthorized: true,
         checkServerIdentity: () => { return undefined; }
     },
-    max: 3,                        // ✅ max concurrent connections
-    idleTimeoutMillis: 30000,      // ✅ release idle connections after 30s
-    connectionTimeoutMillis: 5000, // ✅ fail fast instead of hanging forever
+    max: 3,                        
+    idleTimeoutMillis: 30000,     
+    connectionTimeoutMillis: 5000, 
 });
 
 // ✅ Log pool errors so they don't silently crash the app
