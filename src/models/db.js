@@ -18,7 +18,7 @@ const pool = new Pool({
         rejectUnauthorized: true,
         checkServerIdentity: () => { return undefined; }
     },
-    max: 3,                        
+    max: 1,                        
     idleTimeoutMillis: 30000,     
     connectionTimeoutMillis: 5000, 
 });
@@ -57,7 +57,11 @@ if (process.env.NODE_ENV.includes('dev') && process.env.ENABLE_SQL_LOGGING === '
         }
     };
 } else {
-    db = pool;
+    // db = pool;
+    db = {
+        query: pool.query.bind(pool),
+        async close() { await pool.end() }  // ✅ add this
+    }
 }
 
 export default db;
