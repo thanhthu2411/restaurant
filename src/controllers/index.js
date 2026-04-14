@@ -51,7 +51,7 @@ const restaurantDetailPage = async (req, res, next) => {
     }
     const dishes = await getDishByRestaurantSlug(resSlug);
     const reviews = await getReviewByRestaurant(resSlug);
-    console.log(reviews)
+
     let dishHistory = [];
     if (req.session && req.session.user) {
       const userId = req.session.user.id;

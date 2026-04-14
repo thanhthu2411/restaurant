@@ -14,14 +14,19 @@ const caCert = fs.readFileSync(path.join(__dirname, '../../bin', 'byuicse-psql-c
 const pool = new Pool({
     connectionString: process.env.DB_URL,
     ssl: {
-        ca: caCert,
-        rejectUnauthorized: true,
+        rejectUnauthorized: false,
         checkServerIdentity: () => { return undefined; }
     },
-    max: 1,                        
+    max: 3,                        
     idleTimeoutMillis: 30000,     
     connectionTimeoutMillis: 5000, 
 });
+
+pool.on('connect', (client) => {
+    client.query("SET timezone='America/Denver'")  
+    // BYU-Idaho is in Mountain Time
+    // change to your preferred timezone
+})
 
 // ✅ Log pool errors so they don't silently crash the app
 pool.on('error', (err) => {

@@ -216,7 +216,8 @@ INSERT INTO users (role_id, name, email, password, address) VALUES
     (2, 'Taco Fiesta Owner', 'tacofiesta.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '741 Mexico Way'),
     (2, 'Fire Chili Owner', 'firechili.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '852 Spice Rd'),
     (2, 'Vegan Delight Owner', 'vegandelight.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '963 Plant Ave'),
-    (2, 'Smooth Sip Owner', 'smoothsip.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '123 Tea Lane');
+    (2, 'Smooth Sip Owner', 'smoothsip.owner@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '123 Tea Lane'),
+    (1, 'Admin', 'admin@example.com', '$2b$10$4WpvudzY58ei0vL2wFViDe.HGmITlEzktlhtaIqj56DZtMRdBHs1O', '123S 456W');
 
 INSERT INTO restaurants (owner_id, deal_id, name, slug, address, open_hour, close_hour, delivery_fee, delivery_minutes) VALUES
     (1, 1, 'Bubble Home', 'bubble-home', '123 Boba St, Rexburg, ID', '10:00:00', '22:00:00', 2.99, 15),
