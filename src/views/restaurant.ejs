@@ -22,7 +22,7 @@
           class="restaurant-search-form"
           method="get"
         >
-          <input name="q" type="text" placeholder="Search <%= restaurant.name %>" />
+          <input class="restaurant-search-form-input" name="q" type="text" placeholder="Search <%= restaurant.name %>" />
           <button class="search-btn" type="submit" aria-label="submit button">
             <svg class="icon">
               <use xlink:href="/images/sprite.symbol.svg#search"></use>
@@ -105,28 +105,6 @@
             <% } %>
         </div>
       </div>
-      <!-- expand dish info when being clicked  -->
-      <div class="menu-container-expand">
-        <div class="wrapper">
-          <button class="modal-close-btn" aria-label="close button">
-            <svg class="icon">
-              <use xlink:href="/images/sprite.symbol.svg#close"></use>
-            </svg>
-          </button>
-          <div class="dish-info-expand-container">
-            <h2></h2>
-            <p></p>
-            <img src="" />
-          </div>
-        <% if (isLoggedIn) { %>
-          <form id="add-to-cart-form" method="post" class="add-to-cart-form">
-            <button type="submit" class="add-to-cart-btn">Add to Cart</button>
-          </form>
-        <% } else { %>
-          <a href="/login" class="add-to-card-btn2">Add to Cart</a>
-        <% } %>
-        </div>
-      </div>
 
       <!-- dish history  -->
       <% if(dishHistory && dishHistory.length > 0 && isLoggedIn) { %>
@@ -135,11 +113,13 @@
         <div class="menu-container">
           <% dishHistory.forEach((dish) => { %>
             <div
-            class="dish-card"
-            role="button"
-            data-name="<%= dish.name%>"
-            data-description="<%=dish.description%>"
-            data-img-url="/images/dishes/<%=restaurant.slug%>-<%=dish.slug%>.jpg"
+                class="dish-card"
+                role="button"
+                data-rest-slug="<%=restaurant.slug%>"
+                data-name="<%= dish.name%>"
+                data-slug="<%= dish.slug %>"
+                data-description="<%=dish.description%>"
+                data-img-url="/images/dishes/<%=restaurant.slug%>-<%=dish.slug%>.jpg"
           >
             <div class="dish-img-container">
               <img class="dish-img" src="/images/dishes/<%=restaurant.slug%>-<%=dish.slug%>.jpg" />
@@ -167,51 +147,8 @@
           <a href="/login" class="add-review-btn2">Add Review</a>
         <% } %>
 
-        <% if (reviews.length > 0 && reviews[0].id) { %>
-          <div class="rating-review-container">
-            <div class="rating-container">
-              <h2><%= Number(restaurant.averageRating).toFixed(1) %></h2>
-
-              <% if (restaurant.averageRating < 2) { %>
-                <span>★☆☆☆☆</span>
-              <% } else if (restaurant.averageRating < 3) { %>
-                <span>★★☆☆☆</span>
-              <% } else if (restaurant.averageRating < 4) { %>
-                <span>★★★☆☆</span>
-              <% } else if (restaurant.averageRating < 5) { %>
-                <span>★★★★☆</span>
-              <% } else { %>
-                <span>★★★★★</span>
-              <% } %>
-              
-              <p><%= reviews.length %></p>
-            </div>
-            <div class="review-container">
-              <% reviews.forEach((review) => { %>
-                <div class="review-card">
-                <p class="review"><%= review.content %></p>
-                <span class="review-date">
-                  <% if (review.rating < 2) { %>
-                    <span>★☆☆☆☆</span>
-                  <% } else if (review.rating < 3) { %>
-                    <span>★★☆☆☆</span>
-                  <% } else if (review.rating < 4) { %>
-                    <span>★★★☆☆</span>
-                  <% } else if (review.rating < 5) { %>
-                    <span>★★★★☆</span>
-                  <% } else { %>
-                    <span>★★★★★</span>
-                  <% } %>
-                  &#9679; <%= review.createdAt %></span>
-              </div>
-              <% }) %>
-            </div>
+        <div class="rating-review-container">  
         </div>
-          <%} else {%>
-            <p>No Review Available</p>
-          <%  } %>
-        
-      </div>
 
       <div class="review-form-container">
         <div class="wrapper">
@@ -249,15 +186,36 @@
               ></textarea>
             </div>
             <div class="form-btn-container">
-              <a class="cancel-review-btn" href="/restaurant/<%=restaurant.slug%>"
-                >Cancel</a
-              >
+              <button class="cancel-review-btn">Cancel</button>
               <button type="submit" class="save-review-btn">Save</button>
             </div>
           </form>
         </div>
       </div>
     </div>
+
+    <!-- expand dish info when being clicked  -->
+      <div class="menu-container-expand">
+        <div class="wrapper">
+          <button class="modal-close-btn" aria-label="close button">
+            <svg class="icon">
+              <use xlink:href="/images/sprite.symbol.svg#close"></use>
+            </svg>
+          </button>
+          <div class="dish-info-expand-container">
+            <h2></h2>
+            <p></p>
+            <img src="" />
+          </div>
+        <% if (isLoggedIn) { %>
+          <form id="add-to-cart-form" class="add-to-cart-form">
+            <button type="submit" class="add-to-cart-btn">Add to Cart</button>
+          </form>
+        <% } else { %>
+          <a href="/login" class="add-to-card-btn2">Add to Cart</a>
+        <% } %>
+        </div>
+      </div>
   </section>
 </main>
 <%- include('partials/footer')%>

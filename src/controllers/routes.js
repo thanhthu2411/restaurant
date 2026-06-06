@@ -1,18 +1,19 @@
 import {Router} from 'express';
-import { homePage, restaurantDetailPage } from './index.js';
+import { homePage, restaurantDetailPage, searchRestaurantDishes } from './index.js';
 import contactRouter from './forms/contact.js';
 import registerRouter from './forms/registration.js';
 import loginRouter from './forms/login.js';
 import {processLogout} from './forms/login.js';
 import { requireLogin } from '../middleware/auth.js';
 import { reviewValidation } from '../middleware/validation/form.js';
-import { processReviewForm } from './forms/review.js';
+import { processReviewForm, getReviews } from './forms/review.js';
 import cartRouter  from './cart/cart.js';
 import orderRouter from './order/order.js';
 import { showCheckoutPage } from './order/order.js';
 import { canOrder } from '../middleware/order.js';
 import dashboardRouter from './dashboard/dashboard.js';
 import reviewRouter from './forms/review.js';
+import searchRouter from './search/search.js';
 
 const router = Router();
 
@@ -61,10 +62,16 @@ router.use('/review', (req, res, next) => {
     res.addStyle('<link rel="stylesheet" href="/css/review.css">');
     next();
 });
+router.use('/search', (req, res, next) => {
+    res.addStyle('<link rel="stylesheet" href="/css/search.css">');
+    next();
+});
 
 router.get('/', homePage);
 router.get('/restaurant/:resSlug', restaurantDetailPage);
 router.post('/restaurant/:resSlug/review', requireLogin, reviewValidation, processReviewForm);
+router.get('/restaurant/:resSlug/review', requireLogin, reviewValidation, getReviews);
+router.get('/restaurant/:resSlug/search', requireLogin, searchRestaurantDishes);
 
 router.use('/contact', contactRouter);
 router.use('/register', registerRouter);
@@ -79,4 +86,5 @@ router.use('/dashboard', requireLogin, dashboardRouter);
 //review
 router.use('/review', requireLogin, reviewRouter);
 // search
+router.use('/search', requireLogin, searchRouter);
 export default router;

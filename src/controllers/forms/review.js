@@ -4,6 +4,7 @@ import {
   deleteReviewById,
   getReviewById,
   updateReview,
+  getReviewByRestaurant
 } from "../../models/forms/review.js";
 import { requireRole } from "../../middleware/auth.js";
 import { Router } from "express";
@@ -11,35 +12,54 @@ import { reviewValidation } from "../../middleware/validation/form.js";
 
 const router = Router();
 
+const getReviews = async (req, res) => {
+  const resSlug = req.params.resSlug
+  try {
+    const reviews = await getReviewByRestaurant(resSlug);
+    res.json({success: true, reviews})
+  } catch(error) {
+    res.status(500).json({ success: false, message: 'Failed to load reviews' })
+  }
+}
+
 const processReviewForm = async (req, res, next) => {
   const resSlug = req.params.resSlug;
 
   if (!resSlug) {
-    const err = new Error("Missing route parameter");
-    err.status = 400;
-    return next(err);
-  }
+        return res.status(400).json({
+            success: false,
+            message: 'Missing route parameter'
+        })
+    }
 
   const errors = validationResult(req);
 
   if (!errors.isEmpty()) {
-    errors.array().forEach((error) => {
-      req.flash("error", error.msg);
-    });
-    return res.redirect(`/restaurant/${resSlug}`);
-  }
+    return res.status(422).json({
+        success: false,
+        message: errors.array()[0].msg  // return first error message
+    })
+}
 
   const { rating, review } = req.body;
   const userId = req.session.user.id;
 
   try {
     await insertNewReview(resSlug, userId, rating, review);
-    req.flash("success", "Your review has been saved successfully");
-    return res.redirect(`/restaurant/${resSlug}`);
+
+    const reviews = await getReviewByRestaurant(resSlug);
+
+    res.json({
+      success: true,
+      reviews: reviews,
+      message: "Your review has been saved successfully"
+    })
   } catch (error) {
     console.error("Error submitting review", error);
-    req.flash("error", "Unable to save your review. Please try again later!");
-    return res.redirect(`/restaurant/${resSlug}`);
+    res.status(500).json({
+      success: false,
+      message: "Unable to save your review. Please try again later."
+    })
   }
 };
 
@@ -149,5 +169,5 @@ router.post(
   processEditReview,
 );
 
-export { processReviewForm };
+export { processReviewForm, getReviews };
 export default router;

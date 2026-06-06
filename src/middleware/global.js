@@ -54,29 +54,29 @@ const addLocalVariables = async (req, res, next) => {
       res.locals.user = req.session.user;
     }
 
-    res.locals.cart = {};
-    res.locals.cartNumber = 0;
+    // res.locals.cart = {};
+    // res.locals.cartNumber = 0;
     setHeadAssetsFunctionality(res);
 
 
-    if (req.session && req.session.user) {
-      const userId = req.session.user.id;
-      try {
-        const cart = await getCartbyUser(userId);
-        let cartNumber = 0;
-        if (cart) {
-          res.locals.cart = cart;
-          Object.values(cart).forEach((rest) => {
-            rest.dishes.forEach((dish) => {
-              cartNumber += dish.quantity;
-            });
-          });
-          res.locals.cartNumber = cartNumber;
-        }
-      } catch (error) {
-        console.log("Error", error);
-      }
-    }
+    // if (req.session && req.session.user) {
+    //   const userId = req.session.user.id;
+    //   try {
+    //     const cart = await getCartbyUser(userId);
+    //     let cartNumber = 0;
+    //     if (cart) {
+    //       res.locals.cart = cart;
+    //       Object.values(cart).forEach((rest) => {
+    //         rest.dishes.forEach((dish) => {
+    //           cartNumber += dish.quantity;
+    //         });
+    //       });
+    //       res.locals.cartNumber = cartNumber;
+    //     }
+    //   } catch (error) {
+    //     console.log("Error", error);
+    //   }
+    // }
 
 
     next();

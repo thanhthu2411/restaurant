@@ -8,7 +8,7 @@ import {
   getOpenRestaurant,
 } from "../models/restaurant/restaurant.js";
 import { getReviewByRestaurant } from "../models/forms/review.js";
-import { getDishByRestaurantSlug } from "../models/dish/dish.js";
+import { getDishByRestaurantSlug, getDishbyCategoryandRest } from "../models/dish/dish.js";
 import { getUserDishHistorybyRest } from "../models/order/order.js";
 
 const homePage = async (req, res) => {
@@ -72,4 +72,31 @@ const restaurantDetailPage = async (req, res, next) => {
   }
 };
 
-export { homePage, restaurantDetailPage };
+const searchRestaurantDishes = async (req, res) => {
+  try {
+       const resSlug = req.params.resSlug
+       const searchQuery = req.query.q
+      const userId = req.session.user.id;
+
+        if (!resSlug) {
+          const err = new Error("Missing route parameters");
+          err.status = 400;
+          return next(err);
+        }
+
+      const dishes = await getDishbyCategoryandRest(searchQuery, resSlug)
+
+      res.json({
+        success: true,
+        dishes: dishes || []
+      })
+
+  } catch(error) {
+      res.status(500).json({
+        success: false,
+        error: {message: 'Search failed'}
+      })
+  }
+}
+
+export { homePage, restaurantDetailPage, searchRestaurantDishes };

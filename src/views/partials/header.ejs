@@ -35,8 +35,8 @@
 
         </div>
         <div class="header-middle">
-            <form class="search-form">
-                <input type="text" placeholder="Search Foodie">
+            <form class="search-form" id="global-search-form">
+                <input id="global-search-input" name="q" type="text" placeholder="Search Foodie">
                 <button class="search-btn" type="submit" aria-label="submit button">
                     <svg class="icon"><use xlink:href="/images/sprite.symbol.svg#search"></use></svg>
                 </button>
@@ -46,7 +46,7 @@
             <% if (isLoggedIn) { %>
             <button class="cart-btn">
                 <img class="cart-img" src="/images/cart.png" alt="cart icon">
-                <span class="cart-num"><%= cartNumber %></span>
+                <span class="cart-num"></span>
             </button>
             <% } else { %>
                 <a href="/login">Login</a>
@@ -80,3 +80,4 @@
                 <% }); %>
             </div>
         <% } %>
+        <div id="toast" class="toast" style="display:none"></div>

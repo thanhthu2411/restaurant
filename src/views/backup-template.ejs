@@ -1,0 +1,127 @@
+<!-- <%- include('partials/header') %>
+<main>
+    <section class="search-result-container">
+        <% if (dishes.length == 0) { %> 
+            <p class="no-result">No Result Found</p>
+        <% } else { %>
+            <div class="dish-search-container">
+                <h1>Search Result for "<%= query %>"</h1>
+                <div class="dishes-container">
+                    <% dishes.forEach((dish) => { %>
+                        <div class="dish-card">
+                            <img class="dish-img" src="/images/dishes/<%=dish.restaurantSlug%>-<%=dish.dishSlug%>.jpg">
+                            <a href="/restaurant/<%= dish.restaurantSlug %>" class="dish-info-container">
+                                <h2><%= dish.restaurantName %></h2>
+                                <span class="dish-name"><%= dish.dishName%></span>
+                                <span class="dish-description"
+                                    ><%= dish.dishDescription.slice(0, 18)%>...</span
+                                >
+                                <span class="price">$<%= dish.dishPrice %></span>
+                            </a>
+                        </div>
+                    <% }) %>
+                </div>
+            </div>
+        <% } %>
+    </section>
+</main>
+<%- include('partials/footer') %> -->
+
+// cart.ejs
+
+<section class="cart-modal-container">
+  <div class="wrapper">
+    <button class="close-btn" aria-label="close button">
+      <svg class="icon">
+        <use xlink:href="/images/sprite.symbol.svg#close"></use>
+      </svg>
+    </button>
+  </div>
+
+
+  <div class="cart-restaurant-container">
+    <% if (Object.values(cart).length > 0) { %>
+
+        <% Object.values(cart).forEach(rest => { %>
+            <% if(rest.dishes.length > 0) { %>
+                <div class="cart-rest-card">
+                    <a href="/restaurant/<%= rest.restaurantSlug %>"><%= rest.restaurantName %></a>
+                    
+                    <%rest.dishes.forEach(dish => { %>
+                        <%if (dish.quantity > 0) { %>
+                            <div class="cart-dish-container">
+                                <img class="dish-img" src="/images/dishes/<%=rest.restaurantSlug %>-<%=dish.dishSlug%>.jpg">
+                                <div class="dish-info">
+                                    <p><%= dish.dishName %></p>
+                                    <p class="dish-price">$<%= dish.price %></p>
+                                </div>                                         <div class="dish-quantity">
+                                    <% if(dish.quantity > 0 ) { %>
+                                        <form action="/cart/decrease/<%= dish.dishSlug %>" method="POST">
+                                            <button>-</button>
+                                        </form>                                
+                                    <% } %>
+                                    <span><%= dish.quantity%></span>
+                                    <form action="/cart/increase/<%= dish.dishSlug %>" method="POST">
+                                        <button>+</button>
+                                    </form>                            
+                                    </div>
+                            </div>
+                        <% } %>
+                        
+                    <% }) %>
+                    
+                    <a class="checkout-link" href="/checkout/<%= rest.restaurantSlug %>">Checkout</a>
+                </div>
+            <% } %>
+        <% }) %>
+    <% } else { %>
+        <p class="help-text">The cart is empty.<br>Add items to start.</p>
+    <% } %>
+  </div>
+</section>
+
+
+// restaurant.ejs - review
+<% if (reviews.length > 0 && reviews[0].id) { %>
+          <div class="rating-review-container">
+            <div class="rating-container">
+              <h2><%= Number(restaurant.averageRating).toFixed(1) %></h2>
+
+              <% if (restaurant.averageRating < 2) { %>
+                <span>★☆☆☆☆</span>
+              <% } else if (restaurant.averageRating < 3) { %>
+                <span>★★☆☆☆</span>
+              <% } else if (restaurant.averageRating < 4) { %>
+                <span>★★★☆☆</span>
+              <% } else if (restaurant.averageRating < 5) { %>
+                <span>★★★★☆</span>
+              <% } else { %>
+                <span>★★★★★</span>
+              <% } %>
+              
+              <p><%= reviews.length %></p>
+            </div>
+            <div class="review-container">
+              <% reviews.forEach((review) => { %>
+                <div class="review-card">
+                <p class="review"><%= review.content %></p>
+                <span class="review-date">
+                  <% if (review.rating < 2) { %>
+                    <span>★☆☆☆☆</span>
+                  <% } else if (review.rating < 3) { %>
+                    <span>★★☆☆☆</span>
+                  <% } else if (review.rating < 4) { %>
+                    <span>★★★☆☆</span>
+                  <% } else if (review.rating < 5) { %>
+                    <span>★★★★☆</span>
+                  <% } else { %>
+                    <span>★★★★★</span>
+                  <% } %>
+                  &#9679; <%= review.createdAt %></span>
+              </div>
+              <% }) %>
+            </div>
+        </div>
+          <%} else {%>
+            <p>No Review Available</p>
+          <%  } %>
