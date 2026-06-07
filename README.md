@@ -1,22 +1,49 @@
-# Foodie
+# Foodie 🍔
 
-1. Project Description: This is a food delivery web application that allows users to browse restaurants, add items to their carts, and place orders online. It is for anyone who wants a convenient way to order food from home.
+A full-stack food delivery web application inspired by DoorDash, 
+built with Node.js, Express, and PostgreSQL.
 
-2. Database Schema:
+## Live Demo
+[foodie-u1mq.onrender.com](https://foodie-u1mq.onrender.com)
+
+## Tech Stack
+- **Frontend:** HTML, CSS, JavaScript (Vanilla)
+- **Backend:** Node.js, Express.js
+- **Database:** PostgreSQL (Supabase)
+- **Architecture:** MVC, REST API
+
+## Features
+- Browse restaurants and menus
+- Search dishes globally and within restaurants
+- Add items to cart with real-time updates (no page reload)
+- Place orders online
+- Leave restaurant reviews
+- User authentication and role-based access
+- Admin and restaurant owner dashboards
+
+## Screenshots
+[add screenshots here]
+
+## Getting Started
+1. Clone the repo
+2. Run `npm install`
+3. Create `.env` file with your database credentials
+4. Run `npm start`
+
+## Database Schema
 ![ERD](public/images/ERD.png)
 
-3. User Roles
+## User Roles
 + Admin: edit their own info, edit other user's info, view all contact forms, mark contact forms as read
 + Restaurant Owner: edit their own info, update ongoing orders' status, view their restaurant's info
 + Standard User: add items to cart, place orders online, leave review on restaurants, edit their own info, view order history, view and delete their reviews
 
-4. Test Account Credentials:
+## Test Accounts
 + Admin email: admin@example.com
 + Restaurant Owner email: bubblehome.owner@example.com
 + User email: user1@example.com
 
-5. Known Limitations: 
-+ The search functionality has not yet been implemented.
+## Known Limitations
 + Some user features haven't been completed, such as users editing their reviews, admins replying to contact form submissions, restaurant owners updating their restaurant information.
-+ Updating item quantities in the cart triggers a full page reload.
+
 + Some functions in the models folder need further refactoring to reduce repeated code and simplify complex queries.
