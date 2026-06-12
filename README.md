@@ -22,7 +22,7 @@ built with Node.js, Express, and PostgreSQL.
 - Admin and restaurant owner dashboards
 
 ## Screenshots
-[add screenshots here]
+![alt text](image.png)
 
 ## Getting Started
 1. Clone the repo
