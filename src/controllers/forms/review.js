@@ -104,10 +104,6 @@ const showUserReviewEditForm = async (req, res, next) => {
       return next(err);
     }
 
-    // if (currentUserRole !== "user") {
-    //   req.flash("error", "You don't have permission for this page");
-    //   res.redirect(`/dashboard/${currentUserRole}`);
-    // }
 
     if (review.userId !== currentUserId) {
       req.flash("error", "You don't have permission to edit this review");

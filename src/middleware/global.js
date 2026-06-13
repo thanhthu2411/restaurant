@@ -54,29 +54,9 @@ const addLocalVariables = async (req, res, next) => {
       res.locals.user = req.session.user;
     }
 
-    // res.locals.cart = {};
-    // res.locals.cartNumber = 0;
+  
     setHeadAssetsFunctionality(res);
 
-
-    // if (req.session && req.session.user) {
-    //   const userId = req.session.user.id;
-    //   try {
-    //     const cart = await getCartbyUser(userId);
-    //     let cartNumber = 0;
-    //     if (cart) {
-    //       res.locals.cart = cart;
-    //       Object.values(cart).forEach((rest) => {
-    //         rest.dishes.forEach((dish) => {
-    //           cartNumber += dish.quantity;
-    //         });
-    //       });
-    //       res.locals.cartNumber = cartNumber;
-    //     }
-    //   } catch (error) {
-    //     console.log("Error", error);
-    //   }
-    // }
 
 
     next();
@@ -85,51 +65,5 @@ const addLocalVariables = async (req, res, next) => {
   }
 };
 
-// const setAuth = (req, res, next) => {
-//   res.locals.isLoggedIn = false;
-
-//   if (req.session?.user) {
-//     res.locals.isLoggedIn = true;
-//     res.locals.user = req.session.user;
-//   }
-
-//   next();
-// };
-
-// const setGlobals = (req, res, next) => {
-//   res.locals.currentYear = new Date().getFullYear();
-//   res.locals.NODE_ENV = process.env.NODE_ENV?.toLowerCase() || "production";
-//   res.locals.queryParams = { ...req.query };
-
-//   setHeadAssetsFunctionality(res);
-
-//   next();
-// };
-
-// const setCart = async (req, res, next) => {
-//   if (!req.session?.user) return next();
-
-//   try {
-//     const cart = await getCartbyUser(req.session.user.id);
-
-//     let cartNumber = 0;
-
-//     if (cart) {
-//       res.locals.cart = cart;
-//       Object.values(cart).forEach((rest) => {
-//         rest.dishes.forEach((dish) => {
-//           cartNumber += dish.quantity;
-//         });
-//       });
-//     }
-
-//     res.locals.cartNumber = cartNumber;
-//   } catch (err) {
-//     console.log("Cart error:", err);
-//     // ❗ don’t crash the app
-//   }
-
-//   next();
-// };
 
 export { addLocalVariables };

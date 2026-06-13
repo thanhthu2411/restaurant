@@ -91,8 +91,6 @@ const processIncreaseCart = async (req, res, next) => {
 
   try {
     await increaseDishQuantity(dishSlug, userId);
-    // req.flash("success", "Quantity updated!");
-    // return res.redirect(req.get("referer") || "/");
     const cart = await getCartbyUser(userId)
         let cartNumber = 0
         if (cart) {
@@ -116,8 +114,6 @@ const processIncreaseCart = async (req, res, next) => {
       success: false,
       message: "Something went wrong! Please try again."
     })
-    // req.flash("error", "Something went wrong. Please try again.");
-    // return res.redirect(req.get("referer") || "/");
   }
 };
 
@@ -133,8 +129,6 @@ const processDecreaseCart = async (req, res, next) => {
 
    try {
     await decreaseDishQuantity(dishSlug, userId);
-    // req.flash("success", "Quantity updated!");
-    // return res.redirect(req.get("referer") || "/");
     const cart = await getCartbyUser(userId)
         let cartNumber = 0
         if (cart) {
@@ -158,8 +152,6 @@ const processDecreaseCart = async (req, res, next) => {
       success: false,
       message: "Something went wrong! Please try again."
     })
-    // req.flash("error", "Something went wrong. Please try again.");
-    // return res.redirect(req.get("referer") || "/");
   }
 };
 

@@ -1,4 +1,4 @@
-// contain requireLogin() and requireRole() middleware
+
 
 const requireLogin = (req, res, next) => {
     if (req.session && req.session.user) {

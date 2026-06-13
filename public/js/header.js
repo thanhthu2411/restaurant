@@ -169,14 +169,6 @@ const fetchAndDisplay = async (action, dishSlug) => {
   }
 }
 
-// const displayNewQuantity = (dishSlug, quantity) => {
-//   document.querySelectorAll(".dish-quantity").forEach(dish => {
-//     if (dish.dataset.dishSlug == dishSlug) {
-//       dish.querySelector(".dish-quantity-span").innerText = quantity
-//     }
-//   })
-// }
-
 
 
 export { SideBarHandler, cartBtnHandler, closeFlashBtnHandler, searchFormHandler, loadCart, displayCart, showToast, cartQuantityHander };

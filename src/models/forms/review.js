@@ -15,7 +15,6 @@ const getReviewByRestaurant = async (resSlug) => {
   const result = await db.query(query, [resSlug]);
   if(result.rows.length === 0) return [];
 
-    // console.log(result.rows);
   return result.rows.map(review => ({
     id: review.id,
     restaurantId: review.restaurant_id,

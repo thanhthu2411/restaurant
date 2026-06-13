@@ -47,7 +47,6 @@ const showDashboard = async (req, res, next) => {
       res.render("dashboard/admin", {
         title: "Admin Dashboard",
         users: allUsers,
-        // restaurants: allRestaurants,
         contactForms: allContactForms,
       });
     } else if (userRole === "owner") {
@@ -192,10 +191,6 @@ const processAdminEditForm = async (req, res) => {
       return res.redirect(`/dashboard/admin`);
     }
 
-    // if (targetUserId === currentUser.id) {
-    //   req.flash("info", "Please edit your profile from profile page.");
-    //   return res.redirect("/dashboard/profile/edit");
-    // }
 
     // Check permissions
     const canEdit = currentUser.roleName === "admin";

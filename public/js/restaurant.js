@@ -304,12 +304,7 @@ function init() {
     resSearchHandler();
     addReviewHander();
     loadReviews();
-//     const modalCloseBtn = document.querySelector(".modal-close-btn")
-// if (modalCloseBtn) {
-//     modalCloseBtn.addEventListener("click", () => {
-//         document.querySelector(".menu-container-expand").classList.remove("clicked")
-//     })
-// }
+
 }
 
 init();
