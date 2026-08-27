@@ -51,8 +51,10 @@ async function fetchAndDisplay(url) {
     try {
         const response = await fetch(url, {
             method: "POST",
+            headers: { "Content-Type": "application/json" },
             credentials: 'include'
         });
+        
         if (!response.ok) throw new Error('Failed to add item to cart');
 
         const result = await response.json();

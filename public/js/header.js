@@ -156,7 +156,8 @@ const fetchAndDisplay = async (action, dishSlug) => {
   try {
     const response = await fetch(`/cart/api/${action}/${dishSlug}`, {
       method: "POST",
-      credentials: 'include'
+      credentials: 'include',
+      headers: { "Content-Type": "application/json" }
     })
 
     if (!response.ok) throw new Error("Failed to increase the quantity of this item")

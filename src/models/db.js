@@ -18,8 +18,8 @@ const pool = new Pool({
         checkServerIdentity: () => { return undefined; }
     },
     max: 3,                        
-    idleTimeoutMillis: 30000,     
-    connectionTimeoutMillis: 5000, 
+    idleTimeoutMillis: 30000,     // Close idle clients after 30 seconds
+    connectionTimeoutMillis: 5000, // Error if connection takes > 5 seconds
 });
 
 pool.on('connect', (client) => {

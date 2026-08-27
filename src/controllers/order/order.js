@@ -101,7 +101,7 @@ const processNewOrder = async (req, res, next) => {
     if (!orderId) {
       const error = new Error("Unable to process new order");
       error.status = 500;
-      return next(err);
+      return next(error);
     }
     //remove items from cart
     await removeDishFromCart(resSlug, userId);

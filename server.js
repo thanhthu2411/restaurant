@@ -55,11 +55,11 @@ startSessionCleanup();
 /**
  * Configure Express
  */
-app.use(express.static(path.join(__dirname, "public")));
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'src/views'));
-app.use(express.urlencoded({extended: true}));
-app.use(express.json());
+app.use(express.static(path.join(__dirname, "public"))); // serve static files from 'public' dir
+app.set('view engine', 'ejs'); // use ejs to render html template
+app.set('views', path.join(__dirname, 'src/views')); // specify where template files live
+app.use(express.urlencoded({extended: true})); // parse html form data and populate req.body with key-value pairs of data
+app.use(express.json()); // parse json data for fetch() and populates req.body with parsed JS objects.
 
 
 //Global middleware
